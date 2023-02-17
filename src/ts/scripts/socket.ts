@@ -1,7 +1,8 @@
-import {insertIcon} from "./events";
+import {insertReaction} from "./events";
+import { id as moduleId } from "../../../public/module.json"
 
 export function registerSocketEvents() {
-    game.socket.on('module.crowdgoeswild', handleSocketEvent)
+    game.socket.on(`module.${moduleId}`, handleSocketEvent)
 }
 
 export async function emitSocketEvent({type, payload}) {
@@ -9,14 +10,24 @@ export async function emitSocketEvent({type, payload}) {
         type,
         payload
     }
-    await game.socket.emit('module.crowdgoeswild', event);
+    await game.socket.emit(`module.${moduleId}`, event);
     handleSocketEvent(event)
+}
+
+export async function sendReaction({icon, color}) {
+    emitSocketEvent({
+        type: "icon",
+        payload: {
+            icon,
+            color
+        }
+    });
 }
 
 function handleSocketEvent({type, payload}) {
     switch (type) {
-        case "1":
-            insertIcon("heart", "#eb34b1")
+        case "icon":
+            insertReaction(payload.icon, payload.color)
             break;
 
         default:

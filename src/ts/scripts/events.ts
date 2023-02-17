@@ -1,6 +1,6 @@
 import {gsap, CustomWiggle, CustomEase} from "/scripts/greensock/esm/all.js"
 
-export function insertIcon(icon, color) {
+export function insertReaction(icon, color) {
     let $fullScreen = $("#interface");
     let edgePaddingPercentage = 10;
     let edgePaddingPixels = $fullScreen.width() * (1 / edgePaddingPercentage);

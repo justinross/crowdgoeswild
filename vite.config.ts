@@ -1,4 +1,5 @@
 import {defineConfig} from 'vite';
+
 export default defineConfig({
     publicDir: 'public',
     base: '/modules/crowdgoeswild/',
@@ -23,7 +24,8 @@ export default defineConfig({
             makeAbsoluteExternalsRelative: false,
             output: {
                 globals: {
-                    gsap: "gsap"
+                    gsap: "gsap",
+                    Handlebars: "Handlebars"
                 }
             }
         },
