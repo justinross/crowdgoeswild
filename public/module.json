@@ -21,7 +21,9 @@
         "systems": [],
         "requires": []
     },
-    "esmodules": ["crowdgoeswild.js"],
+    "esmodules": [
+        "crowdgoeswild.js", "greensock/esm/all.js"
+    ],
     "styles": ["style.css"],
     "languages": [
         {
@@ -35,6 +37,7 @@
     "download": "This is auto replaced",
     "license": "LICENSE",
     "readme": "README.md",
+    "socket": true,
     "media": [
         {
             "type": "icon",

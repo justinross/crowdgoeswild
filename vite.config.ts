@@ -18,6 +18,15 @@ export default defineConfig({
         emptyOutDir: true,
         sourcemap: true,
         minify: false,
+        rollupOptions: {
+            external: ['/scripts/greensock/esm/all.js'],
+            makeAbsoluteExternalsRelative: false,
+            output: {
+                globals: {
+                    gsap: "gsap"
+                }
+            }
+        },
         lib: {
             name: 'crowdgoeswild',
             entry: 'src/ts/scripts/crowdgoeswild.ts',

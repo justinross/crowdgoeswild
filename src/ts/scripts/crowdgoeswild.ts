@@ -1,7 +1,16 @@
-import "../../styles/crowdgoeswild.scss";
+import "../../styles/crowdgoeswild.scss"
+import registerHooks from "./hooks"
 
-Hooks.once('init', async function () {
-    console.log("Hello world!")
-});
+declare global {
+    interface LenientGlobalVariableTypes {
+        game: never; // the type doesn't matter
+    }
+}
 
-Hooks.once('ready', async function () {});
+const referenceToGame: Game = game; // ok! :)
+
+registerHooks()
+
+// buttons for reactions
+// send reaction to other clients
+// display reaction from all clients
