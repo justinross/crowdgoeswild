@@ -9,7 +9,7 @@ export function insertReaction(icon, color) {
     let yStart = "-50";
     let yEnd = $fullScreen.height() * .66;
     let htmlString = `
-        <i class="fas fa-${icon}" 
+        <i class="fas fa-${icon} cgw-reaction" 
             style="
             color: ${color}; 
             position: absolute; 

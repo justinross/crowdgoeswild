@@ -1,7 +1,7 @@
 import registerSettings from "./settings";
 import { id as moduleId } from "../../../public/module.json"
-import {registerSocketEvents, sendReaction} from "./socket"
-import { loadPartials } from "../../handlebarsHelpers";
+import {registerSocketEvents, sendReaction, handleReactionClick} from "./socket"
+import { loadPartials } from "./handlebars";
 
 export default function registerHooks() {
     Hooks.once('init', async function () {
@@ -9,23 +9,44 @@ export default function registerHooks() {
         registerSocketEvents()
         registerSettings()
         loadPartials()
+        // CONFIG.debug.hooks = true
     });
 
     Hooks.once('ready', async function () {
         exposeForMacros()
     });
 
-    Hooks.on("getSceneControlButtons", controls => { // Add a scene control under the tokens menu if GM
-        console.log("Get scene control buttons");
-        controls.find(c => c.name == "token").tools.push({
-            name: "groups", title: "Button", icon: "fas fa-heart",
-            // toggle: true,
-            // active: Ctg.selectGroups ?? false,
-            onClick: () => sendReaction(
-                {icon: "heart", color: "#eb34b1"}
-            )
-        });
-    });
+    Hooks.on('renderSidebarTab', async (app, html, data) => {
+        if (app.tabName !== 'chat') return;
+        let $chatForm = $("#chat-form")
+        let templatePath = `modules/${moduleId}/templates/parts/ReactionButtonBar.hbs`
+        let templateData = {
+            reactions: await game.settings.get(moduleId, 'reactions') as []
+        }
+
+        renderTemplate(templatePath, templateData).then(c =>{
+            if(c.length > 0){
+                let $content = $(c)
+                $chatForm.after($content)
+                $content.find('button').on('click', event => {
+                    event.preventDefault()
+                    let $self = $(event.currentTarget)
+                    let dataset = event.currentTarget.dataset
+                    let id = dataset.id
+                    console.log("reaction clicked", id);
+                    handleReactionClick(id)
+
+                });
+
+            }
+        }).catch(e=>console.error(e))
+
+    })
+
+    // Hooks.on("getSceneControlButtons", controls => { 
+    //     console.log(controls)
+    //     controls = addButtons(controls)
+    // });
 }
 
 function exposeForMacros() {

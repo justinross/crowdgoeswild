@@ -17,7 +17,14 @@ export class ReactionSetupMenu extends FormApplication {
     }
 
     async getData() {
-        return game.settings.get(moduleId, 'reactions');
+        let currentReactions = game.settings.get(moduleId, 'reactions') as [];
+        // let outputReactions = []
+        // for (const reaction of currentReactions) {
+        //     if(!reaction.id){
+
+        //     }
+        // }
+        return  currentReactions
     }
 
     async _updateObject(event, formData) {

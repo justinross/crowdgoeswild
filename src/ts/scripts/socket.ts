@@ -24,6 +24,12 @@ export async function sendReaction({icon, color}) {
     });
 }
 
+export async function handleReactionClick(id){
+    let reactions = await game.settings.get(moduleId, 'reactions') as []
+    let clickedReaction = reactions.find(r => r.id == id)
+    sendReaction({icon: clickedReaction.icon, color: clickedReaction.color})
+}
+
 function handleSocketEvent({type, payload}) {
     switch (type) {
         case "icon":

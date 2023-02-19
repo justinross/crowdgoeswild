@@ -1,16 +1,51 @@
 import {ReactionSetupMenu} from "./ReactionSetupMenu";
 import { id as moduleId } from "../../../public/module.json"
 
+let defaultReactions = [
+    {
+        id: 0,
+        title: "Like",
+        icon: "heart",
+        color: "#eb34b1",
+        speed: 1,
+        animation: ""
+    },
+    {
+        id: 1,
+        title: "OMG",
+        icon: "exclamation",
+        color: "#f5ad42",
+        speed: 1,
+        animation: ""
+    },
+    {
+        id: 2,
+        title: "Axe",
+        icon: "axe",
+        color: "#5f7e96",
+        speed: 1,
+        animation: ""
+    }
+]
+
+type Reaction = {
+    id : Number
+    title : string
+    icon : string
+    color : string
+    speed : Number
+    animation : string
+}
+
 export default function registerSettings() {
     console.log("Registering CGW Settings")
-    game.registerSettings([])
     game.settings.register(moduleId, 'reactions', {
         name: 'Reaction 1',
         hint: 'A description of the registered setting and its behavior.',
         scope: 'world', // "world" = sync to db, "client" = local storage
         config: false, // false if you dont want it to show in module config
         type: Array, // Number, Boolean, String, Object
-        default: [],
+        default: defaultReactions,
         onChange: value => { // value is the new value of the setting
             console.log(value)
         }
@@ -40,22 +75,3 @@ export default function registerSettings() {
     });
 }
 
-class Reaction {
-    constructor(parsedJson) {
-        this.merged = {
-            ...parsedJson
-        };
-        this.icon = parsedJson ?. icon;
-        this.color = parsedJson ?. color;
-        this.speed = parsedJson ?. speed;
-        this.animation = parsedJson ?. animation;
-    }
-
-    merged : string = "";
-    title : string = "";
-    icon : string = "";
-    color : string = "";
-    speed : Number = 1;
-    animation : string = "";
-
-}
