@@ -1,13 +1,14 @@
 import {gsap, CustomWiggle, CustomEase} from "/scripts/greensock/esm/all.js"
+import { randomNumber } from "./utils";
 
 export function insertReaction(icon, color) {
     let $fullScreen = $("#interface");
-    let edgePaddingPercentage = 10;
-    let edgePaddingPixels = $fullScreen.width() * (1 / edgePaddingPercentage);
+    let edgePaddingPercentage = 20;
+    let edgePaddingPixels = $fullScreen.width() * (edgePaddingPercentage / 100);
     let xStart = edgePaddingPixels;
     let xEnd = $fullScreen.width() - edgePaddingPixels;
     let yStart = "-50";
-    let yEnd = $fullScreen.height() * .66;
+    let yEnd = $fullScreen.height() * .66 + randomNumber(-200, 200);
     let htmlString = `
         <i class="fas fa-${icon} cgw-reaction" 
             style="
@@ -15,9 +16,7 @@ export function insertReaction(icon, color) {
             position: absolute; 
             bottom: ${yStart}px;
             z-index: 100000;
-            left: ${
-        Math.floor(Math.random() * (xEnd - xStart + 1)) + xStart
-    }px;
+            left: ${ randomNumber(xStart, xEnd) }px;
             font-size: 4rem;" />`
     let $added = $(htmlString).appendTo($fullScreen)
     let tl = gsap.timeline({
@@ -42,8 +41,8 @@ export function insertReaction(icon, color) {
         ease: "easeOut",
         duration: 8
     }, 0)
-    tl.to($added, 3, {
+    tl.to($added, {
         opacity: 0,
-        duration: .5
-    }, "4")
+        duration: 1
+    }, "3")
 }

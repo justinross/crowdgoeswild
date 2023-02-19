@@ -13,7 +13,7 @@ let defaultReactions = [
     {
         id: 1,
         title: "OMG",
-        icon: "exclamation",
+        icon: "triangle-exclamation",
         color: "#f5ad42",
         speed: 1,
         animation: ""
