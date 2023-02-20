@@ -1,4 +1,4 @@
-import {insertReaction} from "./events";
+import {insertSentReaction} from "./events";
 import { id as moduleId } from "../../../public/module.json"
 
 export function registerSocketEvents() {
@@ -14,7 +14,7 @@ export async function emitSocketEvent({type, payload}) {
     handleSocketEvent(event)
 }
 
-export async function sendReaction({icon, color}) {
+export async function sendReactionToSocket({icon, color}) {
     emitSocketEvent({
         type: "icon",
         payload: {
@@ -24,16 +24,11 @@ export async function sendReaction({icon, color}) {
     });
 }
 
-export async function handleReactionClick(id){
-    let reactions = await game.settings.get(moduleId, 'reactions') as []
-    let clickedReaction = reactions.find(r => r.id == id)
-    sendReaction({icon: clickedReaction.icon, color: clickedReaction.color})
-}
 
 function handleSocketEvent({type, payload}) {
     switch (type) {
         case "icon":
-            insertReaction(payload.icon, payload.color)
+            insertSentReaction(payload.icon, payload.color)
             break;
 
         default:

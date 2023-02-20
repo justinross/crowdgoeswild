@@ -1,6 +1,7 @@
 import registerSettings from "./settings";
 import { id as moduleId } from "../../../public/module.json"
-import {registerSocketEvents, sendReaction, handleReactionClick} from "./socket"
+import {registerSocketEvents, sendReactionToSocket} from "./socket"
+import { handleReactionClick } from "./events";
 import { loadPartials } from "./handlebars";
 
 export default function registerHooks() {
@@ -51,10 +52,8 @@ export default function registerHooks() {
 
 function exposeForMacros() {
     game.modules.get(moduleId).api = {
-        sendIcon(
-            {icon, color}
-        ) {
-            sendReaction({icon, color})
+        sendIcon({icon, color}) {
+            sendReactionToSocket({icon, color})
         }
     }
 }

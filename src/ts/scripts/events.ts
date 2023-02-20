@@ -1,7 +1,9 @@
 import {gsap, CustomWiggle, CustomEase} from "/scripts/greensock/esm/all.js"
 import { randomNumber } from "./utils";
+import { sendReactionToSocket } from "./socket";
+import { id as moduleId } from "../../../public/module.json"
 
-export function insertReaction(icon, color) {
+export function insertSentReaction(icon, color) {
     let $fullScreen = $("#interface");
     let edgePaddingPercentage = 20;
     let edgePaddingPixels = $fullScreen.width() * (edgePaddingPercentage / 100);
@@ -45,4 +47,10 @@ export function insertReaction(icon, color) {
         opacity: 0,
         duration: 1
     }, "3")
+}
+
+export async function handleReactionClick(id){
+    let reactions = await game.settings.get(moduleId, 'reactions') as []
+    let clickedReaction = reactions.find(r => r.id == id)
+    sendReactionToSocket({icon: clickedReaction.icon, color: clickedReaction.color})
 }
