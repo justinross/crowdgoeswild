@@ -8,7 +8,7 @@ let defaultReactions = [
         icon: "heart",
         color: "#eb34b1",
         speed: 1,
-        animation: ""
+        effect: "floatUp"
     },
     {
         id: 1,
@@ -16,7 +16,7 @@ let defaultReactions = [
         icon: "triangle-exclamation",
         color: "#f5ad42",
         speed: 1,
-        animation: ""
+        effect: "floatUp"
     },
     {
         id: 2,
@@ -24,8 +24,17 @@ let defaultReactions = [
         icon: "axe",
         color: "#5f7e96",
         speed: 1,
-        animation: ""
+        effect: "floatUp"
+    },
+    {
+        id: 3,
+        title: "droplet",
+        icon: "droplet",
+        color: "#00a6ff",
+        speed: 1,
+        effect: "drop"
     }
+
 ]
 
 type Reaction = {

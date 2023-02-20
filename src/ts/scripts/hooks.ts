@@ -52,8 +52,8 @@ export default function registerHooks() {
 
 function exposeForMacros() {
     game.modules.get(moduleId).api = {
-        sendIcon({icon, color}) {
-            sendReactionToSocket({icon, color})
+        sendIcon({icon, color, effect}) {
+            sendReactionToSocket({icon, color, effect})
         }
     }
 }

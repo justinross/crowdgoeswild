@@ -1,4 +1,5 @@
 import "../../styles/crowdgoeswild.scss"
+import { animationInit } from "./animation";
 import registerHooks from "./hooks"
 
 declare global {
@@ -10,6 +11,7 @@ declare global {
 const referenceToGame: Game = game; // ok! :)
 
 registerHooks()
+animationInit()
 
 // buttons for reactions
 // send reaction to other clients
