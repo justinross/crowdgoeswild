@@ -8,7 +8,8 @@ let defaultReactions = [
         icon: "heart",
         color: "#eb34b1",
         speed: 1,
-        effect: "floatUp"
+        effect: "floatUp",
+        directional: false
     },
     {
         id: 1,
@@ -16,7 +17,8 @@ let defaultReactions = [
         icon: "triangle-exclamation",
         color: "#f5ad42",
         speed: 1,
-        effect: "floatUp"
+        effect: "floatUp",
+        directional: false
     },
     {
         id: 2,
@@ -24,7 +26,8 @@ let defaultReactions = [
         icon: "axe",
         color: "#5f7e96",
         speed: 1,
-        effect: "floatUp"
+        effect: "physics-toss",
+        directional: true
     },
     {
         id: 3,
@@ -32,7 +35,8 @@ let defaultReactions = [
         icon: "droplet",
         color: "#00a6ff",
         speed: 1,
-        effect: "drop"
+        effect: "drop",
+        directional: false
     }
 
 ]

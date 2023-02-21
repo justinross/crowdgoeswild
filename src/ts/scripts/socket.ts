@@ -14,13 +14,15 @@ export async function emitSocketEvent({type, payload}) {
     handleSocketEvent(event)
 }
 
-export async function sendReactionToSocket({icon, color, effect}) {
+export async function sendReactionToSocket(reaction) {
+
     emitSocketEvent({
         type: "icon",
         payload: {
-            icon,
-            color,
-            effect
+            icon : reaction.icon,
+            color: reaction.color,
+            effect: reaction.effect,
+            directional: reaction.directional
         }
     });
 }
@@ -29,7 +31,7 @@ export async function sendReactionToSocket({icon, color, effect}) {
 function handleSocketEvent({type, payload}) {
     switch (type) {
         case "icon":
-            insertSentReaction(payload.icon, payload.color, payload.effect)
+            insertSentReaction(payload)
             break;
 
         default:
