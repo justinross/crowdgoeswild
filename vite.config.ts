@@ -23,6 +23,10 @@ export default defineConfig({
             external: ['/scripts/greensock/esm/all.js'],
             makeAbsoluteExternalsRelative: false,
             output: {
+                assetFileNames: (assetInfo) => {
+                    if (assetInfo.name === 'style.css') return 'cgw.css';
+                    return assetInfo.name;
+                },
                 globals: {
                     gsap: "gsap",
                     Handlebars: "Handlebars"

@@ -1,16 +1,97 @@
 import {ReactionSetupMenu} from "./ReactionSetupMenu";
 import { id as moduleId } from "../../../public/module.json"
 
+let defaultReactions = [
+    {
+        id: 0,
+        title: "Like",
+        icon: "heart",
+        primaryColor: "#eb34b1",
+        secondaryColor: "",
+        style: "fas",
+        speed: 1,
+        effect: "floatUp",
+        directional: false
+    },
+    {
+        id: 1,
+        title: "OMG",
+        icon: "triangle-exclamation",
+        primaryColor: "#f5ad42",
+        secondaryColor: "",
+        style: "fas",
+        speed: 1,
+        effect: "floatUp",
+        directional: false
+    },
+    {
+        id: 2,
+        title: "Axe",
+        icon: "axe",
+        primaryColor: "#5f7e96",
+        secondaryColor: "",
+        style: "fas",
+        speed: 1,
+        effect: "physics-toss",
+        directional: true
+    },
+    {
+        id: 3,
+        title: "droplet",
+        icon: "droplet",
+        primaryColor: "#00a6ff",
+        secondaryColor: "",
+        style: "fas",
+        speed: 1,
+        effect: "physics-drop",
+        directional: false
+    },
+    {
+        id: 4,
+        title: "fire",
+        icon: "fire",
+        primaryColor: "#dd0000",
+        secondaryColor: "#eb8c34",
+        style: "fa-duotone",
+        speed: 1,
+        effect: "floatUp",
+        directional: false
+    },
+    {
+        id: 5,
+        title: "x",
+        icon: "times",
+        primaryColor: "#dd0000",
+        secondaryColor: "",
+        style: "fas",
+        speed: 1,
+        effect: "shutdown",
+        directional: false
+    },
+
+]
+
+type Reaction = {
+    id: Number,
+    title: string,
+    icon: string,
+    primaryColor: string,
+    secondaryColor: string,
+    style: string,
+    speed: Number,
+    effect: string,
+    directional: boolean
+}
+
 export default function registerSettings() {
     console.log("Registering CGW Settings")
-    game.registerSettings([])
     game.settings.register(moduleId, 'reactions', {
         name: 'Reaction 1',
         hint: 'A description of the registered setting and its behavior.',
         scope: 'world', // "world" = sync to db, "client" = local storage
         config: false, // false if you dont want it to show in module config
         type: Array, // Number, Boolean, String, Object
-        default: [],
+        default: defaultReactions,
         onChange: value => { // value is the new value of the setting
             console.log(value)
         }
@@ -40,22 +121,3 @@ export default function registerSettings() {
     });
 }
 
-class Reaction {
-    constructor(parsedJson) {
-        this.merged = {
-            ...parsedJson
-        };
-        this.icon = parsedJson ?. icon;
-        this.color = parsedJson ?. color;
-        this.speed = parsedJson ?. speed;
-        this.animation = parsedJson ?. animation;
-    }
-
-    merged : string = "";
-    title : string = "";
-    icon : string = "";
-    color : string = "";
-    speed : Number = 1;
-    animation : string = "";
-
-}

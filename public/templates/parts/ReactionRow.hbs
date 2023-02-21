@@ -1,5 +1,22 @@
-TEST
-<div class="row">
-    <label for="reaction{{@index}}-title">Name</label>
-    <input type="text" id="reaction{{@index}}-title">
+<div class="flexrow" data-id="{{@index}}">
+    {{log this}}
+    <div>
+        <i class="fas fa-{{icon}}" style="color: {{color}}"></i>
+    </div>
+    <div class="">
+        <label for="reaction{{@index}}-label">Label</label>
+        <input type="text" id="reaction{{@index}}-label">
+    </div>
+    <div class="">
+        <label for="reaction{{@index}}-icon">Icon Name</label>
+        <input type="text" id="reaction{{@index}}-icon">
+    </div>
+    <div class="">
+        <label for="reaction{{@index}}-color">color</label>
+        <input type="text" id="reaction{{@index}}-color">
+    </div>
+    <div class="">
+        <label for="reaction{{@index}}-animation">Animation</label>
+        <input type="text" id="reaction{{@index}}-animation">
+    </div>
 </div>

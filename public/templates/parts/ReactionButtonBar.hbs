@@ -1,0 +1,6 @@
+<div class="cgw reactionbar flexrow">
+    {{#each reactions}}
+        <button draggable="true" class="reaction" data-id="{{id}}"><i class="{{style}} fa-{{icon}}"
+                style="color: {{primaryColor}}; --fa-primary-color: {{primaryColor}}; --fa-secondary-color: {{secondaryColor}}; {{#if secondaryColor}}--fa-secondary-opacity: 1{{/if}}"></i></button>
+    {{/each}}
+</div>
