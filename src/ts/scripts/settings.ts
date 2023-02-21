@@ -6,7 +6,9 @@ let defaultReactions = [
         id: 0,
         title: "Like",
         icon: "heart",
-        color: "#eb34b1",
+        primaryColor: "#eb34b1",
+        secondaryColor: "",
+        style: "fas",
         speed: 1,
         effect: "floatUp",
         directional: false
@@ -15,7 +17,9 @@ let defaultReactions = [
         id: 1,
         title: "OMG",
         icon: "triangle-exclamation",
-        color: "#f5ad42",
+        primaryColor: "#f5ad42",
+        secondaryColor: "",
+        style: "fas",
         speed: 1,
         effect: "floatUp",
         directional: false
@@ -24,7 +28,9 @@ let defaultReactions = [
         id: 2,
         title: "Axe",
         icon: "axe",
-        color: "#5f7e96",
+        primaryColor: "#5f7e96",
+        secondaryColor: "",
+        style: "fas",
         speed: 1,
         effect: "physics-toss",
         directional: true
@@ -33,31 +39,48 @@ let defaultReactions = [
         id: 3,
         title: "droplet",
         icon: "droplet",
-        color: "#00a6ff",
+        primaryColor: "#00a6ff",
+        secondaryColor: "",
+        style: "fas",
         speed: 1,
         effect: "physics-drop",
         directional: false
     },
     {
         id: 4,
+        title: "fire",
+        icon: "fire",
+        primaryColor: "#dd0000",
+        secondaryColor: "#eb8c34",
+        style: "fa-duotone",
+        speed: 1,
+        effect: "floatUp",
+        directional: false
+    },
+    {
+        id: 5,
         title: "x",
         icon: "times",
-        color: "#dd0000",
+        primaryColor: "#dd0000",
+        secondaryColor: "",
+        style: "fas",
         speed: 1,
         effect: "shutdown",
         directional: false
-    }
-
+    },
 
 ]
 
 type Reaction = {
-    id : Number
-    title : string
-    icon : string
-    color : string
-    speed : Number
-    animation : string
+    id: Number,
+    title: string,
+    icon: string,
+    primaryColor: string,
+    secondaryColor: string,
+    style: string,
+    speed: Number,
+    effect: string,
+    directional: boolean
 }
 
 export default function registerSettings() {

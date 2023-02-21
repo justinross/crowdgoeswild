@@ -20,9 +20,12 @@ export async function sendReactionToSocket(reaction) {
         type: "icon",
         payload: {
             icon : reaction.icon,
-            color: reaction.color,
+            primaryColor: reaction.primaryColor,
+            secondaryColor: reaction.secondaryColor,
             effect: reaction.effect,
-            directional: reaction.directional
+            directional: reaction.directional,
+            style: reaction.style
+
         }
     });
 }

@@ -6,13 +6,17 @@ import { id as moduleId } from "../../../public/module.json"
 export function insertSentReaction(reaction) {
 
     let $fullScreen = $("#interface");
+
     let htmlString = `
-        <i class="fas fa-${reaction.icon} cgw-reaction" 
+        <i class="${reaction.style} fa-${reaction.icon} cgw-reaction" 
             style="
-            color: ${reaction.color}; 
-            position: absolute; 
-            z-index: 100000;
-            font-size: 4rem;" />`
+                color: ${reaction.primaryColor}; 
+                --fa-primary-color: ${reaction.primaryColor};
+                --fa-secondary-color: ${reaction.secondaryColor};
+                --fa-secondary-opacity: 1;
+                position: absolute; 
+                z-index: 100000;
+                font-size: 4rem;" />`
             // bottom: ${yStart}px;
             // left: ${ randomNumber(xStart, xEnd) }px;
     let $added = $(htmlString).appendTo($fullScreen)
