@@ -19,9 +19,6 @@ export function insertSentReaction(reaction) {
     gsap.effects[reaction.effect]($added, {parent: $fullScreen, directional: reaction.directional})
 }
 
-
-
-
 export async function handleReactionClick(id){
     let reactions = await game.settings.get(moduleId, 'reactions') as []
     let clickedReaction = reactions.find(r => r.id == id)

@@ -35,9 +35,19 @@ let defaultReactions = [
         icon: "droplet",
         color: "#00a6ff",
         speed: 1,
-        effect: "drop",
+        effect: "physics-drop",
+        directional: false
+    },
+    {
+        id: 4,
+        title: "x",
+        icon: "times",
+        color: "#dd0000",
+        speed: 1,
+        effect: "shutdown",
         directional: false
     }
+
 
 ]
 

@@ -19,6 +19,22 @@ function registerEffects(){
     }
 
     gsap.registerEffect({
+        name: "fadeAndRemove",
+        effect: (targets, config) => {
+          let tl = gsap.timeline()
+          tl.to(targets, {
+            duration: config.duration, 
+            opacity: 0
+          })
+          .call(()=>{$(targets).remove()});
+          return tl
+        },
+        defaults: {duration: 2},
+        extendTimeline: true
+    });
+      
+
+    gsap.registerEffect({
         name: "floatUp",
         effect: (targets, config) => {
             let tl = gsap.timeline({
@@ -34,16 +50,18 @@ function registerEffects(){
             let xEnd = $fullScreen.width() - edgePaddingPixels;
             let xFrom = randomNumber(xStart, xEnd);
 
-            let yEnd = $fullScreen.height() * .66 + randomNumber(-200, 200);
+            let yEnd = $fullScreen.height()
 
             gsap.set(targets, {
                 left: xFrom,
                 bottom: defaults.offscreen,
             })
 
+            let randomLife = randomNumber(1,5)
 
             tl.to(targets, {
                 x: randomNumber(-40, 40),
+                scale: randomNumber(.95, 1.25),
                 rotation: randomNumber(-10, 10),
                 duration: 10,
                 ease: "wiggle"
@@ -53,11 +71,7 @@ function registerEffects(){
                 ease: "easeOut",
                 duration: 8
             }, 0)
-            .to(targets, {
-                opacity: 0,
-                duration: 1
-            }, "3")
-            .call(()=>$(targets).remove())
+            .fadeAndRemove(targets, {}, randomLife)
             return tl
         },
     })
@@ -88,7 +102,44 @@ function registerEffects(){
                 ease: "none",
                 duration: 1
             }, 0)
-            .call(()=>$(targets).remove())
+            .fadeAndRemove(targets)
+
+            return tl
+        },
+    })
+
+    gsap.registerEffect({
+        name: "physics-drop",
+        effect: (targets, config) => {
+            let tl = gsap.timeline({
+                defaults: {
+                    duration: 5
+                }
+            })
+
+            let $fullScreen = config.parent
+
+            let edgePaddingPixels = $fullScreen.width() * (defaults.edgePaddingPercentage / 100);
+            let xStart = edgePaddingPixels;
+            let xEnd = $fullScreen.width() - edgePaddingPixels;
+            let xFrom = randomNumber(xStart, xEnd);
+
+            gsap.set(targets, {
+                left: xFrom,
+                top: defaults.offscreen
+            })
+
+            tl.to(targets, {
+                duration: 30,
+                physics2D: {
+                    velocity: 0,
+                    // velocity: 600,
+                    // angle: "random(250, 290)",
+                    angle: 0,
+                    gravity: 500
+                }
+            }, 0)
+            .fadeAndRemove(targets)
 
             return tl
         },
@@ -140,7 +191,48 @@ function registerEffects(){
                     gravity: 500
                 }
             }, 0)
-            .call(()=>$(targets).remove())
+            .fadeAndRemove(targets)
+
+            return tl
+        }
+    })
+
+    gsap.registerEffect({
+        name: "shutdown",
+        effect: (targets, config) =>{
+            let tl = gsap.timeline()
+
+            let $fullScreen = config.parent
+
+            let $modalBG = $('<div class="cgw modal"></div>').appendTo($fullScreen)
+            gsap.set($modalBG, {
+                top: 0,
+                left: 0,
+                width: "100vw",
+                height: "100vh",
+                backgroundColor: "rgba(255,255,255,0.65)",
+                position: "absolute",
+                zIndex: 1000
+            })
+
+            gsap.set(targets, {
+                left: "50%",
+                top: "50%",
+                xPercent: -50, 
+                yPercent: -50,
+                fontSize: "50vh"
+            })
+
+            game.togglePause(true)
+            tl
+            .to(targets, {
+                scale: 1.25,
+                duration: 10,
+                repeat: -1,
+                ease:"wiggle"
+            })
+            .fadeAndRemove(targets, {duration: 1}, 4)
+            .fadeAndRemove($modalBG, {duration: 1}, 4)
 
             return tl
         }

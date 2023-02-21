@@ -3,6 +3,7 @@ import { id as moduleId } from "../../../public/module.json"
 import {registerSocketEvents, sendReactionToSocket} from "./socket"
 import { handleReactionClick } from "./events";
 import { loadPartials } from "./handlebars";
+import { randomNumber } from "./utils";
 
 export default function registerHooks() {
     Hooks.once('init', async function () {
@@ -41,6 +42,13 @@ export default function registerHooks() {
 
             }
         }).catch(e=>console.error(e))
+
+        //Stress testing. Don't turn this on. Probably.
+        // setTimeout(()=>{
+        //     for (let index = 0; index < 1000; index++) {
+        //         setTimeout(()=>sendReactionToSocket({icon: "heart", color: "#eb34b1", effect: "floatUp"}), randomNumber(0, 100))
+        //     }
+        // }, 4000)
 
     })
 
