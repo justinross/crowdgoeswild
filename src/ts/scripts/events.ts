@@ -3,7 +3,9 @@ import { randomNumber } from "./utils";
 import { sendReactionToSocket } from "./socket";
 import { id as moduleId } from "../../../public/module.json"
 
-export function insertSentReaction(reaction) {
+export async function insertSentReaction(reactionId) {
+    let reactions = await game.settings.get(moduleId, 'reactions') as []
+    let reaction = reactions.find(r => r.id == reactionId)
 
     let $fullScreen = $("#interface");
 
@@ -20,11 +22,10 @@ export function insertSentReaction(reaction) {
             // bottom: ${yStart}px;
             // left: ${ randomNumber(xStart, xEnd) }px;
     let $added = $(htmlString).appendTo($fullScreen)
-    gsap.effects[reaction.effect]($added, {parent: $fullScreen, directional: reaction.directional})
+    gsap.effects[reaction.effect]($added, {parent: $fullScreen, reaction: reaction})
 }
 
 export async function handleReactionClick(id){
-    let reactions = await game.settings.get(moduleId, 'reactions') as []
-    let clickedReaction = reactions.find(r => r.id == id)
-    sendReactionToSocket(clickedReaction)
+    // let clickedReaction = reactions.find(r => r.id == id)
+    sendReactionToSocket(id)
 }

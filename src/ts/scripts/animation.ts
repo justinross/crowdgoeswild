@@ -8,6 +8,12 @@ export function animationInit(){
         type: "uniform",
         duration: 10
     });
+
+    CustomWiggle.create("shake", {
+        wiggles: 8,
+        type: "easeOut",
+        duration: 1
+    });
     registerEffects()
 }
 
@@ -33,6 +39,51 @@ function registerEffects(){
         extendTimeline: true
     });
       
+    gsap.registerEffect({
+        name: "physics-floatUp",
+        effect: (targets, config) => {
+            let tl = gsap.timeline({
+                defaults: {
+                    duration: 5
+                }
+            })
+
+            let $fullScreen = config.parent
+
+            let edgePaddingPixels = $fullScreen.width() * (defaults.edgePaddingPercentage / 100);
+            let xStart = edgePaddingPixels;
+            let xEnd = $fullScreen.width() - edgePaddingPixels;
+            let xFrom = randomNumber(xStart, xEnd);
+
+            let yEnd = $fullScreen.height()
+
+            gsap.set(targets, {
+                left: xFrom,
+                bottom: defaults.offscreen,
+            })
+
+            let randomLife = randomNumber(1,5)
+
+            tl.to(targets, {
+                x: randomNumber(-40, 40),
+                scale: randomNumber(.95, 1.25),
+                rotation: randomNumber(-10, 10),
+                duration: 10,
+                ease: "wiggle"
+            }, 0)
+            tl.to(targets, {
+                duration: 30,
+                physics2D: {
+                    velocity: 200,
+                    angle: "random(250, 290)",
+                    // angle: ,
+                    gravity: -100
+                }
+            }, 0)
+            .fadeAndRemove(targets, {}, randomLife)
+            return tl
+        },
+    })
 
     gsap.registerEffect({
         name: "floatUp",
@@ -168,7 +219,7 @@ function registerEffects(){
                 bottom: defaults.offscreen,
             })
 
-            if(config.directional){
+            if(config.reaction.directional){
                 gsap.set(targets, {
                     scaleX: directionRatio
                 })
@@ -210,7 +261,8 @@ function registerEffects(){
                 left: 0,
                 width: "100vw",
                 height: "100vh",
-                backgroundColor: "rgba(255,255,255,0.65)",
+                backgroundColor: config.reaction.secondaryColor,
+                backdropFilter: "blur(5px)",
                 position: "absolute",
                 zIndex: 1000
             })
@@ -226,10 +278,10 @@ function registerEffects(){
             game.togglePause(true)
             tl
             .to(targets, {
-                scale: 1.25,
-                duration: 10,
-                repeat: -1,
-                ease:"wiggle"
+                rotation: 5,
+                // duration: 10,
+                // repeat: -1,
+                ease:"shake"
             })
             .fadeAndRemove(targets, {duration: 1}, 4)
             .fadeAndRemove($modalBG, {duration: 1}, 4)

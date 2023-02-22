@@ -10,7 +10,7 @@ let defaultReactions = [
         secondaryColor: "",
         style: "fas",
         speed: 1,
-        effect: "floatUp",
+        effect: "physics-floatUp",
         directional: false
     },
     {
@@ -21,7 +21,7 @@ let defaultReactions = [
         secondaryColor: "",
         style: "fas",
         speed: 1,
-        effect: "floatUp",
+        effect: "physics-floatUp",
         directional: false
     },
     {
@@ -62,7 +62,7 @@ let defaultReactions = [
         title: "x",
         icon: "times",
         primaryColor: "#dd0000",
-        secondaryColor: "",
+        secondaryColor: "rgba(255,255,255,0.6)",
         style: "fas",
         speed: 1,
         effect: "shutdown",

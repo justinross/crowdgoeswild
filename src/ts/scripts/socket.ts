@@ -14,19 +14,10 @@ export async function emitSocketEvent({type, payload}) {
     handleSocketEvent(event)
 }
 
-export async function sendReactionToSocket(reaction) {
-
+export async function sendReactionToSocket(reactionId) {
     emitSocketEvent({
         type: "icon",
-        payload: {
-            icon : reaction.icon,
-            primaryColor: reaction.primaryColor,
-            secondaryColor: reaction.secondaryColor,
-            effect: reaction.effect,
-            directional: reaction.directional,
-            style: reaction.style
-
-        }
+        payload: reactionId
     });
 }
 
