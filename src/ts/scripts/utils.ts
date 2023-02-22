@@ -1,3 +1,7 @@
+import { id as moduleId } from "../../../public/module.json"
+import * as htmlToImage from 'html-to-image';
+import { toPng, toJpeg, toBlob, toPixelData, toSvg } from 'html-to-image';
+
 export function randomNumber(min, max) {
     return Math.random() * (max - min) + min;
 }
@@ -16,4 +20,92 @@ export function clamp(a, min = 0, max = 1){
 
 export function calcAngleDegrees(x, y) {
     return Math.atan2(y, x) * 180 / Math.PI;
+}
+
+export async function getReactionAsImage(reactionObject){
+    let reactionHTML = await getReactionHTML(reactionObject)
+    let $interface = $("#interface")
+    // let interfaceEl = $interface.get(0)
+    // let $addedChild = $('<div id="interfaceShadow"></div>')
+    // let addedChildEl = $addedChild.get(0)
+
+    // let shadow = addedChildEl.attachShadow({mode: 'open'})
+    let $appended = $(reactionHTML).appendTo($interface)
+    $appended.css({zIndex: "-10000"})
+    
+
+    // $(shadow).append(reactionHTML)
+    // let shadowEl = addedChildEl.shadowRoot
+    let iconPNGData
+    try {
+        iconPNGData = await htmlToImage.toPng($appended.get(0))
+    } catch (error) {
+        console.error('oops, something went wrong!', error);
+    }
+
+    $appended.remove()
+    return iconPNGData
+}
+
+export async function getReactionObject(reactionId){
+    let reactions = await game.settings.get(moduleId, 'reactions') as []
+    let reaction = reactions.find(r => r.id == reactionId)
+    return reaction
+}
+
+export async function getReactionHTML(reaction){
+    let htmlString = `
+        <i class="${reaction.style} fa-${reaction.icon} cgw-reaction" 
+            style="
+                color: ${reaction.primaryColor}; 
+                --fa-primary-color: ${reaction.primaryColor};
+                --fa-secondary-color: ${reaction.secondaryColor};
+                --fa-secondary-opacity: 1;
+                position: absolute; 
+                z-index: 100000;
+                font-size: 4rem;" />`
+    return htmlString
+}
+
+export async function saveAllReactionPNGs(){
+    let reactions = await game.settings.get(moduleId, 'reactions') as []
+    for (const reaction of reactions) {
+        generateReactionPNG(reaction)
+    }
+}
+
+export async function generateReactionPNG(reactionObject){
+    let macrosPath =  `worlds/${game.world.id}/assets/macros`
+    let dirs_list = await FilePicker.browse("data", macrosPath).then(picker => picker.dirs)
+    console.log(dirs_list, macrosPath + "/reactions")
+    if (!dirs_list.includes(macrosPath + "/reactions")){
+        console.log("Reactions macro folder doesn't exist. Creating it.");
+        await FilePicker.createDirectory('data', macrosPath + '/reactions')
+    }
+
+    let imagesPath = macrosPath + "/reactions"
+    let files_list = await FilePicker.browse("data", macrosPath + "/reactions").then(picker => picker.files)
+    if (!files_list.includes(macrosPath + "/reactions" + `/reaction-${reactionObject.id}.png`)){
+        console.log("Image does not yet exist. Generating.");
+        let imageDataURL = await getReactionAsImage(reactionObject)
+        let uploadResponse = await ImageHelper.uploadBase64(imageDataURL, `reaction-${reactionObject.id}.png`, imagesPath)
+        return uploadResponse.path
+    }
+    else{
+        console.log("Image already exists. Refusing to regenerate.")
+        return 
+    }
+
+
+    
+    
+    // try {
+    // } catch (error) {
+    //     console.log("Folder exists. Using it!")
+    // }
+    // folderPath += "/reactions"
+}
+
+export async function getReactionPNGUrl(reactionId){
+    return `/worlds/${game.world.id}/assets/macros/reactions/reaction-${reactionId}.png`
 }

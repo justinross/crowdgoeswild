@@ -3,7 +3,7 @@ import { id as moduleId } from "../../../public/module.json"
 import {registerSocketEvents, sendReactionToSocket} from "./socket"
 import { handleReactionClick } from "./events";
 import { loadPartials } from "./handlebars";
-import { randomNumber } from "./utils";
+import { randomNumber, getReactionObject, getReactionAsImage, getReactionHTML, getReactionPNGUrl, saveAllReactionPNGs } from "./utils";
 
 export default function registerHooks() {
     Hooks.once('init', async function () {
@@ -15,8 +15,29 @@ export default function registerHooks() {
     });
 
     Hooks.once('ready', async function () {
+        if(game.user.isGM){
+            saveAllReactionPNGs()
+        }
         exposeForMacros()
     });
+
+    Hooks.on('hotbarDrop', async function(bar, data, slot){
+        if(data.type == "reaction"){
+            let reactionId = data.id
+            let droppedReaction = await getReactionObject(reactionId)
+            // let reactions = await game.settings.get(moduleId, 'reactions') as []
+            // let droppedReaction = reactions.find(r => r.id == args[1].id)
+            let newMacro = await Macro.create({
+                name: `Reaction - ${droppedReaction.title}`,
+                type: "script",
+                scope: "global",
+                img: await getReactionPNGUrl(reactionId),
+                command: `game.modules.get('crowdgoeswild').api.sendReaction(${reactionId})`,
+            })
+            game.user.assignHotbarMacro(newMacro, slot);
+        }
+    })
+
 
     Hooks.on('renderSidebarTab', async (app, html, data) => {
         if (app.tabName !== 'chat') return;
@@ -35,10 +56,12 @@ export default function registerHooks() {
                     let $self = $(event.currentTarget)
                     let dataset = event.currentTarget.dataset
                     let id = dataset.id
-                    console.log("reaction clicked", id);
                     handleReactionClick(id)
 
                 });
+                $content.find('button').on('dragstart', event => {
+                    event.originalEvent.dataTransfer.setData("text/plain", JSON.stringify({id: event.currentTarget.dataset.id, type: "reaction"}));
+                })
 
             }
         }).catch(e=>console.error(e))
@@ -60,8 +83,8 @@ export default function registerHooks() {
 
 function exposeForMacros() {
     game.modules.get(moduleId).api = {
-        sendIcon({icon, color, effect}) {
-            sendReactionToSocket({icon, color, effect})
+        sendReaction(reactionId) {
+            sendReactionToSocket(reactionId)
         }
     }
 }
