@@ -1,7 +1,8 @@
 import {ReactionSetupMenu} from "./ReactionSetupMenu";
 import { id as moduleId } from "../../../public/module.json"
+import { debouncedReload, saveAllReactionPNGs } from "./utils";
 
-let defaultReactions: Array<ReactionOptions> = [
+export const defaultReactions: Array<ReactionOptions> = [
     {
         id: 0,
         title: "Like",
@@ -91,7 +92,10 @@ type ReactionOptions = {
 }
 
 export async function resetDefaultReactions(){
-    return await game.settings.set(moduleId, 'reactions', defaultReactions)
+    await game.settings.set(moduleId, 'reactions', defaultReactions)
+    await saveAllReactionPNGs(true)
+    debouncedReload()
+    return 
 }
 
 export function registerSettings() {

@@ -69,6 +69,9 @@ export function getReactionHTML(reaction){
 }
 
 export async function saveAllReactionPNGs(force = false){
+    if(force){
+        ui.notifications.info(`Generating icons for reaction macros. This will take a moment.`, {permanent: false});
+    }
     let reactions = await game.settings.get(moduleId, 'reactions') as []
     for (const reaction of reactions) {
         await generateReactionPNG(reaction, force)
@@ -76,16 +79,22 @@ export async function saveAllReactionPNGs(force = false){
 }
 
 export async function generateReactionPNG(reactionObject, force){
-    let macrosPath =  `worlds/${game.world.id}/assets/macros`
-    let dirs_list = await FilePicker.browse("data", macrosPath).then(picker => picker.dirs)
-    if (!dirs_list.includes(macrosPath + "/reactions")){
-        console.log("Reactions macro folder doesn't exist. Creating it.");
-        await FilePicker.createDirectory('data', macrosPath + '/reactions')
+    let worldPath =  `worlds/${game.world.id}`
+    let iconsPath =  `worlds/${game.world.id}/reactionIcons`
+    let world_dirs_list = await FilePicker.browse("data", worldPath).then(picker => picker.dirs)
+    if (!world_dirs_list.includes(iconsPath)){
+        console.log("Reactions icon folder doesn't exist. Creating it.");
+        await FilePicker.createDirectory('data', iconsPath)
     }
+    // let macros_dirs_list = await FilePicker.browse("data", macrosPath).then(picker => picker.dirs)
+    // if (!macros_dirs_list.includes(macrosPath + "/reactions")){
+    //     console.log("Reactions macro folder doesn't exist. Creating it.");
+    //     await FilePicker.createDirectory('data', macrosPath + '/reactions')
+    // }
 
-    let imagesPath = macrosPath + "/reactions"
-    let files_list = await FilePicker.browse("data", macrosPath + "/reactions").then(picker => picker.files)
-    if (!files_list.includes(macrosPath + "/reactions" + `/reaction-${reactionObject.id}.png`) || force){
+    let imagesPath = iconsPath
+    let files_list = await FilePicker.browse("data", iconsPath).then(picker => picker.files)
+    if (!files_list.includes(iconsPath + `/reaction-${reactionObject.id}.png`) || force){
         console.log("Image does not yet exist or force flag was set. Generating.");
         let imageDataURL = await getReactionAsImage(reactionObject)
         let uploadResponse = await ImageHelper.uploadBase64(imageDataURL, `reaction-${reactionObject.id}.png`, imagesPath)
@@ -107,5 +116,7 @@ export async function generateReactionPNG(reactionObject, force){
 }
 
 export async function getReactionPNGUrl(reactionId){
-    return `/worlds/${game.world.id}/assets/macros/reactions/reaction-${reactionId}.png`
+    return `worlds/${game.world.id}/reactionIcons/reaction-${reactionId}.png`
 }
+
+export const debouncedReload = foundry.utils.debounce(() => window.location.reload(), 500);
