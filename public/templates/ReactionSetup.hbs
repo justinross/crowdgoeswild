@@ -1,6 +1,11 @@
-<form class="flexcol">
-  {{#each this}}
-    {{> "modules/crowdgoeswild/templates/parts/ReactionRow.hbs"}}
-  {{/each}}
-  <button name="submit" id="generateButton">Close and Generate Reaction PNGs</button>
+<form>
+  <div class="flexcol">
+    {{#each this}}
+      {{> "modules/crowdgoeswild/templates/parts/ReactionRow.hbs"}}
+    {{/each}}
+  </div>
+  <div class="flexrow">
+    <button name="submit" id="generateButton">Close and Generate Reaction PNGs</button>
+    <button name="reset" id="resetButton">Restore Defaults</button>
+  </div>
 </form>

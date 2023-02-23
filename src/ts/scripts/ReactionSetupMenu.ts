@@ -1,6 +1,6 @@
 import { id as moduleId } from "../../../public/module.json"
-import { saveAllReactionPNGs } from "./utils";
-const debouncedReload = foundry.utils.debounce(() => window.location.reload(), 500);
+import { debouncedReload, saveAllReactionPNGs } from "./utils";
+import { resetDefaultReactions } from "./settings";
 
 export class ReactionSetupMenu extends FormApplication {
     // constructor(exampleOption) {
@@ -47,11 +47,38 @@ export class ReactionSetupMenu extends FormApplication {
         super.activateListeners(html)
         html.find("#generateButton").on("click", async (ev)=>{
             this.close()
-            ui.notifications.info(`Generating icons for reaction macros. This will take a moment.`, {permanent: false});
             await saveAllReactionPNGs(true)
             debouncedReload()
         })
+        html.find("#resetButton").on("click", (ev)=>{
+            this.showResetDefaultsDialog()
+        })
     }
+
+    showResetDefaultsDialog(){
+        let d = new Dialog({
+            title: "Restore Defaults",
+            content: "<p>Reset the reaction set to defaults? All changes will be lost.</p>",
+            buttons: {
+             one: {
+              icon: '<i class="fas fa-check"></i>',
+              label: "Reset Defaults",
+              callback: () => resetDefaultReactions()
+             },
+             two: {
+              icon: '<i class="fas fa-times"></i>',
+              label: "Cancel",
+              callback: () => this.close()
+             }
+            },
+            default: "two",
+            render: html => {},
+            close: html => {}
+           });
+        d.render(true);
+    }
+
+
 
 
     
