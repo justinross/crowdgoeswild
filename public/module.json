@@ -24,7 +24,7 @@
     "esmodules": [
         "crowdgoeswild.js", "greensock/esm/all.js"
     ],
-    "styles": ["style.css"],
+    "styles": ["cgw.css"],
     "languages": [
         {
             "lang": "en",
