@@ -53,9 +53,10 @@ export async function getReactionObject(reactionId){
     return reaction
 }
 
-export async function getReactionHTML(reaction){
+export function getReactionHTML(reaction){
     let htmlString = `
         <i class="${reaction.style} fa-${reaction.icon} cgw-reaction" 
+            data-id=${reaction.id}
             style="
                 color: ${reaction.primaryColor}; 
                 --fa-primary-color: ${reaction.primaryColor};
@@ -63,21 +64,20 @@ export async function getReactionHTML(reaction){
                 --fa-secondary-opacity: 1;
                 position: absolute; 
                 z-index: 100000;
-                font-size: 4rem;" />`
+                font-size: 4rem;" ></i>`
     return htmlString
 }
 
-export async function saveAllReactionPNGs(){
+export async function saveAllReactionPNGs(force = false){
     let reactions = await game.settings.get(moduleId, 'reactions') as []
     for (const reaction of reactions) {
-        generateReactionPNG(reaction)
+        await generateReactionPNG(reaction, force)
     }
 }
 
-export async function generateReactionPNG(reactionObject){
+export async function generateReactionPNG(reactionObject, force){
     let macrosPath =  `worlds/${game.world.id}/assets/macros`
     let dirs_list = await FilePicker.browse("data", macrosPath).then(picker => picker.dirs)
-    console.log(dirs_list, macrosPath + "/reactions")
     if (!dirs_list.includes(macrosPath + "/reactions")){
         console.log("Reactions macro folder doesn't exist. Creating it.");
         await FilePicker.createDirectory('data', macrosPath + '/reactions')
@@ -85,8 +85,8 @@ export async function generateReactionPNG(reactionObject){
 
     let imagesPath = macrosPath + "/reactions"
     let files_list = await FilePicker.browse("data", macrosPath + "/reactions").then(picker => picker.files)
-    if (!files_list.includes(macrosPath + "/reactions" + `/reaction-${reactionObject.id}.png`)){
-        console.log("Image does not yet exist. Generating.");
+    if (!files_list.includes(macrosPath + "/reactions" + `/reaction-${reactionObject.id}.png`) || force){
+        console.log("Image does not yet exist or force flag was set. Generating.");
         let imageDataURL = await getReactionAsImage(reactionObject)
         let uploadResponse = await ImageHelper.uploadBase64(imageDataURL, `reaction-${reactionObject.id}.png`, imagesPath)
         return uploadResponse.path

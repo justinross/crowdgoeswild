@@ -1,22 +1,50 @@
 <div class="flexrow" data-id="{{@index}}">
-    {{log this}}
     <div>
-        <i class="fas fa-{{icon}}" style="color: {{color}}"></i>
+        {{reactionPreview this}}
+    </div>
+    <input type="hidden" value="{{id}}" name="reactions[{{id}}].id" />
+    <div class="">
+        <label for="reaction-{{id}}-title">Name</label>
+        <input type="text" id="reaction-{{id}}-title" name="reactions[{{id}}].title" value="{{title}}">
     </div>
     <div class="">
-        <label for="reaction{{@index}}-label">Label</label>
-        <input type="text" id="reaction{{@index}}-label">
+        <label for="reaction-{{id}}-icon">Icon</label>
+        <input type="text" name="reactions[{{id}}].icon" id="reaction-{{id}}-icon" value="{{icon}}">
     </div>
     <div class="">
-        <label for="reaction{{@index}}-icon">Icon Name</label>
-        <input type="text" id="reaction{{@index}}-icon">
+        <label for="reaction-{{id}}-primary-color">Primary Color</label>
+        {{colorPicker name=(concat "reactions[" id "].primaryColor") value=primaryColor default="#000000"}}
     </div>
     <div class="">
-        <label for="reaction{{@index}}-color">color</label>
-        <input type="text" id="reaction{{@index}}-color">
+        <label for="reaction-{{id}}-secondary-color">Secondary Color</label>
+        {{colorPicker name=(concat "reactions[" id "].secondaryColor") value=secondaryColor default="#000000"}}
     </div>
     <div class="">
-        <label for="reaction{{@index}}-animation">Animation</label>
-        <input type="text" id="reaction{{@index}}-animation">
+        <label for="reaction-{{id}}-style">Icon Style</label>
+        <select id="reaction-{{id}}-style" value="{{style}}" name="reactions[{{id}}].style">
+            {{#select style}}
+                <option value="fas">Solid</option>
+                <option value="fa-duotone">Duotone</option>
+                <option value="fa-regular">Regular</option>
+                <option value="fa-light">Light</option>
+                <option value="fa-thin">Thin</option>
+            {{/select}}
+        </select>
+    </div>
+    <div class="">
+        <label for="reaction-{{id}}-effect">Effect</label>
+        <select id="reaction-{{id}}-effect" value="{{effect}}" name="reactions[{{id}}].effect">
+            {{#select effect}}
+                <option value="physics-floatUp">Float Up</option>
+                <option value="physics-drop">Fall Down</option>
+                <option value="physics-toss">Throw</option>
+                <option value="shutdown">Shutdown</option>
+            {{/select}}
+        </select>
+    </div>
+    <div class="">
+        <label for="reaction-{{id}}-directional">Directional</label>
+        <input type="checkbox" id="reaction-{{id}}-directional" {{checked directional}}
+            name="reactions[{{id}}].directional">
     </div>
 </div>

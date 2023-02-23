@@ -1,9 +1,10 @@
-import registerSettings from "./settings";
+import { registerSettings,  resetDefaultReactions } from "./settings";
 import { id as moduleId } from "../../../public/module.json"
 import {registerSocketEvents, sendReactionToSocket} from "./socket"
 import { handleReactionClick } from "./events";
-import { loadPartials } from "./handlebars";
+import { loadPartials, registerHelpers } from "./handlebars";
 import { randomNumber, getReactionObject, getReactionAsImage, getReactionHTML, getReactionPNGUrl, saveAllReactionPNGs } from "./utils";
+import { ReactionSetupMenu } from "./ReactionSetupMenu";
 
 export default function registerHooks() {
     Hooks.once('init', async function () {
@@ -11,6 +12,7 @@ export default function registerHooks() {
         registerSocketEvents()
         registerSettings()
         loadPartials()
+        registerHelpers()
         // CONFIG.debug.hooks = true
     });
 
@@ -19,6 +21,9 @@ export default function registerHooks() {
             saveAllReactionPNGs()
         }
         exposeForMacros()
+        // resetDefaultReactions()
+        // let rm = new ReactionSetupMenu({}).render(true)
+
     });
 
     Hooks.on('hotbarDrop', async function(bar, data, slot){

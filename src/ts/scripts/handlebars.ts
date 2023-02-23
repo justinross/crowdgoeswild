@@ -1,5 +1,11 @@
 import { id as moduleId } from "../../../public/module.json"
-export function registerHelpers(){
+import { getReactionHTML } from "./utils";
+
+export async function registerHelpers(){
+    Handlebars.registerHelper("reactionPreview", (reaction)=>{
+        let html = getReactionHTML(reaction)
+        return new Handlebars.SafeString(html)
+    })
 }
 
 export function loadPartials(){

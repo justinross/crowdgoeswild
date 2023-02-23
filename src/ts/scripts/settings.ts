@@ -1,7 +1,7 @@
 import {ReactionSetupMenu} from "./ReactionSetupMenu";
 import { id as moduleId } from "../../../public/module.json"
 
-let defaultReactions = [
+let defaultReactions: Array<ReactionOptions> = [
     {
         id: 0,
         title: "Like",
@@ -11,7 +11,8 @@ let defaultReactions = [
         style: "fas",
         speed: 1,
         effect: "physics-floatUp",
-        directional: false
+        directional: false,
+        enabled: true
     },
     {
         id: 1,
@@ -22,7 +23,8 @@ let defaultReactions = [
         style: "fas",
         speed: 1,
         effect: "physics-floatUp",
-        directional: false
+        directional: false,
+        enabled: true
     },
     {
         id: 2,
@@ -33,7 +35,8 @@ let defaultReactions = [
         style: "fas",
         speed: 1,
         effect: "physics-toss",
-        directional: true
+        directional: true,
+        enabled: true
     },
     {
         id: 3,
@@ -44,7 +47,8 @@ let defaultReactions = [
         style: "fas",
         speed: 1,
         effect: "physics-drop",
-        directional: false
+        directional: false,
+        enabled: true
     },
     {
         id: 4,
@@ -55,7 +59,8 @@ let defaultReactions = [
         style: "fa-duotone",
         speed: 1,
         effect: "floatUp",
-        directional: false
+        directional: false,
+        enabled: true
     },
     {
         id: 5,
@@ -66,12 +71,13 @@ let defaultReactions = [
         style: "fas",
         speed: 1,
         effect: "shutdown",
-        directional: false
+        directional: false,
+        enabled: true
     },
 
 ]
 
-type Reaction = {
+type ReactionOptions = {
     id: Number,
     title: string,
     icon: string,
@@ -80,20 +86,25 @@ type Reaction = {
     style: string,
     speed: Number,
     effect: string,
-    directional: boolean
+    directional: boolean,
+    enabled: boolean
 }
 
-export default function registerSettings() {
+export async function resetDefaultReactions(){
+    return await game.settings.set(moduleId, 'reactions', defaultReactions)
+}
+
+export function registerSettings() {
     console.log("Registering CGW Settings")
     game.settings.register(moduleId, 'reactions', {
-        name: 'Reaction 1',
-        hint: 'A description of the registered setting and its behavior.',
+        name: 'Reaction',
+        hint: 'The list of reactions usable by your players',
         scope: 'world', // "world" = sync to db, "client" = local storage
         config: false, // false if you dont want it to show in module config
         type: Array, // Number, Boolean, String, Object
         default: defaultReactions,
         onChange: value => { // value is the new value of the setting
-            console.log(value)
+            
         }
     });
 
@@ -101,7 +112,7 @@ export default function registerSettings() {
         name: 'Maximum Simultaneous Reactions',
         hint: `Turn this down if you're running into performance issues from players spamming reactions.`,
         scope: 'client',
-        config: true,
+        config: false,
         type: Number,
         range: {
             min: 10,
