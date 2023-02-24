@@ -213,6 +213,9 @@ function registerEffects(){
             // let directionRatio = lerp(-1, 1, invlerp(180, 360, angleToCenter))
             let directionRatio = gsap.utils.mapRange(180, 360, -1, 1, angleToCenter)
             directionRatio = directionRatio > 0 ? 1 : -1
+            let gravity = 600
+            let velocityBase = $fullScreen.height() * 0.6 + 320
+            let velocity = randomNumber(velocityBase * 0.85, velocityBase * 1.15)
 
             gsap.set(targets, {
                 left: xFrom,
@@ -235,11 +238,11 @@ function registerEffects(){
             .to(targets, {
                 duration: 30,
                 physics2D: {
-                    velocity: randomNumber(($fullScreen.height() / 1.5) * 0.85, ($fullScreen.height() / 1.5) * 1.15),
+                    velocity: velocity,
                     // velocity: 600,
                     // angle: "random(250, 290)",
                     angle: angleToCenter + randomNumber(-10, 10),
-                    gravity: 500
+                    gravity: gravity
                 }
             }, 0)
             .fadeAndRemove(targets)
