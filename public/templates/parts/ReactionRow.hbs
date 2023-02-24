@@ -1,26 +1,33 @@
-<div class="flexrow" data-id="{{@index}}">
-    <div>
+<div class="flexrow reactionRow" data-id="{{@index}}">
+    <div class="iconPreview">
         {{reactionPreview this}}
     </div>
     <input type="hidden" value="{{id}}" name="reactions[{{id}}].id" />
+    <input type="hidden" value="{{speed}}" name="reactions[{{id}}].speed" />
+    <input type="hidden" value="{{enabled}}" name="reactions[{{id}}].enabled" />
     <div class="">
-        <label for="reaction-{{id}}-title">Name</label>
+        <label for="reaction-{{id}}-title" title="This reaction's name.">Name</label>
         <input type="text" id="reaction-{{id}}-title" name="reactions[{{id}}].title" value="{{title}}">
     </div>
     <div class="">
-        <label for="reaction-{{id}}-icon">Icon</label>
+        <label for="reaction-{{id}}-icon"
+            title="The Font Awesome ID of the icon you'd like to use, without the leading 'fa-'. Check fontawesome.com for a complete searchable list.">Icon</label>
         <input type="text" name="reactions[{{id}}].icon" id="reaction-{{id}}-icon" value="{{icon}}">
     </div>
     <div class="">
-        <label for="reaction-{{id}}-primary-color">Primary Color</label>
+        <label for="reaction-{{id}}-primary-color"
+            title="If you use the 'solid' style, this will just be the icon color.">Primary Color</label>
         {{colorPicker name=(concat "reactions[" id "].primaryColor") value=primaryColor default="#000000"}}
     </div>
     <div class="">
-        <label for="reaction-{{id}}-secondary-color">Secondary Color</label>
+        <label for="reaction-{{id}}-secondary-color"
+            title="Only applies when using 'Duotone' style icons, or the 'Shutdown' effect (this will be the background overlay color).">Secondary
+            Color</label>
         {{colorPicker name=(concat "reactions[" id "].secondaryColor") value=secondaryColor default="#000000"}}
     </div>
     <div class="">
-        <label for="reaction-{{id}}-style">Icon Style</label>
+        <label for="reaction-{{id}}-style" title="This lets you choose which Font Awesome icon style to use.">Icon
+            Style</label>
         <select id="reaction-{{id}}-style" value="{{style}}" name="reactions[{{id}}].style">
             {{#select style}}
                 <option value="fas">Solid</option>
@@ -32,7 +39,8 @@
         </select>
     </div>
     <div class="">
-        <label for="reaction-{{id}}-effect">Effect</label>
+        <label for="reaction-{{id}}-effect"
+            title="How you'd like this reaction animated. Shutdown is best used for an x-card sort of effect.">Effect</label>
         <select id="reaction-{{id}}-effect" value="{{effect}}" name="reactions[{{id}}].effect">
             {{#select effect}}
                 <option value="physics-floatUp">Float Up</option>
@@ -43,7 +51,8 @@
         </select>
     </div>
     <div class="">
-        <label for="reaction-{{id}}-directional">Directional</label>
+        <label for="reaction-{{id}}-directional"
+            title="Should the rotation of this icon change depending on the direction it's moving? Only applicable to certain icons/effects.">Directional</label>
         <input type="checkbox" id="reaction-{{id}}-directional" {{checked directional}}
             name="reactions[{{id}}].directional">
     </div>

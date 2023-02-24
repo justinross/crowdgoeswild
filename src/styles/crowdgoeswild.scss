@@ -14,4 +14,37 @@
 
 .cgw-reaction{
     pointer-events: none;
+    font-size: 4rem;
+    --fa-secondary-opacity: 1;
+    position: absolute; 
+    z-index: 100000;
+}
+
+.cgw.importer{
+    margin-bottom: 1em; 
+}
+
+.reactionSetup {
+
+    .reactionRow{
+    margin-bottom: 1em;
+    padding: 4px;
+
+        &:nth-child(2n){
+            background-color: rgba(0,0,0,0.1);
+            backdrop-filter: blur(3px)
+        }
+
+        .iconPreview{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .cgw-reaction{
+                position: relative;
+                z-index: auto;
+                font-size: 3rem;
+            }
+        }
+    }
 }

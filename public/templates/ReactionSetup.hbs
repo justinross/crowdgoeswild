@@ -1,11 +1,15 @@
 <form>
+  <h3>Configure your reactions here. Changes are saved as they're made, but you should generate PNGs after making
+    changes if you want players' macro icons to match the current reactions.</h3>
   <div class="flexcol">
     {{#each this}}
       {{> "modules/crowdgoeswild/templates/parts/ReactionRow.hbs"}}
     {{/each}}
   </div>
   <div class="flexrow">
-    <button name="submit" id="generateButton">Close and Generate Reaction PNGs</button>
+    <button name="submit" id="generateButton">Generate Reaction PNGs</button>
     <button name="reset" id="resetButton">Restore Defaults</button>
+    <button name="reset" id="importButton">Import Reaction Set</button>
+    <button name="reset" id="exportButton">Export Reaction Set</button>
   </div>
 </form>

@@ -2,96 +2,98 @@ import {ReactionSetupMenu} from "./ReactionSetupMenu";
 import { id as moduleId } from "../../../public/module.json"
 import { debouncedReload, saveAllReactionPNGs } from "./utils";
 
-export const defaultReactions: Array<ReactionOptions> = [
-    {
-        id: 0,
-        title: "Like",
-        icon: "heart",
-        primaryColor: "#eb34b1",
-        secondaryColor: "",
-        style: "fas",
-        speed: 1,
-        effect: "physics-floatUp",
-        directional: false,
-        enabled: true
-    },
-    {
-        id: 1,
-        title: "OMG",
-        icon: "triangle-exclamation",
-        primaryColor: "#f5ad42",
-        secondaryColor: "",
-        style: "fas",
-        speed: 1,
-        effect: "physics-floatUp",
-        directional: false,
-        enabled: true
-    },
-    {
-        id: 2,
-        title: "Axe",
-        icon: "axe",
-        primaryColor: "#5f7e96",
-        secondaryColor: "",
-        style: "fas",
-        speed: 1,
-        effect: "physics-toss",
-        directional: true,
-        enabled: true
-    },
-    {
-        id: 3,
-        title: "droplet",
-        icon: "droplet",
-        primaryColor: "#00a6ff",
-        secondaryColor: "",
-        style: "fas",
-        speed: 1,
-        effect: "physics-drop",
-        directional: false,
-        enabled: true
-    },
-    {
-        id: 4,
-        title: "fire",
-        icon: "fire",
-        primaryColor: "#dd0000",
-        secondaryColor: "#eb8c34",
-        style: "fa-duotone",
-        speed: 1,
-        effect: "floatUp",
-        directional: false,
-        enabled: true
-    },
-    {
-        id: 5,
-        title: "x",
-        icon: "times",
-        primaryColor: "#dd0000",
-        secondaryColor: "rgba(255,255,255,0.6)",
-        style: "fas",
-        speed: 1,
-        effect: "shutdown",
-        directional: false,
-        enabled: true
-    },
-
+export const defaultReactions: Array<ReactionOption> = [
+  {
+    id: 0,
+    speed: 1,
+    enabled: true,
+    title: "Like",
+    icon: "heart",
+    primaryColor: "#eb34b1",
+    secondaryColor: "",
+    style: "fas",
+    effect: "physics-floatUp",
+    directional: false
+  },
+  {
+    id: 1,
+    speed: 1,
+    enabled: true,
+    title: "OMG",
+    icon: "triangle-exclamation",
+    primaryColor: "#f5ad42",
+    secondaryColor: "",
+    style: "fas",
+    effect: "physics-floatUp",
+    directional: false
+  },
+  {
+    id: 2,
+    speed: 1,
+    enabled: true,
+    title: "Axe",
+    icon: "axe",
+    primaryColor: "#5f7e96",
+    secondaryColor: "#c1c1c1",
+    style: "fa-duotone",
+    effect: "physics-toss",
+    directional: true
+  },
+  {
+    id: 3,
+    speed: 1,
+    enabled: true,
+    title: "droplet",
+    icon: "droplet",
+    primaryColor: "#a4fbf7",
+    secondaryColor: "#00a6ff",
+    style: "fa-duotone",
+    effect: "physics-drop",
+    directional: false
+  },
+  {
+    id: 4,
+    speed: 1,
+    enabled: true,
+    title: "fire",
+    icon: "fire",
+    primaryColor: "#dd0000",
+    secondaryColor: "#eb8c34",
+    style: "fa-duotone",
+    effect: "physics-floatUp",
+    directional: false
+  },
+  {
+    id: 5,
+    speed: 1,
+    enabled: true,
+    title: "x",
+    icon: "times",
+    primaryColor: "#dd0000",
+    secondaryColor: "rgba(255,255,255,0.6)",
+    style: "fas",
+    effect: "shutdown",
+    directional: false
+  }
 ]
 
-type ReactionOptions = {
-    id: Number,
-    title: string,
-    icon: string,
-    primaryColor: string,
-    secondaryColor: string,
-    style: string,
-    speed: Number,
-    effect: string,
-    directional: boolean,
-    enabled: boolean
+export const ReactionOption = {
+    id: 0,
+    title: "",
+    icon: "",
+    primaryColor: "",
+    secondaryColor: "",
+    style: "",
+    speed: 0,
+    effect: "",
+    directional: false,
+    enabled: true
 }
 
+export type ReactionOption = typeof ReactionOption
+
 export async function resetDefaultReactions(){
+    console.log(defaultReactions);
     await game.settings.set(moduleId, 'reactions', defaultReactions)
     await saveAllReactionPNGs(true)
     debouncedReload()
@@ -108,7 +110,6 @@ export function registerSettings() {
         type: Array, // Number, Boolean, String, Object
         default: defaultReactions,
         onChange: value => { // value is the new value of the setting
-            
         }
     });
 
