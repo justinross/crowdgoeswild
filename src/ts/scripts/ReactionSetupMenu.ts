@@ -19,7 +19,8 @@ export class ReactionSetupMenu extends FormApplication {
             title: 'CrowdGoesWild - Reaction Setup',
             width: 900,
             submitOnChange: true,
-            closeOnSubmit: false
+            closeOnSubmit: false,
+            resizable: true
         });
     }
 
