@@ -19,11 +19,7 @@
   ],
   "relationships": {
     "systems": [],
-    "requires": [
-      {
-        "id": "color-picker"
-      }
-    ]
+    "requires": []
   },
   "esmodules": ["crowdgoeswild.js", "greensock/esm/all.js"],
   "styles": ["cgw.css"],
