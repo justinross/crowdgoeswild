@@ -61,10 +61,8 @@ export function getReactionHTML(reaction){
                 color: ${reaction.primaryColor}; 
                 --fa-primary-color: ${reaction.primaryColor};
                 --fa-secondary-color: ${reaction.secondaryColor};
-                --fa-secondary-opacity: 1;
-                position: absolute; 
-                z-index: 100000;
-                font-size: 4rem;" ></i>`
+            ">
+        </i>`
     return htmlString
 }
 

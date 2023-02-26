@@ -22,7 +22,7 @@ export default function registerHooks() {
         }
         exposeForMacros()
         // resetDefaultReactions()
-        // let rm = new ReactionSetupMenu({}).render(true)
+        let rm = new ReactionSetupMenu({}).render(true)
 
     });
 
@@ -45,31 +45,9 @@ export default function registerHooks() {
 
 
     Hooks.on('renderSidebarTab', async (app, html, data) => {
+        console.log("Rendered sidebar tab");
         if (app.tabName !== 'chat') return;
-        let $chatForm = $("#chat-form")
-        let templatePath = `modules/${moduleId}/templates/parts/ReactionButtonBar.hbs`
-        let templateData = {
-            reactions: await game.settings.get(moduleId, 'reactions') as []
-        }
-
-        renderTemplate(templatePath, templateData).then(c =>{
-            if(c.length > 0){
-                let $content = $(c)
-                $chatForm.after($content)
-                $content.find('button').on('click', event => {
-                    event.preventDefault()
-                    let $self = $(event.currentTarget)
-                    let dataset = event.currentTarget.dataset
-                    let id = dataset.id
-                    handleReactionClick(id)
-
-                });
-                $content.find('button').on('dragstart', event => {
-                    event.originalEvent.dataTransfer.setData("text/plain", JSON.stringify({id: event.currentTarget.dataset.id, type: "reaction"}));
-                })
-
-            }
-        }).catch(e=>console.error(e))
+        renderChatButtonBar()
 
         //Stress testing. Don't turn this on. Probably.
         // setTimeout(()=>{
@@ -84,6 +62,35 @@ export default function registerHooks() {
     //     console.log(controls)
     //     controls = addButtons(controls)
     // });
+}
+
+export async function renderChatButtonBar(){
+    let $chatForm = $("#chat-form")
+    let $reactionBar = $('.cgw.reactionbar')
+    $reactionBar.remove()
+    let templatePath = `modules/${moduleId}/templates/parts/ReactionButtonBar.hbs`
+    let templateData = {
+        reactions: await game.settings.get(moduleId, 'reactions') as []
+    }
+
+    renderTemplate(templatePath, templateData).then(c =>{
+        if(c.length > 0){
+            let $content = $(c)
+            $chatForm.after($content)
+            $content.find('button').on('click', event => {
+                event.preventDefault()
+                let $self = $(event.currentTarget)
+                let dataset = event.currentTarget.dataset
+                let id = dataset.id
+                handleReactionClick(id)
+
+            });
+            $content.find('button').on('dragstart', event => {
+                event.originalEvent.dataTransfer.setData("text/plain", JSON.stringify({id: event.currentTarget.dataset.id, type: "reaction"}));
+            })
+
+        }
+    }).catch(e=>console.error(e))
 }
 
 function exposeForMacros() {
