@@ -1481,7 +1481,6 @@ class ReactionSetupMenu extends FormApplication {
     }
     await game.settings.set(id, "reactions", reactions);
     await this.render();
-    renderChatButtonBar();
   }
   activateListeners(html) {
     super.activateListeners(html);
@@ -1599,7 +1598,8 @@ class ReactionSetupMenu extends FormApplication {
         two: {
           icon: '<i class="fas fa-times"></i>',
           label: "Cancel",
-          callback: () => this.close()
+          callback: () => {
+          }
         }
       },
       default: "two",
@@ -1818,6 +1818,11 @@ function registerHooks() {
         command: `game.modules.get('crowdgoeswild').api.sendReaction(${reactionId})`
       });
       game.user.assignHotbarMacro(newMacro, slot);
+    }
+  });
+  Hooks.on("updateSetting", async function(oldSetting, newData, opts) {
+    if (oldSetting.key === "crowdgoeswild.reactions") {
+      renderChatButtonBar();
     }
   });
   Hooks.on("renderSidebarTab", async (app, html, data) => {

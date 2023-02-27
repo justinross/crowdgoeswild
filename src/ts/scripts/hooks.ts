@@ -49,6 +49,12 @@ export default function registerHooks() {
     }
   });
 
+  Hooks.on("updateSetting", async function (oldSetting, newData, opts) {
+    if (oldSetting.key === "crowdgoeswild.reactions") {
+      renderChatButtonBar();
+    }
+  });
+
   Hooks.on("renderSidebarTab", async (app, html, data) => {
     console.log("Rendered sidebar tab");
     if (app.tabName !== "chat") return;
