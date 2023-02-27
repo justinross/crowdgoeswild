@@ -1,0 +1,76 @@
+.cgw.reactionbar {
+  flex-grow: 0;
+  justify-content: center;
+}
+.cgw.reactionbar button {
+  flex-grow: 0;
+  min-width: 15%;
+  background-color: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.cgw-reaction {
+  pointer-events: none;
+  font-size: 4rem;
+  --fa-secondary-opacity: 1;
+  position: absolute;
+  z-index: 100000;
+}
+
+.cgw.importer {
+  margin-bottom: 1em;
+}
+
+.reactionSetup form {
+  padding: 1rem;
+}
+.reactionSetup form .actionButtons {
+  align-content: center;
+  justify-content: center;
+}
+.reactionSetup form .actionButtons > * {
+  margin: 1rem;
+}
+.reactionSetup .reactionRow {
+  margin-bottom: 1em;
+  padding: 4px;
+}
+.reactionSetup .reactionRow > * {
+  margin: 5px;
+}
+.reactionSetup .reactionRow:nth-child(2n) {
+  background-color: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3px);
+}
+.reactionSetup .reactionRow label i {
+  color: rgba(0, 0, 0, 0.4);
+}
+.reactionSetup .reactionRow .iconPreview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.reactionSetup .reactionRow .iconPreview .cgw-reaction {
+  position: relative;
+  z-index: auto;
+  font-size: 2.5rem;
+}
+.reactionSetup .reactionRow .colorSwitch {
+  max-width: 3em;
+  max-height: 3em;
+  align-self: center;
+}
+.reactionSetup .reactionRow .primaryColor .inputWrapper,
+.reactionSetup .reactionRow .secondaryColor .inputWrapper {
+  position: relative;
+  min-width: 120px;
+}
+.reactionSetup .reactionRow .primaryColor .inputWrapper input[type=color][data-edit][data-edit],
+.reactionSetup .reactionRow .secondaryColor .inputWrapper input[type=color][data-edit][data-edit] {
+  padding: 0;
+  width: 2rem;
+  border: none;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}

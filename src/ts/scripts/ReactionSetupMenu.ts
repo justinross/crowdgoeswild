@@ -64,7 +64,6 @@ export class ReactionSetupMenu extends FormApplication {
     }
     await game.settings.set(moduleId, "reactions", reactions);
     await this.render();
-    renderChatButtonBar();
   }
 
   activateListeners(html) {
@@ -204,7 +203,7 @@ export class ReactionSetupMenu extends FormApplication {
         two: {
           icon: '<i class="fas fa-times"></i>',
           label: "Cancel",
-          callback: () => this.close(),
+          callback: () => {},
         },
       },
       default: "two",
