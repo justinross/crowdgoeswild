@@ -1,12 +1,9 @@
 import { id as moduleId } from "../../../public/module.json";
-import {
-  calcAngleDegrees,
-  debouncedReload,
-  saveAllReactionPNGs,
-} from "./utils";
+import { calcAngleDegrees, saveAllReactionPNGs } from "./utils";
 import { loadReactionsPreset, ReactionOption } from "./settings";
 import { renderChatButtonBar } from "./hooks";
 import { reactionSets } from "./reactionsets";
+import { reloadAllClients } from "./socket";
 
 export class ReactionSetupMenu extends FormApplication {
   // constructor(exampleOption) {
@@ -72,7 +69,7 @@ export class ReactionSetupMenu extends FormApplication {
     html.find("#generateButton").on("click", async (ev) => {
       this.close();
       await saveAllReactionPNGs(true);
-      debouncedReload();
+      reloadAllClients();
     });
     html.find("#resetButton").on("click", (ev) => {
       this.showLoadPresetDialog();
