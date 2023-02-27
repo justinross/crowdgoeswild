@@ -1,6 +1,7 @@
 import { id as moduleId } from "../../../public/module.json";
 import * as htmlToImage from "html-to-image";
 import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
+import { handleReactionClick } from "./events";
 
 export function randomNumber(min, max) {
   return Math.random() * (max - min) + min;
@@ -126,4 +127,38 @@ export async function getReactionPNGUrl(reactionId) {
   return `worlds/${game.world.id}/reactionIcons/reaction-${reactionId}.png`;
 }
 
+export async function renderChatButtonBar() {
+  let $chatForm = $("#chat-form");
+  let $reactionBar = $(".cgw.reactionbar");
+  $reactionBar.remove();
+  let templatePath = `modules/${moduleId}/templates/parts/ReactionButtonBar.hbs`;
+  let templateData = {
+    reactions: (await game.settings.get(moduleId, "reactions")) as [],
+  };
+
+  renderTemplate(templatePath, templateData)
+    .then((c) => {
+      if (c.length > 0) {
+        let $content = $(c);
+        $chatForm.after($content);
+        $content.find("button").on("click", (event) => {
+          event.preventDefault();
+          let $self = $(event.currentTarget);
+          let dataset = event.currentTarget.dataset;
+          let id = dataset.id;
+          handleReactionClick(id);
+        });
+        $content.find("button").on("dragstart", (event) => {
+          event.originalEvent.dataTransfer.setData(
+            "text/plain",
+            JSON.stringify({
+              id: event.currentTarget.dataset.id,
+              type: "reaction",
+            })
+          );
+        });
+      }
+    })
+    .catch((e) => console.error(e));
+}
 // export const debouncedReload = foundry.utils.debounce(() => window.location.reload(), 500);
