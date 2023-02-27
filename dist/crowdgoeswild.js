@@ -779,7 +779,10 @@ function getReactionHTML(reaction) {
 }
 async function saveAllReactionPNGs(force = false) {
   if (force) {
-    ui.notifications.info(`Generating icons for reaction macros. This will take a moment.`, { permanent: false });
+    ui.notifications.info(
+      `Generating icons for reaction macros. This will take a moment.`,
+      { permanent: false }
+    );
   }
   let reactions = await game.settings.get(id, "reactions");
   for (const reaction of reactions) {
@@ -789,17 +792,25 @@ async function saveAllReactionPNGs(force = false) {
 async function generateReactionPNG(reactionObject, force) {
   let worldPath = `worlds/${game.world.id}`;
   let iconsPath = `worlds/${game.world.id}/reactionIcons`;
-  let world_dirs_list = await FilePicker.browse("data", worldPath).then((picker) => picker.dirs);
+  let world_dirs_list = await FilePicker.browse("data", worldPath).then(
+    (picker) => picker.dirs
+  );
   if (!world_dirs_list.includes(iconsPath)) {
     console.log("Reactions icon folder doesn't exist. Creating it.");
     await FilePicker.createDirectory("data", iconsPath);
   }
   let imagesPath = iconsPath;
-  let files_list = await FilePicker.browse("data", iconsPath).then((picker) => picker.files);
+  let files_list = await FilePicker.browse("data", iconsPath).then(
+    (picker) => picker.files
+  );
   if (!files_list.includes(iconsPath + `/reaction-${reactionObject.id}.png`) || force) {
     console.log("Image does not yet exist or force flag was set. Generating.");
     let imageDataURL = await getReactionAsImage(reactionObject);
-    let uploadResponse = await ImageHelper.uploadBase64(imageDataURL, `reaction-${reactionObject.id}.png`, imagesPath);
+    let uploadResponse = await ImageHelper.uploadBase64(
+      imageDataURL,
+      `reaction-${reactionObject.id}.png`,
+      imagesPath
+    );
     return uploadResponse.path;
   } else {
     console.log("Image already exists. Refusing to regenerate.");
@@ -809,7 +820,6 @@ async function generateReactionPNG(reactionObject, force) {
 async function getReactionPNGUrl(reactionId) {
   return `worlds/${game.world.id}/reactionIcons/reaction-${reactionId}.png`;
 }
-const debouncedReload = foundry.utils.debounce(() => window.location.reload(), 500);
 function animationInit() {
   gsap.registerPlugin(CustomEase, CustomWiggle, Physics2DPlugin);
   CustomWiggle.create("wiggle", {
@@ -1435,6 +1445,51 @@ const reactionSets = {
     ]
   }
 };
+async function insertSentReaction(reactionId) {
+  let reaction = await getReactionObject(reactionId);
+  let htmlString = await getReactionHTML(reaction);
+  let $fullScreen = $("#interface");
+  let $added = $(htmlString).appendTo($fullScreen);
+  gsap.effects[reaction.effect]($added, { parent: $fullScreen, reaction });
+}
+async function handleReactionClick(id2) {
+  sendReactionToSocket(id2);
+}
+function registerSocketEvents() {
+  game.socket.on(`module.${id}`, handleSocketEvent);
+}
+async function emitSocketEvent({ type, payload }) {
+  let event = {
+    type,
+    payload
+  };
+  await game.socket.emit(`module.${id}`, event);
+  handleSocketEvent(event);
+}
+async function sendReactionToSocket(reactionId) {
+  emitSocketEvent({
+    type: "icon",
+    payload: reactionId
+  });
+}
+async function reloadAllClients() {
+  emitSocketEvent({
+    type: "reload",
+    payload: ""
+  });
+}
+function handleSocketEvent({ type, payload }) {
+  switch (type) {
+    case "icon":
+      insertSentReaction(payload);
+      break;
+    case "reload":
+      debouncedReload();
+      break;
+    default:
+      throw new Error("unknown type");
+  }
+}
 class ReactionSetupMenu extends FormApplication {
   constructor() {
     super(...arguments);
@@ -1487,7 +1542,7 @@ class ReactionSetupMenu extends FormApplication {
     html.find("#generateButton").on("click", async (ev) => {
       this.close();
       await saveAllReactionPNGs(true);
-      debouncedReload();
+      reloadAllClients();
     });
     html.find("#resetButton").on("click", (ev) => {
       this.showLoadPresetDialog();
@@ -1742,42 +1797,6 @@ function registerSettings() {
     restricted: true
     // Restrict this submenu to gamemaster only?
   });
-}
-async function insertSentReaction(reactionId) {
-  let reaction = await getReactionObject(reactionId);
-  let htmlString = await getReactionHTML(reaction);
-  let $fullScreen = $("#interface");
-  let $added = $(htmlString).appendTo($fullScreen);
-  gsap.effects[reaction.effect]($added, { parent: $fullScreen, reaction });
-}
-async function handleReactionClick(id2) {
-  sendReactionToSocket(id2);
-}
-function registerSocketEvents() {
-  game.socket.on(`module.${id}`, handleSocketEvent);
-}
-async function emitSocketEvent({ type, payload }) {
-  let event = {
-    type,
-    payload
-  };
-  await game.socket.emit(`module.${id}`, event);
-  handleSocketEvent(event);
-}
-async function sendReactionToSocket(reactionId) {
-  emitSocketEvent({
-    type: "icon",
-    payload: reactionId
-  });
-}
-function handleSocketEvent({ type, payload }) {
-  switch (type) {
-    case "icon":
-      insertSentReaction(payload);
-      break;
-    default:
-      throw new Error("unknown type");
-  }
 }
 async function registerHelpers() {
   Handlebars.registerHelper("reactionPreview", (reaction) => {
