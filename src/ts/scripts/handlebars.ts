@@ -11,6 +11,10 @@ export async function registerHelpers() {
     array = array.slice(-count);
     return array;
   });
+
+  Handlebars.registerHelper("add", (input, add) => {
+    return parseInt(input) + parseInt(add);
+  });
 }
 
 export function loadPartials() {

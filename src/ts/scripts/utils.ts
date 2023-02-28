@@ -130,8 +130,8 @@ export async function getReactionPNGUrl(reactionId) {
 
 export async function renderChatButtonBar() {
   let $chatForm = $("#chat-form");
-  let $reactionBar = $(".cgw.reactionbar");
-  $reactionBar.remove();
+  let $cgwContainer = $(".cgwcontainer");
+  $cgwContainer.remove();
   let templatePath = `modules/${moduleId}/templates/parts/ReactionButtonBar.hbs`;
   let templateData = {
     reactions: (await game.settings.get(moduleId, "reactions")) as [],

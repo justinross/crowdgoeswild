@@ -17,10 +17,17 @@ export async function insertSentReaction(reactionId) {
   });
 }
 
-export async function displayVibeCheck() {
+export async function displayVibeCheck(duration) {
   let vc = VibeCheckPopup.getInstance();
   vc.userResponses = [];
   vc.render(true);
+  if (duration > 0) {
+    if (!game.user.isGM) {
+      setTimeout(() => vc.close(), duration * 1000);
+    } else {
+      setTimeout(() => vc.close(), duration * 2 * 1000);
+    }
+  }
 }
 
 export async function handleReactionClick(id) {

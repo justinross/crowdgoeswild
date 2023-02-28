@@ -40,6 +40,35 @@ export function registerSettings() {
     },
   });
 
+  game.settings.register(moduleId, "vibecheckautoclose", {
+    name: "Close vibe check after selection",
+    hint: "If this is enabled, players' vibe check popups will close after they make a selection. If this is disabled, it will stay open and they can choose another reaction.",
+    scope: "world", // "world" = sync to db, "client" = local storage
+    config: true, // false if you dont want it to show in module config
+    type: Boolean, // Number, Boolean, String, Object
+    default: true,
+    onChange: (value) => {
+      // value is the new value of the setting
+    },
+  });
+
+  game.settings.register(moduleId, "vibecheckduration", {
+    name: "Vibe check duration",
+    hint: "This determines, in seconds, how long players have to respond to a vibe check. The results will display to the GM for twice this duration. 0 = no timeout",
+    scope: "world", // "world" = sync to db, "client" = local storage
+    config: true, // false if you dont want it to show in module config
+    type: Number, // Number, Boolean, String, Object
+    default: 10,
+    range: {
+      min: 0,
+      step: 10,
+      max: 60,
+    },
+    onChange: (value) => {
+      // value is the new value of the setting
+    },
+  });
+
   game.settings.register(moduleId, "maxdisplayed", {
     name: "Maximum Simultaneous Reactions",
     hint: `Turn this down if you're running into performance issues from players spamming reactions.`,

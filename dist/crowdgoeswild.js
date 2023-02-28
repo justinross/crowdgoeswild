@@ -762,6 +762,7 @@ const _VibeCheckPopup = class extends Application {
       id: `${id}-vibe-check`,
       title: "CrowdGoesWild - Vibe Check",
       width: 600,
+      // height: game.user.isGM ? 600 : "auto",
       height: "auto"
     });
   }
@@ -774,6 +775,12 @@ const _VibeCheckPopup = class extends Application {
         if (sentResponse.user._id == user.id) {
           filteredResponses.push(sentResponse.response);
         }
+      }
+      let userCharacter = await user.character;
+      if (userCharacter) {
+        user.image = userCharacter.img;
+      } else {
+        user.image = user.avatar;
       }
       let userResponses = {
         user,
@@ -792,7 +799,21 @@ const _VibeCheckPopup = class extends Application {
   activateListeners(html) {
     html.find("button.reaction").on("click", (ev) => {
       sendVibeCheckResponse(game.user, ev.currentTarget.dataset.id);
+      this.close();
     });
+    $(document).off("keyup.cgw-vibecheck");
+    $(document).on("keyup.cgw-vibecheck", (ev) => {
+      let key = parseInt(ev.key);
+      if (key >= 1 && key <= 6) {
+        console.log(key, key >= 1 && key <= 6);
+        sendVibeCheckResponse(game.user, key - 1);
+        this.close();
+      }
+    });
+  }
+  async close(options) {
+    $(document).off("keyup.cgw-vibecheck");
+    super.close();
   }
 };
 let VibeCheckPopup = _VibeCheckPopup;
@@ -840,7 +861,7 @@ async function sendVibeCheckResponse(user, responseId) {
 async function initiateVibeCheck() {
   emitSocketEvent({
     type: "vibecheck",
-    payload: ""
+    payload: { duration: game.settings.get(id, "vibecheckduration") }
   });
 }
 function handleSocketEvent({ type, payload }) {
@@ -852,7 +873,7 @@ function handleSocketEvent({ type, payload }) {
       debouncedReload();
       break;
     case "vibecheck":
-      displayVibeCheck();
+      displayVibeCheck(payload.duration);
       break;
     case "vibecheckresponse":
       recordVibeCheckResponse(payload);
@@ -871,10 +892,17 @@ async function insertSentReaction(reactionId) {
     reaction
   });
 }
-async function displayVibeCheck() {
+async function displayVibeCheck(duration) {
   let vc = VibeCheckPopup.getInstance();
   vc.userResponses = [];
   vc.render(true);
+  if (duration > 0) {
+    if (!game.user.isGM) {
+      setTimeout(() => vc.close(), duration * 1e3);
+    } else {
+      setTimeout(() => vc.close(), duration * 2 * 1e3);
+    }
+  }
 }
 async function handleReactionClick(id2) {
   sendReactionToSocket(id2);
@@ -961,8 +989,8 @@ async function getReactionPNGUrl(reactionId) {
 }
 async function renderChatButtonBar() {
   let $chatForm = $("#chat-form");
-  let $reactionBar = $(".cgw.reactionbar");
-  $reactionBar.remove();
+  let $cgwContainer = $(".cgwcontainer");
+  $cgwContainer.remove();
   let templatePath = `modules/${id}/templates/parts/ReactionButtonBar.hbs`;
   let templateData = {
     reactions: await game.settings.get(id, "reactions"),
@@ -1827,6 +1855,37 @@ function registerSettings() {
     onChange: (value) => {
     }
   });
+  game.settings.register(id, "vibecheckautoclose", {
+    name: "Close vibe check after selection",
+    hint: "If this is enabled, players' vibe check popups will close after they make a selection. If this is disabled, it will stay open and they can choose another reaction.",
+    scope: "world",
+    // "world" = sync to db, "client" = local storage
+    config: true,
+    // false if you dont want it to show in module config
+    type: Boolean,
+    // Number, Boolean, String, Object
+    default: true,
+    onChange: (value) => {
+    }
+  });
+  game.settings.register(id, "vibecheckduration", {
+    name: "Vibe check duration",
+    hint: "This determines, in seconds, how long players have to respond to a vibe check. The results will display to the GM for twice this duration. 0 = no timeout",
+    scope: "world",
+    // "world" = sync to db, "client" = local storage
+    config: true,
+    // false if you dont want it to show in module config
+    type: Number,
+    // Number, Boolean, String, Object
+    default: 10,
+    range: {
+      min: 0,
+      step: 10,
+      max: 60
+    },
+    onChange: (value) => {
+    }
+  });
   game.settings.register(id, "maxdisplayed", {
     name: "Maximum Simultaneous Reactions",
     hint: `Turn this down if you're running into performance issues from players spamming reactions.`,
@@ -1861,6 +1920,9 @@ async function registerHelpers() {
   Handlebars.registerHelper("last_x", (array, count) => {
     array = array.slice(-count);
     return array;
+  });
+  Handlebars.registerHelper("add", (input, add) => {
+    return parseInt(input) + parseInt(add);
   });
 }
 function loadPartials() {

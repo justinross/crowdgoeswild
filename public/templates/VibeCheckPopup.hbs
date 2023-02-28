@@ -1,10 +1,13 @@
 {{#if isGM}}
   <div class="playerReactions">
     {{#each groupedResponses}}
-    <div class="flexcol user">
-      <header style="background-color: {{user.color}}">{{user.name}}</header>
+    <div class="user">
+      <div class="userAvatar">
+        <img src="{{user.image}}" />
+      </div>
+      <div class="userName" style="background-color: {{user.color}}">{{user.name}}</div>
       <div class="responses">
-        {{#each (last_x responses 20)}}
+        {{#each (last_x responses 1)}}
           {{reactionPreview this}}
         {{/each}}
       </div>
@@ -12,10 +15,10 @@
     {{/each}}
   </div>
 {{else}}
-  <div class="reactionButtons flexrow">
+  <div class="reactionButtons flexrow" tabindex="0">
     {{#each reactions}}
         <button class="reaction" data-id="{{id}}"><i class="{{style}} fa-{{icon}}"
-                style="color: {{primaryColor}}; --fa-primary-color: {{primaryColor}}; --fa-secondary-color: {{secondaryColor}}; {{#if secondaryColor}}--fa-secondary-opacity: 1{{/if}}"></i></button>
+                style="color: {{primaryColor}}; --fa-primary-color: {{primaryColor}}; --fa-secondary-color: {{secondaryColor}}; {{#if secondaryColor}}--fa-secondary-opacity: 1{{/if}}"></i><span class="buttonshortcut">{{add id 1}}</span></button>
     {{/each}}
 </div>
 {{/if}}

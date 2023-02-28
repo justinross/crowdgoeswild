@@ -30,6 +30,7 @@ export default class VibeCheckPopup extends Application {
       id: `${moduleId}-vibe-check`,
       title: "CrowdGoesWild - Vibe Check",
       width: 600,
+      // height: game.user.isGM ? 600 : "auto",
       height: "auto",
     });
   }
@@ -45,6 +46,13 @@ export default class VibeCheckPopup extends Application {
         if (sentResponse.user._id == user.id) {
           filteredResponses.push(sentResponse.response);
         }
+      }
+
+      let userCharacter = await user.character;
+      if (userCharacter) {
+        user.image = userCharacter.img;
+      } else {
+        user.image = user.avatar;
       }
 
       let userResponses = {
@@ -68,7 +76,23 @@ export default class VibeCheckPopup extends Application {
   activateListeners(html: JQuery<HTMLElement>): void {
     html.find("button.reaction").on("click", (ev) => {
       sendVibeCheckResponse(game.user, ev.currentTarget.dataset.id);
+      this.close();
     });
+
+    $(document).off("keyup.cgw-vibecheck");
+    $(document).on("keyup.cgw-vibecheck", (ev) => {
+      let key = parseInt(ev.key);
+      if (key >= 1 && key <= 6) {
+        console.log(key, key >= 1 && key <= 6);
+        sendVibeCheckResponse(game.user, key - 1);
+        this.close();
+      }
+    });
+  }
+
+  async close(options?: Application.CloseOptions): Promise<void> {
+    $(document).off("keyup.cgw-vibecheck");
+    super.close();
   }
 }
 

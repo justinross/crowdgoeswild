@@ -39,7 +39,7 @@ export async function sendVibeCheckResponse(user, responseId) {
 export async function initiateVibeCheck() {
   emitSocketEvent({
     type: "vibecheck",
-    payload: "",
+    payload: { duration: game.settings.get(moduleId, "vibecheckduration") },
   });
 }
 
@@ -54,7 +54,7 @@ function handleSocketEvent({ type, payload }) {
       break;
 
     case "vibecheck":
-      displayVibeCheck();
+      displayVibeCheck(payload.duration);
       break;
 
     case "vibecheckresponse":
