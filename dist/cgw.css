@@ -84,3 +84,35 @@
   right: 0;
   bottom: 0;
 }
+
+.window-app.vibecheck .window-content {
+  height: auto;
+  overflow-x: auto;
+}
+.window-app.vibecheck .window-content .playerReactions {
+  display: flex;
+  justify-content: center;
+  max-height: 500px;
+}
+.window-app.vibecheck .window-content .playerReactions .user {
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  width: 4rem;
+  text-align: center;
+}
+.window-app.vibecheck .window-content .playerReactions .user header {
+  flex-grow: 0;
+  padding: 0.5em 1em;
+  color: #fff;
+  text-shadow: 0px 1px 4px rgba(0, 0, 0, 0.5);
+  font-weight: bold;
+}
+.window-app.vibecheck .window-content .playerReactions .user .responses {
+  margin-top: 1em;
+}
+.window-app.vibecheck .window-content .playerReactions .cgw-reaction {
+  position: relative;
+  display: inline-block;
+  font-size: 2em;
+  line-height: 0.5em;
+  text-shadow: 0px 0px 6px rgba(0, 0, 0, 0.5);
+}

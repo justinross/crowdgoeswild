@@ -756,25 +756,42 @@ const _VibeCheckPopup = class extends Application {
    */
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
-      classes: ["form", "crowdgoeswild", "reactionSetup"],
+      classes: ["form", "crowdgoeswild", "vibecheck"],
       popOut: true,
       template: `modules/${id}/templates/VibeCheckPopup.hbs`,
       id: `${id}-vibe-check`,
       title: "CrowdGoesWild - Vibe Check",
-      width: 900
+      width: 600,
+      height: "auto"
     });
   }
   async getData() {
+    let users = await game.users.players.filter((u) => u.active);
+    let groupedResponses = [];
+    for (const user of users) {
+      let filteredResponses = [];
+      for (const sentResponse of this.userResponses) {
+        if (sentResponse.user._id == user.id) {
+          filteredResponses.push(sentResponse.response);
+        }
+      }
+      let userResponses = {
+        user,
+        responses: filteredResponses
+      };
+      groupedResponses.push(userResponses);
+    }
     let data = {
       isGM: game.user.isGM,
       reactions: await game.settings.get(id, "reactions"),
-      responses: this.userResponses
+      responses: this.userResponses,
+      groupedResponses
     };
     return data;
   }
   activateListeners(html) {
     html.find("button.reaction").on("click", (ev) => {
-      sendVibeCheckResponse(game.userId, ev.currentTarget.dataset.id);
+      sendVibeCheckResponse(game.user, ev.currentTarget.dataset.id);
     });
   }
 };
@@ -783,8 +800,9 @@ __publicField(VibeCheckPopup, "instance");
 async function recordVibeCheckResponse(response) {
   let vc = VibeCheckPopup.getInstance();
   let reaction = await getReactionObject(response.response);
+  let user = response.user;
   response = {
-    user: response.user,
+    user,
     response: reaction
   };
   vc.userResponses.push(response);
@@ -813,10 +831,10 @@ async function reloadAllClients() {
     payload: ""
   });
 }
-async function sendVibeCheckResponse(userId, responseId) {
+async function sendVibeCheckResponse(user, responseId) {
   emitSocketEvent({
     type: "vibecheckresponse",
-    payload: { user: userId, response: responseId }
+    payload: { user, response: responseId }
   });
 }
 async function initiateVibeCheck() {
@@ -855,6 +873,7 @@ async function insertSentReaction(reactionId) {
 }
 async function displayVibeCheck() {
   let vc = VibeCheckPopup.getInstance();
+  vc.userResponses = [];
   vc.render(true);
 }
 async function handleReactionClick(id2) {
@@ -886,7 +905,6 @@ async function getReactionObject(reactionId) {
   return reaction;
 }
 function getReactionHTML(reaction) {
-  console.log(reaction);
   let htmlString = `
         <i class="${reaction.style} fa-${reaction.icon} cgw-reaction" 
             data-id=${reaction.id}
@@ -1839,6 +1857,10 @@ async function registerHelpers() {
   Handlebars.registerHelper("reactionPreview", (reaction) => {
     let html = getReactionHTML(reaction);
     return new Handlebars.SafeString(html);
+  });
+  Handlebars.registerHelper("last_x", (array, count) => {
+    array = array.slice(-count);
+    return array;
   });
 }
 function loadPartials() {

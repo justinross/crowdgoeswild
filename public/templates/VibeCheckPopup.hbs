@@ -1,8 +1,14 @@
 {{#if isGM}}
   <div class="playerReactions">
-    {{#each responses}}
-      {{user}} - {{reactionPreview response}}
-
+    {{#each groupedResponses}}
+    <div class="flexcol user">
+      <header style="background-color: {{user.color}}">{{user.name}}</header>
+      <div class="responses">
+        {{#each (last_x responses 20)}}
+          {{reactionPreview this}}
+        {{/each}}
+      </div>
+    </div>
     {{/each}}
   </div>
 {{else}}

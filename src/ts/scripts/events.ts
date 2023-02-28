@@ -19,6 +19,7 @@ export async function insertSentReaction(reactionId) {
 
 export async function displayVibeCheck() {
   let vc = VibeCheckPopup.getInstance();
+  vc.userResponses = [];
   vc.render(true);
 }
 

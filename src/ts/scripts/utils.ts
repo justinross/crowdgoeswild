@@ -55,7 +55,6 @@ export async function getReactionObject(reactionId) {
 }
 
 export function getReactionHTML(reaction) {
-  console.log(reaction);
   let htmlString = `
         <i class="${reaction.style} fa-${reaction.icon} cgw-reaction" 
             data-id=${reaction.id}

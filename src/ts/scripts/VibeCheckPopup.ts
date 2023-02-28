@@ -3,7 +3,7 @@ import { sendVibeCheckResponse } from "./socket";
 import { getReactionObject } from "./utils";
 
 type userResponse = {
-  user: String;
+  user: {};
   response: Number;
 };
 
@@ -24,20 +24,42 @@ export default class VibeCheckPopup extends Application {
    */
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
-      classes: ["form", "crowdgoeswild", "reactionSetup"],
+      classes: ["form", "crowdgoeswild", "vibecheck"],
       popOut: true,
       template: `modules/${moduleId}/templates/VibeCheckPopup.hbs`,
       id: `${moduleId}-vibe-check`,
       title: "CrowdGoesWild - Vibe Check",
-      width: 900,
+      width: 600,
+      height: "auto",
     });
   }
 
   async getData(): object | Promise<object> {
+    let users = await game.users.players.filter((u) => u.active);
+
+    //group the responses by user for display. Variable naming is awful here.
+    let groupedResponses = [];
+    for (const user of users) {
+      let filteredResponses = [];
+      for (const sentResponse of this.userResponses) {
+        if (sentResponse.user._id == user.id) {
+          filteredResponses.push(sentResponse.response);
+        }
+      }
+
+      let userResponses = {
+        user: user,
+        responses: filteredResponses,
+      };
+
+      groupedResponses.push(userResponses);
+    }
+
     let data = {
       isGM: game.user.isGM,
       reactions: await game.settings.get(moduleId, "reactions"),
       responses: this.userResponses,
+      groupedResponses: groupedResponses,
     };
 
     return data;
@@ -45,7 +67,7 @@ export default class VibeCheckPopup extends Application {
 
   activateListeners(html: JQuery<HTMLElement>): void {
     html.find("button.reaction").on("click", (ev) => {
-      sendVibeCheckResponse(game.userId, ev.currentTarget.dataset.id);
+      sendVibeCheckResponse(game.user, ev.currentTarget.dataset.id);
     });
   }
 }
@@ -53,8 +75,9 @@ export default class VibeCheckPopup extends Application {
 export async function recordVibeCheckResponse(response) {
   let vc = VibeCheckPopup.getInstance();
   let reaction = await getReactionObject(response.response);
+  let user = response.user;
   response = {
-    user: response.user,
+    user: user,
     response: reaction,
   };
   vc.userResponses.push(response);

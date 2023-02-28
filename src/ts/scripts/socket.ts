@@ -29,10 +29,10 @@ export async function reloadAllClients() {
   });
 }
 
-export async function sendVibeCheckResponse(userId, responseId) {
+export async function sendVibeCheckResponse(user, responseId) {
   emitSocketEvent({
     type: "vibecheckresponse",
-    payload: { user: userId, response: responseId },
+    payload: { user: user, response: responseId },
   });
 }
 

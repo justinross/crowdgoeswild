@@ -103,3 +103,42 @@
     }
   }
 }
+
+.window-app.vibecheck {
+  .window-content {
+    height: auto;
+    overflow-x: auto;
+
+    .playerReactions {
+      display: flex;
+      justify-content: center;
+      max-height: 500px;
+
+      .user {
+        border: 1px solid rgba(0, 0, 0, 0.4);
+        width: 4rem;
+        text-align: center;
+
+        header {
+          flex-grow: 0;
+          padding: 0.5em 1em;
+          color: #fff;
+          text-shadow: 0px 1px 4px rgba(0, 0, 0, 0.5);
+          font-weight: bold;
+        }
+
+        .responses {
+          margin-top: 1em;
+        }
+      }
+
+      .cgw-reaction {
+        position: relative;
+        display: inline-block;
+        font-size: 2em;
+        line-height: 0.5em;
+        text-shadow: 0px 0px 6px rgba(0, 0, 0, 0.5);
+      }
+    }
+  }
+}
