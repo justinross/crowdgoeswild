@@ -740,6 +740,173 @@ async function toPng(node, options = {}) {
   const canvas = await toCanvas(node, options);
   return canvas.toDataURL();
 }
+const _VibeCheckPopup = class extends Application {
+  constructor() {
+    super(...arguments);
+    __publicField(this, "userResponses", []);
+  }
+  static getInstance() {
+    if (!this.instance) {
+      this.instance = new _VibeCheckPopup();
+    }
+    return this.instance;
+  }
+  /**
+   * override
+   */
+  static get defaultOptions() {
+    return mergeObject(super.defaultOptions, {
+      classes: ["form", "crowdgoeswild", "vibecheck"],
+      popOut: true,
+      template: `modules/${id}/templates/VibeCheckPopup.hbs`,
+      id: `${id}-vibe-check`,
+      title: "CrowdGoesWild - Vibe Check",
+      width: 600,
+      // height: game.user.isGM ? 600 : "auto",
+      height: "auto"
+    });
+  }
+  async getData() {
+    let users = await game.users.players.filter((u) => u.active);
+    let groupedResponses = [];
+    for (const user of users) {
+      let filteredResponses = [];
+      for (const sentResponse of this.userResponses) {
+        if (sentResponse.user._id == user.id) {
+          filteredResponses.push(sentResponse.response);
+        }
+      }
+      let userCharacter = await user.character;
+      if (userCharacter) {
+        user.image = userCharacter.img;
+      } else {
+        user.image = user.avatar;
+      }
+      let userResponses = {
+        user,
+        responses: filteredResponses
+      };
+      groupedResponses.push(userResponses);
+    }
+    let data = {
+      isGM: game.user.isGM,
+      reactions: await game.settings.get(id, "reactions"),
+      responses: this.userResponses,
+      groupedResponses
+    };
+    return data;
+  }
+  activateListeners(html) {
+    html.find("button.reaction").on("click", (ev) => {
+      sendVibeCheckResponse(game.user, ev.currentTarget.dataset.id);
+      this.close();
+    });
+    $(document).off("keyup.cgw-vibecheck");
+    $(document).on("keyup.cgw-vibecheck", (ev) => {
+      let key = parseInt(ev.key);
+      if (key >= 1 && key <= 6) {
+        console.log(key, key >= 1 && key <= 6);
+        sendVibeCheckResponse(game.user, key - 1);
+        this.close();
+      }
+    });
+  }
+  async close(options) {
+    $(document).off("keyup.cgw-vibecheck");
+    super.close();
+  }
+};
+let VibeCheckPopup = _VibeCheckPopup;
+__publicField(VibeCheckPopup, "instance");
+async function recordVibeCheckResponse(response) {
+  let vc = VibeCheckPopup.getInstance();
+  let reaction = await getReactionObject(response.response);
+  let user = response.user;
+  response = {
+    user,
+    response: reaction
+  };
+  vc.userResponses.push(response);
+  vc.render(false);
+}
+function registerSocketEvents() {
+  game.socket.on(`module.${id}`, handleSocketEvent);
+}
+async function emitSocketEvent({ type, payload }) {
+  let event = {
+    type,
+    payload
+  };
+  await game.socket.emit(`module.${id}`, event);
+  handleSocketEvent(event);
+}
+async function sendReactionToSocket(reactionId) {
+  emitSocketEvent({
+    type: "icon",
+    payload: reactionId
+  });
+}
+async function reloadAllClients() {
+  emitSocketEvent({
+    type: "reload",
+    payload: ""
+  });
+}
+async function sendVibeCheckResponse(user, responseId) {
+  emitSocketEvent({
+    type: "vibecheckresponse",
+    payload: { user, response: responseId }
+  });
+}
+async function initiateVibeCheck() {
+  emitSocketEvent({
+    type: "vibecheck",
+    payload: { duration: game.settings.get(id, "vibecheckduration") }
+  });
+}
+function handleSocketEvent({ type, payload }) {
+  switch (type) {
+    case "icon":
+      insertSentReaction(payload);
+      break;
+    case "reload":
+      debouncedReload();
+      break;
+    case "vibecheck":
+      displayVibeCheck(payload.duration);
+      break;
+    case "vibecheckresponse":
+      recordVibeCheckResponse(payload);
+      break;
+    default:
+      throw new Error("unknown type");
+  }
+}
+async function insertSentReaction(reactionId) {
+  let reaction = await getReactionObject(reactionId);
+  let htmlString = await getReactionHTML(reaction);
+  let $fullScreen = $("#interface");
+  let $added = $(htmlString).appendTo($fullScreen);
+  gsap.effects[reaction.effect]($added, {
+    parent: $fullScreen,
+    reaction
+  });
+}
+async function displayVibeCheck(duration) {
+  let vc = VibeCheckPopup.getInstance();
+  vc.userResponses = [];
+  vc.render(true);
+  if (duration > 0) {
+    if (!game.user.isGM) {
+      setTimeout(() => vc.close(), duration * 1e3);
+    } else {
+      setTimeout(() => vc.close(), duration * 2 * 1e3);
+    }
+  }
+}
+async function handleReactionClick(id2) {
+  sendReactionToSocket(id2);
+}
 function randomNumber(min, max) {
   return Math.random() * (max - min) + min;
 }
@@ -819,6 +986,41 @@ async function generateReactionPNG(reactionObject, force) {
 }
 async function getReactionPNGUrl(reactionId) {
   return `worlds/${game.world.id}/reactionIcons/reaction-${reactionId}.png`;
+}
+async function renderChatButtonBar() {
+  let $chatForm = $("#chat-form");
+  let $cgwContainer = $(".cgwcontainer");
+  $cgwContainer.remove();
+  let templatePath = `modules/${id}/templates/parts/ReactionButtonBar.hbs`;
+  let templateData = {
+    reactions: await game.settings.get(id, "reactions"),
+    isGM: game.user.isGM
+  };
+  renderTemplate(templatePath, templateData).then((c) => {
+    if (c.length > 0) {
+      let $content = $(c);
+      $chatForm.after($content);
+      $content.find(".reactionbar button").on("click", (event) => {
+        event.preventDefault();
+        $(event.currentTarget);
+        let dataset = event.currentTarget.dataset;
+        let id2 = dataset.id;
+        handleReactionClick(id2);
+      });
+      $content.find(".reactionbar button").on("dragstart", (event) => {
+        event.originalEvent.dataTransfer.setData(
+          "text/plain",
+          JSON.stringify({
+            id: event.currentTarget.dataset.id,
+            type: "reaction"
+          })
+        );
+      });
+      $content.find("button.vibecheck").on("click", (event) => {
+        initiateVibeCheck();
+      });
+    }
+  }).catch((e) => console.error(e));
 }
 function animationInit() {
   gsap.registerPlugin(CustomEase, CustomWiggle, Physics2DPlugin);
@@ -1445,51 +1647,6 @@ const reactionSets = {
     ]
   }
 };
-async function insertSentReaction(reactionId) {
-  let reaction = await getReactionObject(reactionId);
-  let htmlString = await getReactionHTML(reaction);
-  let $fullScreen = $("#interface");
-  let $added = $(htmlString).appendTo($fullScreen);
-  gsap.effects[reaction.effect]($added, { parent: $fullScreen, reaction });
-}
-async function handleReactionClick(id2) {
-  sendReactionToSocket(id2);
-}
-function registerSocketEvents() {
-  game.socket.on(`module.${id}`, handleSocketEvent);
-}
-async function emitSocketEvent({ type, payload }) {
-  let event = {
-    type,
-    payload
-  };
-  await game.socket.emit(`module.${id}`, event);
-  handleSocketEvent(event);
-}
-async function sendReactionToSocket(reactionId) {
-  emitSocketEvent({
-    type: "icon",
-    payload: reactionId
-  });
-}
-async function reloadAllClients() {
-  emitSocketEvent({
-    type: "reload",
-    payload: ""
-  });
-}
-function handleSocketEvent({ type, payload }) {
-  switch (type) {
-    case "icon":
-      insertSentReaction(payload);
-      break;
-    case "reload":
-      debouncedReload();
-      break;
-    default:
-      throw new Error("unknown type");
-  }
-}
 class ReactionSetupMenu extends FormApplication {
   constructor() {
     super(...arguments);
@@ -1666,80 +1823,6 @@ class ReactionSetupMenu extends FormApplication {
     d.render(true);
   }
 }
-const defaultReactions = [
-  {
-    id: 0,
-    speed: 1,
-    enabled: true,
-    title: "Like",
-    icon: "heart",
-    primaryColor: "#eb34b1",
-    secondaryColor: "",
-    style: "fas",
-    effect: "physics-floatUp",
-    directional: false
-  },
-  {
-    id: 1,
-    speed: 1,
-    enabled: true,
-    title: "OMG",
-    icon: "triangle-exclamation",
-    primaryColor: "#f5ad42",
-    secondaryColor: "",
-    style: "fas",
-    effect: "physics-floatUp",
-    directional: false
-  },
-  {
-    id: 2,
-    speed: 1,
-    enabled: true,
-    title: "Axe",
-    icon: "axe",
-    primaryColor: "#5f7e96",
-    secondaryColor: "#c1c1c1",
-    style: "fa-duotone",
-    effect: "physics-toss",
-    directional: true
-  },
-  {
-    id: 3,
-    speed: 1,
-    enabled: true,
-    title: "droplet",
-    icon: "droplet",
-    primaryColor: "#a4fbf7",
-    secondaryColor: "#00a6ff",
-    style: "fa-duotone",
-    effect: "physics-drop",
-    directional: false
-  },
-  {
-    id: 4,
-    speed: 1,
-    enabled: true,
-    title: "fire",
-    icon: "fire",
-    primaryColor: "#dd0000",
-    secondaryColor: "#eb8c34",
-    style: "fa-duotone",
-    effect: "physics-floatUp",
-    directional: false
-  },
-  {
-    id: 5,
-    speed: 1,
-    enabled: true,
-    title: "x",
-    icon: "times",
-    primaryColor: "#dd0000",
-    secondaryColor: "rgba(255,255,255,0.6)",
-    style: "fas",
-    effect: "shutdown",
-    directional: false
-  }
-];
 const ReactionOption = {
   id: 0,
   title: "",
@@ -1768,7 +1851,38 @@ function registerSettings() {
     // false if you dont want it to show in module config
     type: Array,
     // Number, Boolean, String, Object
-    default: defaultReactions,
+    default: reactionSets["default"].reactions,
+    onChange: (value) => {
+    }
+  });
+  game.settings.register(id, "vibecheckautoclose", {
+    name: "Close vibe check after selection",
+    hint: "If this is enabled, players' vibe check popups will close after they make a selection. If this is disabled, it will stay open and they can choose another reaction.",
+    scope: "world",
+    // "world" = sync to db, "client" = local storage
+    config: true,
+    // false if you dont want it to show in module config
+    type: Boolean,
+    // Number, Boolean, String, Object
+    default: true,
+    onChange: (value) => {
+    }
+  });
+  game.settings.register(id, "vibecheckduration", {
+    name: "Vibe check duration",
+    hint: "This determines, in seconds, how long players have to respond to a vibe check. The results will display to the GM for twice this duration. 0 = no timeout",
+    scope: "world",
+    // "world" = sync to db, "client" = local storage
+    config: true,
+    // false if you dont want it to show in module config
+    type: Number,
+    // Number, Boolean, String, Object
+    default: 10,
+    range: {
+      min: 0,
+      step: 10,
+      max: 60
+    },
     onChange: (value) => {
     }
   });
@@ -1802,6 +1916,13 @@ async function registerHelpers() {
   Handlebars.registerHelper("reactionPreview", (reaction) => {
     let html = getReactionHTML(reaction);
     return new Handlebars.SafeString(html);
+  });
+  Handlebars.registerHelper("last_x", (array, count) => {
+    array = array.slice(-count);
+    return array;
+  });
+  Handlebars.registerHelper("add", (input, add) => {
+    return parseInt(input) + parseInt(add);
   });
 }
 function loadPartials() {
@@ -1850,37 +1971,6 @@ function registerHooks() {
       return;
     renderChatButtonBar();
   });
-}
-async function renderChatButtonBar() {
-  let $chatForm = $("#chat-form");
-  let $reactionBar = $(".cgw.reactionbar");
-  $reactionBar.remove();
-  let templatePath = `modules/${id}/templates/parts/ReactionButtonBar.hbs`;
-  let templateData = {
-    reactions: await game.settings.get(id, "reactions")
-  };
-  renderTemplate(templatePath, templateData).then((c) => {
-    if (c.length > 0) {
-      let $content = $(c);
-      $chatForm.after($content);
-      $content.find("button").on("click", (event) => {
-        event.preventDefault();
-        $(event.currentTarget);
-        let dataset = event.currentTarget.dataset;
-        let id2 = dataset.id;
-        handleReactionClick(id2);
-      });
-      $content.find("button").on("dragstart", (event) => {
-        event.originalEvent.dataTransfer.setData(
-          "text/plain",
-          JSON.stringify({
-            id: event.currentTarget.dataset.id,
-            type: "reaction"
-          })
-        );
-      });
-    }
-  }).catch((e) => console.error(e));
 }
 function exposeForMacros() {
   game.modules.get(id).api = {
