@@ -1,16 +1,14 @@
-import { registerSettings, resetDefaultReactions } from "./settings";
+import { registerSettings } from "./settings";
 import { id as moduleId } from "../../../public/module.json";
 import { registerSocketEvents, sendReactionToSocket } from "./socket";
-import { handleReactionClick } from "./events";
 import { loadPartials, registerHelpers } from "./handlebars";
 import {
-  randomNumber,
   getReactionObject,
-  getReactionAsImage,
-  getReactionHTML,
   getReactionPNGUrl,
   saveAllReactionPNGs,
+  renderChatButtonBar,
 } from "./utils";
+
 import { ReactionSetupMenu } from "./ReactionSetupMenu";
 
 export default function registerHooks() {
@@ -72,41 +70,6 @@ export default function registerHooks() {
   //     console.log(controls)
   //     controls = addButtons(controls)
   // });
-}
-
-export async function renderChatButtonBar() {
-  let $chatForm = $("#chat-form");
-  let $reactionBar = $(".cgw.reactionbar");
-  $reactionBar.remove();
-  let templatePath = `modules/${moduleId}/templates/parts/ReactionButtonBar.hbs`;
-  let templateData = {
-    reactions: (await game.settings.get(moduleId, "reactions")) as [],
-  };
-
-  renderTemplate(templatePath, templateData)
-    .then((c) => {
-      if (c.length > 0) {
-        let $content = $(c);
-        $chatForm.after($content);
-        $content.find("button").on("click", (event) => {
-          event.preventDefault();
-          let $self = $(event.currentTarget);
-          let dataset = event.currentTarget.dataset;
-          let id = dataset.id;
-          handleReactionClick(id);
-        });
-        $content.find("button").on("dragstart", (event) => {
-          event.originalEvent.dataTransfer.setData(
-            "text/plain",
-            JSON.stringify({
-              id: event.currentTarget.dataset.id,
-              type: "reaction",
-            })
-          );
-        });
-      }
-    })
-    .catch((e) => console.error(e));
 }
 
 function exposeForMacros() {

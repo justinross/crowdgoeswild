@@ -1,6 +1,13 @@
-<div class="cgw reactionbar flexrow">
-    {{#each reactions}}
-        <button draggable="true" class="reaction" data-id="{{id}}"><i class="{{style}} fa-{{icon}}"
-                style="color: {{primaryColor}}; --fa-primary-color: {{primaryColor}}; --fa-secondary-color: {{secondaryColor}}; {{#if secondaryColor}}--fa-secondary-opacity: 1{{/if}}"></i></button>
-    {{/each}}
+<div class="cgwcontainer">
+    <div class="cgw reactionbar flexrow">
+        {{#each reactions}}
+            <button draggable="true" class="reaction" data-id="{{id}}"><i class="{{style}} fa-{{icon}}"
+                    style="color: {{primaryColor}}; --fa-primary-color: {{primaryColor}}; --fa-secondary-color: {{secondaryColor}}; {{#if secondaryColor}}--fa-secondary-opacity: 1{{/if}}"></i></button>
+        {{/each}}
+    </div>
+    {{#if isGM}}
+    <div class="cgw gmButtons flexrow">
+        <button class="vibecheck">Vibe Check</button>
+    </div>
+    {{/if}}
 </div>
