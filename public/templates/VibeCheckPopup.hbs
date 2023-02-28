@@ -1,0 +1,15 @@
+{{#if isGM}}
+  <div class="playerReactions">
+    {{#each responses}}
+      {{user}} - {{reactionPreview response}}
+
+    {{/each}}
+  </div>
+{{else}}
+  <div class="reactionButtons flexrow">
+    {{#each reactions}}
+        <button class="reaction" data-id="{{id}}"><i class="{{style}} fa-{{icon}}"
+                style="color: {{primaryColor}}; --fa-primary-color: {{primaryColor}}; --fa-secondary-color: {{secondaryColor}}; {{#if secondaryColor}}--fa-secondary-opacity: 1{{/if}}"></i></button>
+    {{/each}}
+</div>
+{{/if}}

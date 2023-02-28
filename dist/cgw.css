@@ -1,8 +1,18 @@
-.cgw.reactionbar {
+.cgwcontainer {
+  padding: 1em;
+  padding-top: 0;
+  flex-grow: 0;
+}
+.cgwcontainer .cgw.gmButtons {
   flex-grow: 0;
   justify-content: center;
 }
-.cgw.reactionbar button {
+.cgwcontainer .cgw.reactionbar {
+  flex-grow: 0;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+.cgwcontainer .cgw.reactionbar button {
   flex-grow: 0;
   min-width: 15%;
   background-color: rgba(0, 0, 0, 0.4);

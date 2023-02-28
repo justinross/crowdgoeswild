@@ -1,13 +1,24 @@
-.cgw {
-  &.reactionbar {
-    flex-grow: 0;
-    justify-content: center;
-
-    button {
+.cgwcontainer {
+  padding: 1em;
+  padding-top: 0;
+  flex-grow: 0;
+  .cgw {
+    &.gmButtons {
       flex-grow: 0;
-      min-width: 15%;
-      background-color: rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.4);
+      justify-content: center;
+    }
+
+    &.reactionbar {
+      flex-grow: 0;
+      justify-content: space-between;
+      margin-bottom: 4px;
+
+      button {
+        flex-grow: 0;
+        min-width: 15%;
+        background-color: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+      }
     }
   }
 }

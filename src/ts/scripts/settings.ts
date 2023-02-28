@@ -1,82 +1,7 @@
 import { ReactionSetupMenu } from "./ReactionSetupMenu";
 import { id as moduleId } from "../../../public/module.json";
-import { debouncedReload, saveAllReactionPNGs } from "./utils";
+import { saveAllReactionPNGs } from "./utils";
 import { reactionSets } from "./reactionsets";
-
-export const defaultReactions: Array<ReactionOption> = [
-  {
-    id: 0,
-    speed: 1,
-    enabled: true,
-    title: "Like",
-    icon: "heart",
-    primaryColor: "#eb34b1",
-    secondaryColor: "",
-    style: "fas",
-    effect: "physics-floatUp",
-    directional: false,
-  },
-  {
-    id: 1,
-    speed: 1,
-    enabled: true,
-    title: "OMG",
-    icon: "triangle-exclamation",
-    primaryColor: "#f5ad42",
-    secondaryColor: "",
-    style: "fas",
-    effect: "physics-floatUp",
-    directional: false,
-  },
-  {
-    id: 2,
-    speed: 1,
-    enabled: true,
-    title: "Axe",
-    icon: "axe",
-    primaryColor: "#5f7e96",
-    secondaryColor: "#c1c1c1",
-    style: "fa-duotone",
-    effect: "physics-toss",
-    directional: true,
-  },
-  {
-    id: 3,
-    speed: 1,
-    enabled: true,
-    title: "droplet",
-    icon: "droplet",
-    primaryColor: "#a4fbf7",
-    secondaryColor: "#00a6ff",
-    style: "fa-duotone",
-    effect: "physics-drop",
-    directional: false,
-  },
-  {
-    id: 4,
-    speed: 1,
-    enabled: true,
-    title: "fire",
-    icon: "fire",
-    primaryColor: "#dd0000",
-    secondaryColor: "#eb8c34",
-    style: "fa-duotone",
-    effect: "physics-floatUp",
-    directional: false,
-  },
-  {
-    id: 5,
-    speed: 1,
-    enabled: true,
-    title: "x",
-    icon: "times",
-    primaryColor: "#dd0000",
-    secondaryColor: "rgba(255,255,255,0.6)",
-    style: "fas",
-    effect: "shutdown",
-    directional: false,
-  },
-];
 
 export const ReactionOption = {
   id: 0,
@@ -109,7 +34,7 @@ export function registerSettings() {
     scope: "world", // "world" = sync to db, "client" = local storage
     config: false, // false if you dont want it to show in module config
     type: Array, // Number, Boolean, String, Object
-    default: defaultReactions,
+    default: reactionSets["default"].reactions,
     onChange: (value) => {
       // value is the new value of the setting
     },

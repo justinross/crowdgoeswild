@@ -1,13 +1,9 @@
-import { registerSettings, resetDefaultReactions } from "./settings";
+import { registerSettings } from "./settings";
 import { id as moduleId } from "../../../public/module.json";
 import { registerSocketEvents, sendReactionToSocket } from "./socket";
-import { handleReactionClick } from "./events";
 import { loadPartials, registerHelpers } from "./handlebars";
 import {
-  randomNumber,
   getReactionObject,
-  getReactionAsImage,
-  getReactionHTML,
   getReactionPNGUrl,
   saveAllReactionPNGs,
   renderChatButtonBar,

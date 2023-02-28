@@ -2,6 +2,7 @@ import { id as moduleId } from "../../../public/module.json";
 import * as htmlToImage from "html-to-image";
 import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
 import { handleReactionClick } from "./events";
+import { initiateVibeCheck } from "./socket";
 
 export function randomNumber(min, max) {
   return Math.random() * (max - min) + min;
@@ -54,6 +55,7 @@ export async function getReactionObject(reactionId) {
 }
 
 export function getReactionHTML(reaction) {
+  console.log(reaction);
   let htmlString = `
         <i class="${reaction.style} fa-${reaction.icon} cgw-reaction" 
             data-id=${reaction.id}
@@ -134,6 +136,7 @@ export async function renderChatButtonBar() {
   let templatePath = `modules/${moduleId}/templates/parts/ReactionButtonBar.hbs`;
   let templateData = {
     reactions: (await game.settings.get(moduleId, "reactions")) as [],
+    isGM: game.user.isGM,
   };
 
   renderTemplate(templatePath, templateData)
@@ -141,14 +144,16 @@ export async function renderChatButtonBar() {
       if (c.length > 0) {
         let $content = $(c);
         $chatForm.after($content);
-        $content.find("button").on("click", (event) => {
+
+        $content.find(".reactionbar button").on("click", (event) => {
           event.preventDefault();
           let $self = $(event.currentTarget);
           let dataset = event.currentTarget.dataset;
           let id = dataset.id;
           handleReactionClick(id);
         });
-        $content.find("button").on("dragstart", (event) => {
+
+        $content.find(".reactionbar button").on("dragstart", (event) => {
           event.originalEvent.dataTransfer.setData(
             "text/plain",
             JSON.stringify({
@@ -156,6 +161,10 @@ export async function renderChatButtonBar() {
               type: "reaction",
             })
           );
+        });
+
+        $content.find("button.vibecheck").on("click", (event) => {
+          initiateVibeCheck();
         });
       }
     })
