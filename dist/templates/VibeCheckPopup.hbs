@@ -1,18 +1,22 @@
 {{#if isGM}}
   <div class="playerReactions">
-    {{#each groupedResponses}}
-    <div class="user">
-      <div class="userAvatar">
-        <img src="{{user.image}}" />
+    {{#if groupedResponses.length}}
+      {{#each groupedResponses}}
+      <div class="user">
+        <div class="userAvatar">
+          <img src="{{user.image}}" />
+        </div>
+        <div class="userName" style="background-color: {{user.color}}">{{user.name}}</div>
+        <div class="responses">
+          {{#each (last_x responses 1)}}
+            {{reactionPreview this}}
+          {{/each}}
+        </div>
       </div>
-      <div class="userName" style="background-color: {{user.color}}">{{user.name}}</div>
-      <div class="responses">
-        {{#each (last_x responses 1)}}
-          {{reactionPreview this}}
-        {{/each}}
-      </div>
-    </div>
-    {{/each}}
+      {{/each}}
+    {{else}}
+      <h3>No other players are connected right now.</h3>
+    {{/if}}
   </div>
 {{else}}
   <div class="reactionButtons flexrow" tabindex="0">
