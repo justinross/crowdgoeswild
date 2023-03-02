@@ -55,15 +55,43 @@ export async function getReactionObject(reactionId) {
 }
 
 export function getReactionHTML(reaction) {
-  let htmlString = `
-        <i class="${reaction.style} fa-${reaction.icon} cgw-reaction" 
+  let htmlString = "";
+  if (reaction.type == "fontawesome") {
+    htmlString = `
+          <i class="${reaction.style} fa-${reaction.icon} cgw-reaction" 
+              data-id=${reaction.id}
+              style="
+                  color: ${reaction.primaryColor}; 
+                  --fa-primary-color: ${reaction.primaryColor};
+                  --fa-secondary-color: ${reaction.secondaryColor};
+              ">
+          </i>`;
+  } else if (
+    reaction.type == "filepicker" &&
+    ["png", "jpg", "jpeg", "webp", "avif", "svg"].includes(
+      reaction.path?.split(".").pop()
+    )
+  ) {
+    htmlString = `
+          <img
+            class="cgw-reaction" 
             data-id=${reaction.id}
-            style="
-                color: ${reaction.primaryColor}; 
-                --fa-primary-color: ${reaction.primaryColor};
-                --fa-secondary-color: ${reaction.secondaryColor};
-            ">
-        </i>`;
+            src="${reaction.path}"
+          />`;
+  } else if (
+    reaction.type == "filepicker" &&
+    ["webm", "mp4", "m4v"].includes(reaction.path?.split(".").pop())
+  ) {
+    htmlString = `
+          <video class="cgw-reaction" data-id=${
+            reaction.id
+          } autoplay loop muted>
+            <source src="${reaction.path}" 
+            type="video/${reaction.path?.split(".").pop()}"
+            />
+          </video>
+          `;
+  }
   return htmlString;
 }
 

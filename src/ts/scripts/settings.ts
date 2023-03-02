@@ -14,7 +14,20 @@ export const ReactionOption = {
   effect: "",
   directional: false,
   enabled: true,
+  type: "",
+  path: "",
 };
+
+export const typeOptions = [
+  {
+    label: "Image/Video",
+    value: "filepicker",
+  },
+  {
+    label: "Font Icon",
+    value: "fontawesome",
+  },
+];
 
 export type ReactionOption = typeof ReactionOption;
 

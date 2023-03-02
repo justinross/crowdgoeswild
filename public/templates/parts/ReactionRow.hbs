@@ -15,18 +15,53 @@
       value="{{title}}"
     />
   </div>
-  <div class="">
+  <div>
     <label
-      for="reaction-{{id}}-icon"
-      title="The Font Awesome ID of the icon you'd like to use, without the leading 'fa-'. Check fontawesome.com for a complete searchable list."
-    >Icon <i class="fas fa-circle-info"></i></label>
-    <input
-      type="text"
-      name="reactions[{{id}}].icon"
-      id="reaction-{{id}}-icon"
-      value="{{icon}}"
-    />
+      for="reaction-{{id}}-type"
+      title="What type of image should this reaction be? Upload/use your own image, or pick from the built-in FontAwesome collection?"
+    >Name
+      <i class="fas fa-circle-info"></i></label>
+    <select
+      id="reaction-{{id}}-type"
+      value="{{type}}"
+      name="reactions[{{id}}].type"
+    >
+      {{#select type}}
+        <option value="fontawesome">Font Icon</option>
+        <option value="filepicker">Image/Video</option>
+      {{/select}}
+    </select>
   </div>
+  {{#if (eq type "filepicker")}}
+    <div>
+      <label
+        for="reaction-{{id}}-path"
+        title="Select an image to use for this icon. SVG images will be colored with the reaction's primary color"
+      >Path
+        <i class="fas fa-circle-info"></i></label>
+      <input
+        type="text"
+        id="reaction-{{id}}-path"
+        value="{{path}}"
+        name="reactions[{{id}}].path"
+        class="path"
+      />
+      {{filePicker type="any" target=(concat "reactions[" id "].path")}}
+    </div>
+  {{else}}
+    <div class="">
+      <label
+        for="reaction-{{id}}-icon"
+        title="The Font Awesome ID of the icon you'd like to use, without the leading 'fa-'. Check fontawesome.com for a complete searchable list."
+      >Icon <i class="fas fa-circle-info"></i></label>
+      <input
+        type="text"
+        name="reactions[{{id}}].icon"
+        id="reaction-{{id}}-icon"
+        value="{{icon}}"
+      />
+    </div>
+  {{/if}}
   <div class="primaryColor">
     <label
       for="reaction-{{id}}-primary-color"

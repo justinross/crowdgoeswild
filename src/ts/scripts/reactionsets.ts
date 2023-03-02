@@ -13,6 +13,8 @@ export const reactionSets = {
         style: "fas",
         effect: "physics-floatUp",
         directional: false,
+        type: "fontawesome",
+        path: "",
       },
       {
         id: "1",
@@ -25,6 +27,8 @@ export const reactionSets = {
         style: "fa-duotone",
         effect: "physics-floatUp",
         directional: false,
+        type: "fontawesome",
+        path: "",
       },
       {
         id: "2",
@@ -37,6 +41,8 @@ export const reactionSets = {
         style: "fa-duotone",
         effect: "physics-toss",
         directional: true,
+        type: "fontawesome",
+        path: "",
       },
       {
         id: "3",
@@ -49,6 +55,8 @@ export const reactionSets = {
         style: "fa-duotone",
         effect: "physics-drop",
         directional: false,
+        type: "fontawesome",
+        path: "",
       },
       {
         id: "4",
@@ -61,6 +69,8 @@ export const reactionSets = {
         style: "fa-duotone",
         effect: "physics-floatUp",
         directional: false,
+        type: "fontawesome",
+        path: "",
       },
       {
         id: "5",
@@ -73,6 +83,8 @@ export const reactionSets = {
         style: "fas",
         effect: "shutdown",
         directional: false,
+        type: "fontawesome",
+        path: "",
       },
     ],
   },
@@ -90,6 +102,8 @@ export const reactionSets = {
         style: "fas",
         effect: "physics-floatUp",
         directional: false,
+        type: "fontawesome",
+        path: "",
       },
       {
         id: "1",
@@ -102,6 +116,8 @@ export const reactionSets = {
         style: "fa-duotone",
         effect: "physics-floatUp",
         directional: false,
+        type: "fontawesome",
+        path: "",
       },
       {
         id: "2",
@@ -114,6 +130,8 @@ export const reactionSets = {
         style: "fa-duotone",
         effect: "physics-toss",
         directional: true,
+        type: "fontawesome",
+        path: "",
       },
       {
         id: "3",
@@ -126,6 +144,8 @@ export const reactionSets = {
         style: "fa-duotone",
         effect: "physics-drop",
         directional: false,
+        type: "fontawesome",
+        path: "",
       },
       {
         id: "4",
@@ -138,6 +158,8 @@ export const reactionSets = {
         style: "fa-duotone",
         effect: "physics-toss",
         directional: false,
+        type: "fontawesome",
+        path: "",
       },
       {
         id: "5",
@@ -150,6 +172,8 @@ export const reactionSets = {
         style: "fas",
         effect: "shutdown",
         directional: false,
+        type: "fontawesome",
+        path: "",
       },
     ],
   },
@@ -167,6 +191,8 @@ export const reactionSets = {
         style: "fa-duotone",
         effect: "physics-flutterDown",
         directional: false,
+        type: "fontawesome",
+        path: "",
       },
       {
         id: "1",
@@ -179,6 +205,8 @@ export const reactionSets = {
         style: "fas",
         effect: "physics-floatUp",
         directional: false,
+        type: "fontawesome",
+        path: "",
       },
       {
         id: "2",
@@ -191,6 +219,8 @@ export const reactionSets = {
         style: "fa-duotone",
         effect: "physics-floatUp",
         directional: true,
+        type: "fontawesome",
+        path: "",
       },
       {
         id: "3",
@@ -203,6 +233,8 @@ export const reactionSets = {
         style: "fa-duotone",
         effect: "physics-drop",
         directional: false,
+        type: "fontawesome",
+        path: "",
       },
       {
         id: "4",
@@ -215,6 +247,8 @@ export const reactionSets = {
         style: "fa-duotone",
         effect: "physics-floatUp",
         directional: false,
+        type: "fontawesome",
+        path: "",
       },
       {
         id: "5",
@@ -227,6 +261,8 @@ export const reactionSets = {
         style: "fas",
         effect: "shutdown",
         directional: false,
+        type: "fontawesome",
+        path: "",
       },
     ],
   },
@@ -244,6 +280,8 @@ export const reactionSets = {
         style: "fas",
         effect: "physics-floatUp",
         directional: false,
+        type: "fontawesome",
+        path: "",
       },
       {
         id: "1",
@@ -256,6 +294,8 @@ export const reactionSets = {
         style: "fa-duotone",
         effect: "physics-floatUp",
         directional: false,
+        type: "fontawesome",
+        path: "",
       },
       {
         id: "2",
@@ -268,6 +308,8 @@ export const reactionSets = {
         style: "fa-duotone",
         effect: "physics-toss",
         directional: true,
+        type: "fontawesome",
+        path: "",
       },
       {
         id: "3",
@@ -280,6 +322,8 @@ export const reactionSets = {
         style: "fa-duotone",
         effect: "physics-toss",
         directional: false,
+        type: "fontawesome",
+        path: "",
       },
       {
         id: "4",
@@ -292,6 +336,8 @@ export const reactionSets = {
         style: "fa-duotone",
         effect: "physics-floatUp",
         directional: false,
+        type: "fontawesome",
+        path: "",
       },
       {
         id: "5",
@@ -304,6 +350,8 @@ export const reactionSets = {
         style: "fas",
         effect: "shutdown",
         directional: false,
+        type: "fontawesome",
+        path: "",
       },
     ],
   },

@@ -20,7 +20,7 @@ export class ReactionSetupMenu extends FormApplication {
       template: `modules/${moduleId}/templates/ReactionSetup.hbs`,
       id: `${moduleId}-reaction-setup`,
       title: "CrowdGoesWild - Reaction Setup",
-      width: 900,
+      width: 1200,
       submitOnChange: true,
       closeOnSubmit: false,
       resizable: true,
@@ -99,6 +99,22 @@ export class ReactionSetupMenu extends FormApplication {
         .get(0);
       this.switchColors(i1, i2);
     });
+
+    // html.find(".pathPicker").on("click", (ev) => {
+    //   let inputEl = $(ev.currentTarget).siblings("input.path").get(0);
+    //   inputEl.value = "butts";
+    //   let picker = new FilePicker({
+    //     callback: (picked) => {
+    //       console.log(picked);
+    //       try {
+    //         inputEl.value = picked;
+    //       } catch (error) {
+    //         console.error(error);
+    //       }
+    //     },
+    //   });
+    //   picker.render(true);
+    // });
   }
 
   showImportReactionsDialog() {

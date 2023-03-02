@@ -933,15 +933,36 @@ async function getReactionObject(reactionId) {
   return reaction;
 }
 function getReactionHTML(reaction) {
-  let htmlString = `
-        <i class="${reaction.style} fa-${reaction.icon} cgw-reaction" 
+  var _a, _b, _c;
+  let htmlString = "";
+  if (reaction.type == "fontawesome") {
+    htmlString = `
+          <i class="${reaction.style} fa-${reaction.icon} cgw-reaction" 
+              data-id=${reaction.id}
+              style="
+                  color: ${reaction.primaryColor}; 
+                  --fa-primary-color: ${reaction.primaryColor};
+                  --fa-secondary-color: ${reaction.secondaryColor};
+              ">
+          </i>`;
+  } else if (reaction.type == "filepicker" && ["png", "jpg", "jpeg", "webp", "avif", "svg"].includes(
+    (_a = reaction.path) == null ? void 0 : _a.split(".").pop()
+  )) {
+    htmlString = `
+          <img
+            class="cgw-reaction" 
             data-id=${reaction.id}
-            style="
-                color: ${reaction.primaryColor}; 
-                --fa-primary-color: ${reaction.primaryColor};
-                --fa-secondary-color: ${reaction.secondaryColor};
-            ">
-        </i>`;
+            src="${reaction.path}"
+          />`;
+  } else if (reaction.type == "filepicker" && ["webm", "mp4", "m4v"].includes((_b = reaction.path) == null ? void 0 : _b.split(".").pop())) {
+    htmlString = `
+          <video class="cgw-reaction" data-id=${reaction.id} autoplay loop muted>
+            <source src="${reaction.path}" 
+            type="video/${(_c = reaction.path) == null ? void 0 : _c.split(".").pop()}"
+            />
+          </video>
+          `;
+  }
   return htmlString;
 }
 async function saveAllReactionPNGs(force = false) {
@@ -1351,7 +1372,9 @@ const reactionSets = {
         secondaryColor: "",
         style: "fas",
         effect: "physics-floatUp",
-        directional: false
+        directional: false,
+        type: "fontawesome",
+        path: ""
       },
       {
         id: "1",
@@ -1363,7 +1386,9 @@ const reactionSets = {
         secondaryColor: "#efaa4b",
         style: "fa-duotone",
         effect: "physics-floatUp",
-        directional: false
+        directional: false,
+        type: "fontawesome",
+        path: ""
       },
       {
         id: "2",
@@ -1375,7 +1400,9 @@ const reactionSets = {
         secondaryColor: "#c1c1c1",
         style: "fa-duotone",
         effect: "physics-toss",
-        directional: true
+        directional: true,
+        type: "fontawesome",
+        path: ""
       },
       {
         id: "3",
@@ -1387,7 +1414,9 @@ const reactionSets = {
         secondaryColor: "#00a6ff",
         style: "fa-duotone",
         effect: "physics-drop",
-        directional: false
+        directional: false,
+        type: "fontawesome",
+        path: ""
       },
       {
         id: "4",
@@ -1399,7 +1428,9 @@ const reactionSets = {
         secondaryColor: "#f5c767",
         style: "fa-duotone",
         effect: "physics-floatUp",
-        directional: false
+        directional: false,
+        type: "fontawesome",
+        path: ""
       },
       {
         id: "5",
@@ -1411,7 +1442,9 @@ const reactionSets = {
         secondaryColor: "rgba(255,255,255,0.6)",
         style: "fas",
         effect: "shutdown",
-        directional: false
+        directional: false,
+        type: "fontawesome",
+        path: ""
       }
     ]
   },
@@ -1428,7 +1461,9 @@ const reactionSets = {
         secondaryColor: "",
         style: "fas",
         effect: "physics-floatUp",
-        directional: false
+        directional: false,
+        type: "fontawesome",
+        path: ""
       },
       {
         id: "1",
@@ -1440,7 +1475,9 @@ const reactionSets = {
         secondaryColor: "#e60404",
         style: "fa-duotone",
         effect: "physics-floatUp",
-        directional: false
+        directional: false,
+        type: "fontawesome",
+        path: ""
       },
       {
         id: "2",
@@ -1452,7 +1489,9 @@ const reactionSets = {
         secondaryColor: "#51e367",
         style: "fa-duotone",
         effect: "physics-toss",
-        directional: true
+        directional: true,
+        type: "fontawesome",
+        path: ""
       },
       {
         id: "3",
@@ -1464,7 +1503,9 @@ const reactionSets = {
         secondaryColor: "#585858",
         style: "fa-duotone",
         effect: "physics-drop",
-        directional: false
+        directional: false,
+        type: "fontawesome",
+        path: ""
       },
       {
         id: "4",
@@ -1476,7 +1517,9 @@ const reactionSets = {
         secondaryColor: "#aeaeae",
         style: "fa-duotone",
         effect: "physics-toss",
-        directional: false
+        directional: false,
+        type: "fontawesome",
+        path: ""
       },
       {
         id: "5",
@@ -1488,7 +1531,9 @@ const reactionSets = {
         secondaryColor: "rgba(255,255,255,0.6)",
         style: "fas",
         effect: "shutdown",
-        directional: false
+        directional: false,
+        type: "fontawesome",
+        path: ""
       }
     ]
   },
@@ -1505,7 +1550,9 @@ const reactionSets = {
         secondaryColor: "#6c9733",
         style: "fa-duotone",
         effect: "physics-flutterDown",
-        directional: false
+        directional: false,
+        type: "fontawesome",
+        path: ""
       },
       {
         id: "1",
@@ -1517,7 +1564,9 @@ const reactionSets = {
         secondaryColor: "",
         style: "fas",
         effect: "physics-floatUp",
-        directional: false
+        directional: false,
+        type: "fontawesome",
+        path: ""
       },
       {
         id: "2",
@@ -1529,7 +1578,9 @@ const reactionSets = {
         secondaryColor: "#ddbeaa",
         style: "fa-duotone",
         effect: "physics-floatUp",
-        directional: true
+        directional: true,
+        type: "fontawesome",
+        path: ""
       },
       {
         id: "3",
@@ -1541,7 +1592,9 @@ const reactionSets = {
         secondaryColor: "#6bc7fe",
         style: "fa-duotone",
         effect: "physics-drop",
-        directional: false
+        directional: false,
+        type: "fontawesome",
+        path: ""
       },
       {
         id: "4",
@@ -1553,7 +1606,9 @@ const reactionSets = {
         secondaryColor: "#eb8c34",
         style: "fa-duotone",
         effect: "physics-floatUp",
-        directional: false
+        directional: false,
+        type: "fontawesome",
+        path: ""
       },
       {
         id: "5",
@@ -1565,7 +1620,9 @@ const reactionSets = {
         secondaryColor: "rgba(255,255,255,0.6)",
         style: "fas",
         effect: "shutdown",
-        directional: false
+        directional: false,
+        type: "fontawesome",
+        path: ""
       }
     ]
   },
@@ -1582,7 +1639,9 @@ const reactionSets = {
         secondaryColor: "",
         style: "fas",
         effect: "physics-floatUp",
-        directional: false
+        directional: false,
+        type: "fontawesome",
+        path: ""
       },
       {
         id: "1",
@@ -1594,7 +1653,9 @@ const reactionSets = {
         secondaryColor: "#efaa4b",
         style: "fa-duotone",
         effect: "physics-floatUp",
-        directional: false
+        directional: false,
+        type: "fontawesome",
+        path: ""
       },
       {
         id: "2",
@@ -1606,7 +1667,9 @@ const reactionSets = {
         secondaryColor: "#c1c1c1",
         style: "fa-duotone",
         effect: "physics-toss",
-        directional: true
+        directional: true,
+        type: "fontawesome",
+        path: ""
       },
       {
         id: "3",
@@ -1618,7 +1681,9 @@ const reactionSets = {
         secondaryColor: "#69432c",
         style: "fa-duotone",
         effect: "physics-toss",
-        directional: false
+        directional: false,
+        type: "fontawesome",
+        path: ""
       },
       {
         id: "4",
@@ -1630,7 +1695,9 @@ const reactionSets = {
         secondaryColor: "#fbe7bd",
         style: "fa-duotone",
         effect: "physics-floatUp",
-        directional: false
+        directional: false,
+        type: "fontawesome",
+        path: ""
       },
       {
         id: "5",
@@ -1642,7 +1709,9 @@ const reactionSets = {
         secondaryColor: "rgba(255,255,255,0.6)",
         style: "fas",
         effect: "shutdown",
-        directional: false
+        directional: false,
+        type: "fontawesome",
+        path: ""
       }
     ]
   }
@@ -1663,7 +1732,7 @@ class ReactionSetupMenu extends FormApplication {
       template: `modules/${id}/templates/ReactionSetup.hbs`,
       id: `${id}-reaction-setup`,
       title: "CrowdGoesWild - Reaction Setup",
-      width: 900,
+      width: 1200,
       submitOnChange: true,
       closeOnSubmit: false,
       resizable: true
@@ -1833,7 +1902,9 @@ const ReactionOption = {
   speed: 0,
   effect: "",
   directional: false,
-  enabled: true
+  enabled: true,
+  type: "",
+  path: ""
 };
 async function loadReactionsPreset(presetName) {
   let reactions = reactionSets[presetName].reactions;
@@ -1924,6 +1995,9 @@ async function registerHelpers() {
   Handlebars.registerHelper("add", (input, add) => {
     return parseInt(input) + parseInt(add);
   });
+  Handlebars.registerHelper("eq", (arg1, arg2) => {
+    return arg1 == arg2;
+  });
 }
 function loadPartials() {
   let partialsList = [
@@ -1945,6 +2019,7 @@ function registerHooks() {
       saveAllReactionPNGs();
     }
     exposeForMacros();
+    new ReactionSetupMenu({}).render(true);
   });
   Hooks.on("hotbarDrop", async function(bar, data, slot) {
     if (data.type == "reaction") {
