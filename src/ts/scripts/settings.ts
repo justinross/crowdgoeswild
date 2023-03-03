@@ -84,6 +84,13 @@ export function registerSettings() {
     },
   });
 
+  game.settings.register(moduleId, "moduleVersion", {
+    scope: "world", // "world" = sync to db, "client" = local storage
+    config: true, // false if you dont want it to show in module config
+    type: String, // Number, Boolean, String, Object
+    default: "1.0.0-alpha4",
+  });
+
   game.settings.register(moduleId, "maxdisplayed", {
     name: "Maximum Simultaneous Reactions",
     hint: `Turn this down if you're running into performance issues from players spamming reactions.`,

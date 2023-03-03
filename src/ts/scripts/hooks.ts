@@ -10,6 +10,7 @@ import {
 } from "./utils";
 
 import { ReactionSetupMenu } from "./ReactionSetupMenu";
+import runMigrationChecks from "./migrations";
 
 export default function registerHooks() {
   Hooks.once("init", async function () {
@@ -24,6 +25,7 @@ export default function registerHooks() {
   Hooks.once("ready", async function () {
     if (game.user.isGM) {
       saveAllReactionPNGs();
+      runMigrationChecks();
     }
     exposeForMacros();
     // resetDefaultReactions()

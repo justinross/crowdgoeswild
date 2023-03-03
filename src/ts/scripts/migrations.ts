@@ -1,0 +1,46 @@
+import {
+  id as moduleId,
+  version as installedVersion,
+} from "../../../public/module.json";
+import * as semver from "semver";
+
+export default async function runMigrationChecks() {
+  // don't do anything if we're running a local dev version without a real version number filled in
+  if (installedVersion == "#{VERSION}#") {
+    console.log(
+      "No version number available. Skipping migration. Things might run wonky."
+    );
+    return;
+  } else {
+    let oldVersion;
+    try {
+      oldVersion = await game.settings.get(moduleId, "moduleVersion");
+    } catch (error) {
+      console.log(
+        "moduleVersion setting not registered somehow. Must be pre-1.0.0a4"
+      );
+      oldVersion = "1.0.0-alpha4";
+    }
+
+    console.log("---- Running migration checks ----");
+
+    if (semver.lt(oldVersion, "1.0.0-alpha5")) {
+      console.log("Pre-1.0.0-alpha5. Adding reaction types");
+      addTypeToReactions(game.settings.get(moduleId, "reactions"));
+    } else {
+      console.log("No migrations needed.");
+    }
+
+    game.settings.set(moduleId, "moduleVersion", installedVersion);
+  }
+}
+
+async function addTypeToReactions(reactions) {
+  let newReactions = reactions.map((reaction) => {
+    if (!reaction.type) {
+      reaction.type = "fontawesome";
+    }
+    return reaction;
+  });
+  game.settings.set(moduleId, "reactions", newReactions);
+}
