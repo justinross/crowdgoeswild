@@ -2,7 +2,7 @@
   "id": "crowdgoeswild",
   "title": "Crowd Goes Wild",
   "description": "",
-  "version": "#{VERSION}#",
+  "version": "1.0.0-alpha5",
   "library": "false",
   "manifestPlusVersion": "1.2.0",
   "compatibility": {

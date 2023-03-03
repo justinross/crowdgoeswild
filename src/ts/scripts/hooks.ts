@@ -10,6 +10,7 @@ import {
 } from "./utils";
 
 import { ReactionSetupMenu } from "./ReactionSetupMenu";
+import runMigrationChecks from "./migrations";
 
 export default function registerHooks() {
   Hooks.once("init", async function () {
@@ -24,10 +25,11 @@ export default function registerHooks() {
   Hooks.once("ready", async function () {
     if (game.user.isGM) {
       saveAllReactionPNGs();
+      runMigrationChecks();
     }
     exposeForMacros();
     // resetDefaultReactions()
-    // let rm = new ReactionSetupMenu({}).render(true)
+    // let rm = new ReactionSetupMenu({}).render(true);
   });
 
   Hooks.on("hotbarDrop", async function (bar, data, slot) {

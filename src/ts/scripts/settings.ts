@@ -14,7 +14,22 @@ export const ReactionOption = {
   effect: "",
   directional: false,
   enabled: true,
+  type: "",
+  path: "",
+  maxWidth: 200,
+  maxHeight: 200,
 };
+
+export const typeOptions = [
+  {
+    label: "Image/Video",
+    value: "filepicker",
+  },
+  {
+    label: "Font Icon",
+    value: "fontawesome",
+  },
+];
 
 export type ReactionOption = typeof ReactionOption;
 
@@ -69,6 +84,13 @@ export function registerSettings() {
     },
   });
 
+  game.settings.register(moduleId, "moduleVersion", {
+    scope: "world", // "world" = sync to db, "client" = local storage
+    config: false, // false if you dont want it to show in module config
+    type: String, // Number, Boolean, String, Object
+    default: "1.0.0-alpha4",
+  });
+
   game.settings.register(moduleId, "maxdisplayed", {
     name: "Maximum Simultaneous Reactions",
     hint: `Turn this down if you're running into performance issues from players spamming reactions.`,
@@ -83,12 +105,12 @@ export function registerSettings() {
     default: 200,
   });
 
-  game.settings.registerMenu(moduleId, "reactionSetup", {
-    name: "Reactions",
-    label: "Configure Available Reactions", // The text label used in the button
-    hint: "Use this menu to create up to eight reactions for your players to use during play.",
-    icon: "fas fa-bars", // A Font Awesome icon used in the submenu button
-    type: ReactionSetupMenu, // A FormApplication subclass
-    restricted: true, // Restrict this submenu to gamemaster only?
-  });
+  // game.settings.registerMenu(moduleId, "reactionSetup", {
+  //   name: "Reactions",
+  //   label: "Configure Available Reactions", // The text label used in the button
+  //   hint: "Use this menu to create up to eight reactions for your players to use during play.",
+  //   icon: "fas fa-bars", // A Font Awesome icon used in the submenu button
+  //   type: ReactionSetupMenu, // A FormApplication subclass
+  //   restricted: true, // Restrict this submenu to gamemaster only?
+  // });
 }

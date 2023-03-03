@@ -1,108 +1,14 @@
-<div class="flexrow reactionRow" data-id="{{@index}}">
+<div class="flexcol reactionRow" data-id="{{id}}">
   <div class="iconPreview">
     {{reactionPreview this}}
   </div>
-  <input type="hidden" value="{{id}}" name="reactions[{{id}}].id" />
-  <input type="hidden" value="{{speed}}" name="reactions[{{id}}].speed" />
-  <input type="hidden" value="{{enabled}}" name="reactions[{{id}}].enabled" />
-  <div class="">
-    <label for="reaction-{{id}}-title" title="This reaction's name.">Name
-      <i class="fas fa-circle-info"></i></label>
-    <input
-      type="text"
-      id="reaction-{{id}}-title"
-      name="reactions[{{id}}].title"
-      value="{{title}}"
-    />
+  <div class="reactionName">
+    <span
+      for="reaction-{{id}}-title"
+      title="This reaction's name."
+    >{{title}}</span>
   </div>
-  <div class="">
-    <label
-      for="reaction-{{id}}-icon"
-      title="The Font Awesome ID of the icon you'd like to use, without the leading 'fa-'. Check fontawesome.com for a complete searchable list."
-    >Icon <i class="fas fa-circle-info"></i></label>
-    <input
-      type="text"
-      name="reactions[{{id}}].icon"
-      id="reaction-{{id}}-icon"
-      value="{{icon}}"
-    />
-  </div>
-  <div class="primaryColor">
-    <label
-      for="reaction-{{id}}-primary-color"
-      title="If you use the 'solid' style, this will just be the icon color."
-    >Primary Color <i class="fas fa-circle-info"></i></label>
-    <div class="inputWrapper">
-      {{colorPicker
-        name=(concat "reactions[" id "].primaryColor")
-        class="primaryColor"
-        value=primaryColor
-        default="#000000"
-      }}
-    </div>
-  </div>
-  <button class="colorSwitch"><i class="fas fa-right-left"></i></button>
-  <div class="secondaryColor">
-    <label
-      for="reaction-{{id}}-secondary-color"
-      title="Only applies when using 'Duotone' style icons, or the 'Shutdown' effect (this will be the background overlay color)."
-    >Secondary Color <i class="fas fa-circle-info"></i></label>
-    <div class="inputWrapper">
-      {{colorPicker
-        name=(concat "reactions[" id "].secondaryColor")
-        class="secondaryColor"
-        value=secondaryColor
-        default="#000000"
-      }}</div>
-  </div>
-  <div class="">
-    <label
-      for="reaction-{{id}}-style"
-      title="This lets you choose which Font Awesome icon style to use."
-    >Icon Style <i class="fas fa-circle-info"></i></label>
-    <select
-      id="reaction-{{id}}-style"
-      value="{{style}}"
-      name="reactions[{{id}}].style"
-    >
-      {{#select style}}
-        <option value="fas">Solid</option>
-        <option value="fa-duotone">Duotone</option>
-        <option value="fa-regular">Regular</option>
-        <option value="fa-light">Light</option>
-        <option value="fa-thin">Thin</option>
-      {{/select}}
-    </select>
-  </div>
-  <div class="">
-    <label
-      for="reaction-{{id}}-effect"
-      title="How you'd like this reaction animated. Shutdown is best used for an x-card sort of effect."
-    >Effect <i class="fas fa-circle-info"></i></label>
-    <select
-      id="reaction-{{id}}-effect"
-      value="{{effect}}"
-      name="reactions[{{id}}].effect"
-    >
-      {{#select effect}}
-        <option value="physics-floatUp">Float Up</option>
-        <option value="physics-drop">Fall Down</option>
-        <option value="physics-flutterDown">Flutter Down</option>
-        <option value="physics-toss">Throw</option>
-        <option value="shutdown">Shutdown</option>
-      {{/select}}
-    </select>
-  </div>
-  <div class="">
-    <label
-      for="reaction-{{id}}-directional"
-      title="Should the rotation of this icon change depending on the direction it's moving? Only applicable to certain icons/effects."
-    >Directional <i class="fas fa-circle-info"></i></label>
-    <input
-      type="checkbox"
-      id="reaction-{{id}}-directional"
-      {{checked directional}}
-      name="reactions[{{id}}].directional"
-    />
-  </div>
+  <button class="reactionEdit" data-id="{{id}}"><i
+      class="fas fa-edit"
+    ></i></button>
 </div>
