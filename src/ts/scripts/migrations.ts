@@ -40,6 +40,18 @@ async function addTypeToReactions(reactions) {
     if (!reaction.type) {
       reaction.type = "fontawesome";
     }
+    if (!reaction.path) {
+      reaction.path = "";
+    }
+    if (!reaction.maxWidth) {
+      reaction.maxWidth = 200;
+    }
+    if (!reaction.maxHeight) {
+      reaction.maxHeight = 200;
+    }
+    if (!reaction.fontSize) {
+      reaction.fontSize = 48;
+    }
     return reaction;
   });
   game.settings.set(moduleId, "reactions", newReactions);
