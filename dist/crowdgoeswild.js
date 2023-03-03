@@ -2562,10 +2562,10 @@ let SemVer$d = class SemVer {
     return this;
   }
 };
-var semver = SemVer$d;
+var semver$1 = SemVer$d;
 const { MAX_LENGTH } = constants$1;
 const { re: re$1, t: t$1 } = reExports;
-const SemVer$c = semver;
+const SemVer$c = semver$1;
 const parseOptions = parseOptions_1;
 const parse$6 = (version, options) => {
   options = parseOptions(options);
@@ -2601,7 +2601,7 @@ const clean$1 = (version, options) => {
   return s ? s.version : null;
 };
 var clean_1 = clean$1;
-const SemVer$b = semver;
+const SemVer$b = semver$1;
 const inc$1 = (version, release, options, identifier) => {
   if (typeof options === "string") {
     identifier = options;
@@ -2617,7 +2617,7 @@ const inc$1 = (version, release, options, identifier) => {
   }
 };
 var inc_1 = inc$1;
-const SemVer$a = semver;
+const SemVer$a = semver$1;
 const compare$b = (a, b, loose) => new SemVer$a(a, loose).compare(new SemVer$a(b, loose));
 var compare_1 = compare$b;
 const compare$a = compare_1;
@@ -2645,13 +2645,13 @@ const diff$1 = (version1, version2) => {
   }
 };
 var diff_1 = diff$1;
-const SemVer$9 = semver;
+const SemVer$9 = semver$1;
 const major$1 = (a, loose) => new SemVer$9(a, loose).major;
 var major_1 = major$1;
-const SemVer$8 = semver;
+const SemVer$8 = semver$1;
 const minor$1 = (a, loose) => new SemVer$8(a, loose).minor;
 var minor_1 = minor$1;
-const SemVer$7 = semver;
+const SemVer$7 = semver$1;
 const patch$1 = (a, loose) => new SemVer$7(a, loose).patch;
 var patch_1 = patch$1;
 const parse$2 = parse_1;
@@ -2666,7 +2666,7 @@ var rcompare_1 = rcompare$1;
 const compare$8 = compare_1;
 const compareLoose$1 = (a, b) => compare$8(a, b, true);
 var compareLoose_1 = compareLoose$1;
-const SemVer$6 = semver;
+const SemVer$6 = semver$1;
 const compareBuild$3 = (a, b, loose) => {
   const versionA = new SemVer$6(a, loose);
   const versionB = new SemVer$6(b, loose);
@@ -2737,7 +2737,7 @@ const cmp$1 = (a, op, b, loose) => {
   }
 };
 var cmp_1 = cmp$1;
-const SemVer$5 = semver;
+const SemVer$5 = semver$1;
 const parse$1 = parse_1;
 const { re, t } = reExports;
 const coerce$1 = (version, options) => {
@@ -3545,7 +3545,7 @@ function requireRange() {
   const parseOptions2 = parseOptions_1;
   const Comparator2 = requireComparator();
   const debug2 = debug_1;
-  const SemVer3 = semver;
+  const SemVer3 = semver$1;
   const {
     re: re2,
     t: t2,
@@ -3871,7 +3871,7 @@ function requireComparator() {
   const { re: re2, t: t2 } = reExports;
   const cmp2 = cmp_1;
   const debug2 = debug_1;
-  const SemVer3 = semver;
+  const SemVer3 = semver$1;
   const Range2 = requireRange();
   return comparator;
 }
@@ -3888,7 +3888,7 @@ var satisfies_1 = satisfies$4;
 const Range$8 = requireRange();
 const toComparators$1 = (range2, options) => new Range$8(range2, options).set.map((comp) => comp.map((c) => c.value).join(" ").trim().split(" "));
 var toComparators_1 = toComparators$1;
-const SemVer$4 = semver;
+const SemVer$4 = semver$1;
 const Range$7 = requireRange();
 const maxSatisfying$1 = (versions, range2, options) => {
   let max = null;
@@ -3910,7 +3910,7 @@ const maxSatisfying$1 = (versions, range2, options) => {
   return max;
 };
 var maxSatisfying_1 = maxSatisfying$1;
-const SemVer$3 = semver;
+const SemVer$3 = semver$1;
 const Range$6 = requireRange();
 const minSatisfying$1 = (versions, range2, options) => {
   let min = null;
@@ -3932,7 +3932,7 @@ const minSatisfying$1 = (versions, range2, options) => {
   return min;
 };
 var minSatisfying_1 = minSatisfying$1;
-const SemVer$2 = semver;
+const SemVer$2 = semver$1;
 const Range$5 = requireRange();
 const gt$2 = gt_1;
 const minVersion$1 = (range2, loose) => {
@@ -3991,7 +3991,7 @@ const validRange$1 = (range2, options) => {
   }
 };
 var valid$1 = validRange$1;
-const SemVer$1 = semver;
+const SemVer$1 = semver$1;
 const Comparator$2 = requireComparator();
 const { ANY: ANY$1 } = Comparator$2;
 const Range$3 = requireRange();
@@ -4265,7 +4265,7 @@ const lowerLT = (a, b, options) => {
 var subset_1 = subset$1;
 const internalRe = reExports;
 const constants = constants$1;
-const SemVer2 = semver;
+const SemVer2 = semver$1;
 const identifiers = identifiers$1;
 const parse = parse_1;
 const valid = valid_1;
@@ -4304,7 +4304,7 @@ const ltr = ltr_1;
 const intersects = intersects_1;
 const simplifyRange = simplify;
 const subset = subset_1;
-({
+var semver = {
   parse,
   valid,
   clean,
@@ -4349,14 +4349,56 @@ const subset = subset_1;
   SEMVER_SPEC_VERSION: constants.SEMVER_SPEC_VERSION,
   compareIdentifiers: identifiers.compareIdentifiers,
   rcompareIdentifiers: identifiers.rcompareIdentifiers
-});
+};
 async function runMigrationChecks() {
-  {
+  let module = await game.modules.get("crowdgoeswild");
+  let installedVersion = module.version;
+  console.log(installedVersion);
+  if (installedVersion == "#{VERSION}#") {
     console.log(
       "No version number available. Skipping migration. Things might run wonky."
     );
     return;
+  } else {
+    let oldVersion;
+    try {
+      oldVersion = await game.settings.get(id, "moduleVersion");
+    } catch (error) {
+      console.log(
+        "moduleVersion setting not registered somehow. Must be pre-1.0.0a4"
+      );
+      oldVersion = "1.0.0-alpha4";
+    }
+    console.log("---- Running migration checks ----");
+    if (semver.lt(oldVersion, "1.0.0-alpha5")) {
+      console.log("Pre-1.0.0-alpha5. Adding updated reaction fields");
+      addTypeToReactions(game.settings.get(id, "reactions"));
+    } else {
+      console.log("No migrations needed.");
+    }
+    game.settings.set(id, "moduleVersion", installedVersion);
   }
+}
+async function addTypeToReactions(reactions) {
+  let newReactions = reactions.map((reaction) => {
+    if (!reaction.type) {
+      reaction.type = "fontawesome";
+    }
+    if (!reaction.path) {
+      reaction.path = "";
+    }
+    if (!reaction.maxWidth) {
+      reaction.maxWidth = 200;
+    }
+    if (!reaction.maxHeight) {
+      reaction.maxHeight = 200;
+    }
+    if (!reaction.fontSize) {
+      reaction.fontSize = 48;
+    }
+    return reaction;
+  });
+  game.settings.set(id, "reactions", newReactions);
 }
 function registerHooks() {
   Hooks.once("init", async function() {
