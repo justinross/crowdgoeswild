@@ -4364,7 +4364,7 @@ async function runMigrationChecks() {
     }
     console.log("---- Running migration checks ----");
     if (semver.lt(oldVersion, "1.0.0-alpha5")) {
-      console.log("Pre-1.0.0-alpha5. Adding reaction types");
+      console.log("Pre-1.0.0-alpha5. Adding updated reaction fields");
       addTypeToReactions(game.settings.get(id, "reactions"));
     } else {
       console.log("No migrations needed.");
