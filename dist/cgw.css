@@ -119,6 +119,9 @@
   flex-direction: column;
   align-items: center;
 }
+.reactionEditor label i {
+  color: rgba(0, 0, 0, 0.4);
+}
 .reactionEditor input,
 .reactionEditor select {
   display: block;

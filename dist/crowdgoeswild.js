@@ -1402,7 +1402,7 @@ function registerSettings() {
   game.settings.register(id, "moduleVersion", {
     scope: "world",
     // "world" = sync to db, "client" = local storage
-    config: true,
+    config: false,
     // false if you dont want it to show in module config
     type: String,
     // Number, Boolean, String, Object

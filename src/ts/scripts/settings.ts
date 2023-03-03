@@ -86,7 +86,7 @@ export function registerSettings() {
 
   game.settings.register(moduleId, "moduleVersion", {
     scope: "world", // "world" = sync to db, "client" = local storage
-    config: true, // false if you dont want it to show in module config
+    config: false, // false if you dont want it to show in module config
     type: String, // Number, Boolean, String, Object
     default: "1.0.0-alpha4",
   });

@@ -1,5 +1,8 @@
 <form class="reactionEditor {{type}}" data-id="{{id}}">
-  <div class="reactionPreview" style="width: {{maxWidth}}px; height: {{maxHeight}}px; ">
+  <div
+    class="reactionPreview"
+    style="width: {{maxWidth}}px; height: {{maxHeight}}px; "
+  >
     {{reactionPreview this}}
   </div>
   <input type="hidden" value="{{id}}" name="id" />
@@ -48,7 +51,7 @@
         for="reaction-{{id}}-type"
         title="What type of image should this reaction be? Upload/use your own image, or pick from the built-in FontAwesome collection?"
       >Type
-        <i class="fas fa-circle-info"></i></label><br/>
+        <i class="fas fa-circle-info"></i></label><br />
       <select id="reaction-{{id}}-type" value="{{type}}" name="type">
         {{#select type}}
           <option value="fontawesome">Font Icon</option>
@@ -63,16 +66,16 @@
         for="reaction-{{id}}-path"
         title="Select an image to use for this icon. SVG images will be colored with the reaction's primary color. Theoretically."
       >Path
-        <i class="fas fa-circle-info"></i></label><br/>
+        <i class="fas fa-circle-info"></i></label><br />
       <div class="inputWrapper">
-      <input
-        type="text"
-        id="reaction-{{id}}-path"
-        value="{{path}}"
-        name="path"
-        class="path"
-      />
-      {{filePicker type="any" target="path"}}
+        <input
+          type="text"
+          id="reaction-{{id}}-path"
+          value="{{path}}"
+          name="path"
+          class="path"
+        />
+        {{filePicker type="any" target="path"}}
       </div>
     </div>
     <div class="">
@@ -103,47 +106,47 @@
     </div>
   </div>
   <div class="iconOptions formgroup">
-      <div class=""
-        <label
-          for="reaction-{{id}}-icon"
-          title="The Font Awesome ID of the icon you'd like to use, without the leading 'fa-'. Check fontawesome.com for a complete searchable list."
-        >Icon <i class="fas fa-circle-info"></i></label>
-        <input
-          type="text"
-          name="icon"
-          id="reaction-{{id}}-icon"
-          value="{{icon}}"
-        />
-      </div>
-      <div class=""
-        <label
-          for="reaction-{{id}}-fontSize"
-          title="The font size you'd like to use for your icons in pixels. Default is 48"
-        >Icon Size <i class="fas fa-circle-info"></i></label>
-        <input
-          type="text"
-          name="fontSize"
-          id="reaction-{{id}}-fontSize"
-          value="{{fontSize}}"
-        />
-      </div>
-      <div class="">
-          <label
-            for="reaction-{{id}}-style"
-            title="This lets you choose which Font Awesome icon style to use."
-          >Icon Style <i class="fas fa-circle-info"></i></label>
-          <select id="reaction-{{id}}-style" value="{{style}}" name="style">
-            {{#select style}}
-              <option value="fas">Solid</option>
-              <option value="fa-duotone">Duotone</option>
-              <option value="fa-regular">Regular</option>
-              <option value="fa-light">Light</option>
-              <option value="fa-thin">Thin</option>
-            {{/select}}
-          </select>
-        </div>
+    <div class="">
+      <label
+        for="reaction-{{id}}-icon"
+        title="The Font Awesome ID of the icon you'd like to use, without the leading 'fa-'. Check fontawesome.com for a complete searchable list."
+      >Icon <i class="fas fa-circle-info"></i></label>
+      <input
+        type="text"
+        name="icon"
+        id="reaction-{{id}}-icon"
+        value="{{icon}}"
+      />
+    </div>
+    <div class="">
+      <label
+        for="reaction-{{id}}-fontSize"
+        title="The font size you'd like to use for your icons in pixels. Default is 48"
+      >Icon Size <i class="fas fa-circle-info"></i></label>
+      <input
+        type="text"
+        name="fontSize"
+        id="reaction-{{id}}-fontSize"
+        value="{{fontSize}}"
+      />
+    </div>
+    <div class="">
+      <label
+        for="reaction-{{id}}-style"
+        title="This lets you choose which Font Awesome icon style to use."
+      >Icon Style <i class="fas fa-circle-info"></i></label>
+      <select id="reaction-{{id}}-style" value="{{style}}" name="style">
+        {{#select style}}
+          <option value="fas">Solid</option>
+          <option value="fa-duotone">Duotone</option>
+          <option value="fa-regular">Regular</option>
+          <option value="fa-light">Light</option>
+          <option value="fa-thin">Thin</option>
+        {{/select}}
+      </select>
+    </div>
   </div>
-  <div class="formgroup colors">
+  <div class="formgroup iconOptions colors">
     <div class="primaryColor">
       <label
         for="reaction-{{id}}-primary-color"
@@ -160,7 +163,7 @@
     </div>
     <div class="nogrow">
       <label>&nbsp;</label>
-      <button class="colorSwitch "><i class="fas fa-right-left"></i></button>
+      <button class="colorSwitch"><i class="fas fa-right-left"></i></button>
     </div>
     <div class="secondaryColor">
       <label
