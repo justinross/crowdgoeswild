@@ -7,7 +7,6 @@ var __publicField = (obj, key, value) => {
 import { gsap, CustomEase, CustomWiggle, Physics2DPlugin } from "/scripts/greensock/esm/all.js";
 const crowdgoeswild = "";
 const id = "crowdgoeswild";
-const version = "1.0.0-alpha5";
 function resolveUrl(url, baseUrl) {
   if (url.match(/^[a-z]+:\/\//i)) {
     return url;
@@ -2348,31 +2347,31 @@ const { re: re$2, t: t$2 } = reExports;
 const parseOptions$1 = parseOptions_1;
 const { compareIdentifiers } = identifiers$1;
 let SemVer$d = class SemVer {
-  constructor(version2, options) {
+  constructor(version, options) {
     options = parseOptions$1(options);
-    if (version2 instanceof SemVer) {
-      if (version2.loose === !!options.loose && version2.includePrerelease === !!options.includePrerelease) {
-        return version2;
+    if (version instanceof SemVer) {
+      if (version.loose === !!options.loose && version.includePrerelease === !!options.includePrerelease) {
+        return version;
       } else {
-        version2 = version2.version;
+        version = version.version;
       }
-    } else if (typeof version2 !== "string") {
-      throw new TypeError(`Invalid Version: ${version2}`);
+    } else if (typeof version !== "string") {
+      throw new TypeError(`Invalid Version: ${version}`);
     }
-    if (version2.length > MAX_LENGTH$1) {
+    if (version.length > MAX_LENGTH$1) {
       throw new TypeError(
         `version is longer than ${MAX_LENGTH$1} characters`
       );
     }
-    debug("SemVer", version2, options);
+    debug("SemVer", version, options);
     this.options = options;
     this.loose = !!options.loose;
     this.includePrerelease = !!options.includePrerelease;
-    const m = version2.trim().match(options.loose ? re$2[t$2.LOOSE] : re$2[t$2.FULL]);
+    const m = version.trim().match(options.loose ? re$2[t$2.LOOSE] : re$2[t$2.FULL]);
     if (!m) {
-      throw new TypeError(`Invalid Version: ${version2}`);
+      throw new TypeError(`Invalid Version: ${version}`);
     }
-    this.raw = version2;
+    this.raw = version;
     this.major = +m[1];
     this.minor = +m[2];
     this.patch = +m[3];
@@ -2563,54 +2562,54 @@ let SemVer$d = class SemVer {
     return this;
   }
 };
-var semver$1 = SemVer$d;
+var semver = SemVer$d;
 const { MAX_LENGTH } = constants$1;
 const { re: re$1, t: t$1 } = reExports;
-const SemVer$c = semver$1;
+const SemVer$c = semver;
 const parseOptions = parseOptions_1;
-const parse$6 = (version2, options) => {
+const parse$6 = (version, options) => {
   options = parseOptions(options);
-  if (version2 instanceof SemVer$c) {
-    return version2;
+  if (version instanceof SemVer$c) {
+    return version;
   }
-  if (typeof version2 !== "string") {
+  if (typeof version !== "string") {
     return null;
   }
-  if (version2.length > MAX_LENGTH) {
+  if (version.length > MAX_LENGTH) {
     return null;
   }
   const r = options.loose ? re$1[t$1.LOOSE] : re$1[t$1.FULL];
-  if (!r.test(version2)) {
+  if (!r.test(version)) {
     return null;
   }
   try {
-    return new SemVer$c(version2, options);
+    return new SemVer$c(version, options);
   } catch (er) {
     return null;
   }
 };
 var parse_1 = parse$6;
 const parse$5 = parse_1;
-const valid$2 = (version2, options) => {
-  const v = parse$5(version2, options);
+const valid$2 = (version, options) => {
+  const v = parse$5(version, options);
   return v ? v.version : null;
 };
 var valid_1 = valid$2;
 const parse$4 = parse_1;
-const clean$1 = (version2, options) => {
-  const s = parse$4(version2.trim().replace(/^[=v]+/, ""), options);
+const clean$1 = (version, options) => {
+  const s = parse$4(version.trim().replace(/^[=v]+/, ""), options);
   return s ? s.version : null;
 };
 var clean_1 = clean$1;
-const SemVer$b = semver$1;
-const inc$1 = (version2, release, options, identifier) => {
+const SemVer$b = semver;
+const inc$1 = (version, release, options, identifier) => {
   if (typeof options === "string") {
     identifier = options;
     options = void 0;
   }
   try {
     return new SemVer$b(
-      version2 instanceof SemVer$b ? version2.version : version2,
+      version instanceof SemVer$b ? version.version : version,
       options
     ).inc(release, identifier).version;
   } catch (er) {
@@ -2618,7 +2617,7 @@ const inc$1 = (version2, release, options, identifier) => {
   }
 };
 var inc_1 = inc$1;
-const SemVer$a = semver$1;
+const SemVer$a = semver;
 const compare$b = (a, b, loose) => new SemVer$a(a, loose).compare(new SemVer$a(b, loose));
 var compare_1 = compare$b;
 const compare$a = compare_1;
@@ -2646,18 +2645,18 @@ const diff$1 = (version1, version2) => {
   }
 };
 var diff_1 = diff$1;
-const SemVer$9 = semver$1;
+const SemVer$9 = semver;
 const major$1 = (a, loose) => new SemVer$9(a, loose).major;
 var major_1 = major$1;
-const SemVer$8 = semver$1;
+const SemVer$8 = semver;
 const minor$1 = (a, loose) => new SemVer$8(a, loose).minor;
 var minor_1 = minor$1;
-const SemVer$7 = semver$1;
+const SemVer$7 = semver;
 const patch$1 = (a, loose) => new SemVer$7(a, loose).patch;
 var patch_1 = patch$1;
 const parse$2 = parse_1;
-const prerelease$1 = (version2, options) => {
-  const parsed = parse$2(version2, options);
+const prerelease$1 = (version, options) => {
+  const parsed = parse$2(version, options);
   return parsed && parsed.prerelease.length ? parsed.prerelease : null;
 };
 var prerelease_1 = prerelease$1;
@@ -2667,7 +2666,7 @@ var rcompare_1 = rcompare$1;
 const compare$8 = compare_1;
 const compareLoose$1 = (a, b) => compare$8(a, b, true);
 var compareLoose_1 = compareLoose$1;
-const SemVer$6 = semver$1;
+const SemVer$6 = semver;
 const compareBuild$3 = (a, b, loose) => {
   const versionA = new SemVer$6(a, loose);
   const versionB = new SemVer$6(b, loose);
@@ -2738,26 +2737,26 @@ const cmp$1 = (a, op, b, loose) => {
   }
 };
 var cmp_1 = cmp$1;
-const SemVer$5 = semver$1;
+const SemVer$5 = semver;
 const parse$1 = parse_1;
 const { re, t } = reExports;
-const coerce$1 = (version2, options) => {
-  if (version2 instanceof SemVer$5) {
-    return version2;
+const coerce$1 = (version, options) => {
+  if (version instanceof SemVer$5) {
+    return version;
   }
-  if (typeof version2 === "number") {
-    version2 = String(version2);
+  if (typeof version === "number") {
+    version = String(version);
   }
-  if (typeof version2 !== "string") {
+  if (typeof version !== "string") {
     return null;
   }
   options = options || {};
   let match = null;
   if (!options.rtl) {
-    match = version2.match(re[t.COERCE]);
+    match = version.match(re[t.COERCE]);
   } else {
     let next;
-    while ((next = re[t.COERCERTL].exec(version2)) && (!match || match.index + match[0].length !== version2.length)) {
+    while ((next = re[t.COERCERTL].exec(version)) && (!match || match.index + match[0].length !== version.length)) {
       if (!match || next.index + next[0].length !== match.index + match[0].length) {
         match = next;
       }
@@ -3521,19 +3520,19 @@ function requireRange() {
       });
     }
     // if ANY of the sets match ALL of its comparators, then pass
-    test(version2) {
-      if (!version2) {
+    test(version) {
+      if (!version) {
         return false;
       }
-      if (typeof version2 === "string") {
+      if (typeof version === "string") {
         try {
-          version2 = new SemVer3(version2, this.options);
+          version = new SemVer3(version, this.options);
         } catch (er) {
           return false;
         }
       }
       for (let i = 0; i < this.set.length; i++) {
-        if (testSet(this.set[i], version2, this.options)) {
+        if (testSet(this.set[i], version, this.options)) {
           return true;
         }
       }
@@ -3546,7 +3545,7 @@ function requireRange() {
   const parseOptions2 = parseOptions_1;
   const Comparator2 = requireComparator();
   const debug2 = debug_1;
-  const SemVer3 = semver$1;
+  const SemVer3 = semver;
   const {
     re: re2,
     t: t2,
@@ -3748,13 +3747,13 @@ function requireRange() {
     }
     return `${from} ${to}`.trim();
   };
-  const testSet = (set, version2, options) => {
+  const testSet = (set, version, options) => {
     for (let i = 0; i < set.length; i++) {
-      if (!set[i].test(version2)) {
+      if (!set[i].test(version)) {
         return false;
       }
     }
-    if (version2.prerelease.length && !options.includePrerelease) {
+    if (version.prerelease.length && !options.includePrerelease) {
       for (let i = 0; i < set.length; i++) {
         debug2(set[i].semver);
         if (set[i].semver === Comparator2.ANY) {
@@ -3762,7 +3761,7 @@ function requireRange() {
         }
         if (set[i].semver.prerelease.length > 0) {
           const allowed = set[i].semver;
-          if (allowed.major === version2.major && allowed.minor === version2.minor && allowed.patch === version2.patch) {
+          if (allowed.major === version.major && allowed.minor === version.minor && allowed.patch === version.patch) {
             return true;
           }
         }
@@ -3823,19 +3822,19 @@ function requireComparator() {
     toString() {
       return this.value;
     }
-    test(version2) {
-      debug2("Comparator.test", version2, this.options.loose);
-      if (this.semver === ANY2 || version2 === ANY2) {
+    test(version) {
+      debug2("Comparator.test", version, this.options.loose);
+      if (this.semver === ANY2 || version === ANY2) {
         return true;
       }
-      if (typeof version2 === "string") {
+      if (typeof version === "string") {
         try {
-          version2 = new SemVer3(version2, this.options);
+          version = new SemVer3(version, this.options);
         } catch (er) {
           return false;
         }
       }
-      return cmp2(version2, this.operator, this.semver, this.options);
+      return cmp2(version, this.operator, this.semver, this.options);
     }
     intersects(comp, options) {
       if (!(comp instanceof Comparator2)) {
@@ -3872,24 +3871,24 @@ function requireComparator() {
   const { re: re2, t: t2 } = reExports;
   const cmp2 = cmp_1;
   const debug2 = debug_1;
-  const SemVer3 = semver$1;
+  const SemVer3 = semver;
   const Range2 = requireRange();
   return comparator;
 }
 const Range$9 = requireRange();
-const satisfies$4 = (version2, range2, options) => {
+const satisfies$4 = (version, range2, options) => {
   try {
     range2 = new Range$9(range2, options);
   } catch (er) {
     return false;
   }
-  return range2.test(version2);
+  return range2.test(version);
 };
 var satisfies_1 = satisfies$4;
 const Range$8 = requireRange();
 const toComparators$1 = (range2, options) => new Range$8(range2, options).set.map((comp) => comp.map((c) => c.value).join(" ").trim().split(" "));
 var toComparators_1 = toComparators$1;
-const SemVer$4 = semver$1;
+const SemVer$4 = semver;
 const Range$7 = requireRange();
 const maxSatisfying$1 = (versions, range2, options) => {
   let max = null;
@@ -3911,7 +3910,7 @@ const maxSatisfying$1 = (versions, range2, options) => {
   return max;
 };
 var maxSatisfying_1 = maxSatisfying$1;
-const SemVer$3 = semver$1;
+const SemVer$3 = semver;
 const Range$6 = requireRange();
 const minSatisfying$1 = (versions, range2, options) => {
   let min = null;
@@ -3933,7 +3932,7 @@ const minSatisfying$1 = (versions, range2, options) => {
   return min;
 };
 var minSatisfying_1 = minSatisfying$1;
-const SemVer$2 = semver$1;
+const SemVer$2 = semver;
 const Range$5 = requireRange();
 const gt$2 = gt_1;
 const minVersion$1 = (range2, loose) => {
@@ -3992,7 +3991,7 @@ const validRange$1 = (range2, options) => {
   }
 };
 var valid$1 = validRange$1;
-const SemVer$1 = semver$1;
+const SemVer$1 = semver;
 const Comparator$2 = requireComparator();
 const { ANY: ANY$1 } = Comparator$2;
 const Range$3 = requireRange();
@@ -4001,8 +4000,8 @@ const gt$1 = gt_1;
 const lt$1 = lt_1;
 const lte$1 = lte_1;
 const gte$1 = gte_1;
-const outside$3 = (version2, range2, hilo, options) => {
-  version2 = new SemVer$1(version2, options);
+const outside$3 = (version, range2, hilo, options) => {
+  version = new SemVer$1(version, options);
   range2 = new Range$3(range2, options);
   let gtfn, ltefn, ltfn, comp, ecomp;
   switch (hilo) {
@@ -4023,7 +4022,7 @@ const outside$3 = (version2, range2, hilo, options) => {
     default:
       throw new TypeError('Must provide a hilo val of "<" or ">"');
   }
-  if (satisfies$3(version2, range2, options)) {
+  if (satisfies$3(version, range2, options)) {
     return false;
   }
   for (let i = 0; i < range2.set.length; ++i) {
@@ -4045,9 +4044,9 @@ const outside$3 = (version2, range2, hilo, options) => {
     if (high.operator === comp || high.operator === ecomp) {
       return false;
     }
-    if ((!low.operator || low.operator === comp) && ltefn(version2, low.semver)) {
+    if ((!low.operator || low.operator === comp) && ltefn(version, low.semver)) {
       return false;
-    } else if (low.operator === ecomp && ltfn(version2, low.semver)) {
+    } else if (low.operator === ecomp && ltfn(version, low.semver)) {
       return false;
     }
   }
@@ -4055,10 +4054,10 @@ const outside$3 = (version2, range2, hilo, options) => {
 };
 var outside_1 = outside$3;
 const outside$2 = outside_1;
-const gtr$1 = (version2, range2, options) => outside$2(version2, range2, ">", options);
+const gtr$1 = (version, range2, options) => outside$2(version, range2, ">", options);
 var gtr_1 = gtr$1;
 const outside$1 = outside_1;
-const ltr$1 = (version2, range2, options) => outside$1(version2, range2, "<", options);
+const ltr$1 = (version, range2, options) => outside$1(version, range2, "<", options);
 var ltr_1 = ltr$1;
 const Range$2 = requireRange();
 const intersects$1 = (r1, r2, options) => {
@@ -4074,12 +4073,12 @@ var simplify = (versions, range2, options) => {
   let first = null;
   let prev = null;
   const v = versions.sort((a, b) => compare$2(a, b, options));
-  for (const version2 of v) {
-    const included = satisfies$2(version2, range2, options);
+  for (const version of v) {
+    const included = satisfies$2(version, range2, options);
     if (included) {
-      prev = version2;
+      prev = version;
       if (!first) {
-        first = version2;
+        first = version;
       }
     } else {
       if (prev) {
@@ -4266,7 +4265,7 @@ const lowerLT = (a, b, options) => {
 var subset_1 = subset$1;
 const internalRe = reExports;
 const constants = constants$1;
-const SemVer2 = semver$1;
+const SemVer2 = semver;
 const identifiers = identifiers$1;
 const parse = parse_1;
 const valid = valid_1;
@@ -4305,7 +4304,7 @@ const ltr = ltr_1;
 const intersects = intersects_1;
 const simplifyRange = simplify;
 const subset = subset_1;
-var semver = {
+({
   parse,
   valid,
   clean,
@@ -4350,48 +4349,14 @@ var semver = {
   SEMVER_SPEC_VERSION: constants.SEMVER_SPEC_VERSION,
   compareIdentifiers: identifiers.compareIdentifiers,
   rcompareIdentifiers: identifiers.rcompareIdentifiers
-};
+});
 async function runMigrationChecks() {
   {
-    let oldVersion;
-    try {
-      oldVersion = await game.settings.get(id, "moduleVersion");
-    } catch (error) {
-      console.log(
-        "moduleVersion setting not registered somehow. Must be pre-1.0.0a4"
-      );
-      oldVersion = "1.0.0-alpha4";
-    }
-    console.log("---- Running migration checks ----");
-    if (semver.lt(oldVersion, "1.0.0-alpha5")) {
-      console.log("Pre-1.0.0-alpha5. Adding updated reaction fields");
-      addTypeToReactions(game.settings.get(id, "reactions"));
-    } else {
-      console.log("No migrations needed.");
-    }
-    game.settings.set(id, "moduleVersion", version);
+    console.log(
+      "No version number available. Skipping migration. Things might run wonky."
+    );
+    return;
   }
-}
-async function addTypeToReactions(reactions) {
-  let newReactions = reactions.map((reaction) => {
-    if (!reaction.type) {
-      reaction.type = "fontawesome";
-    }
-    if (!reaction.path) {
-      reaction.path = "";
-    }
-    if (!reaction.maxWidth) {
-      reaction.maxWidth = 200;
-    }
-    if (!reaction.maxHeight) {
-      reaction.maxHeight = 200;
-    }
-    if (!reaction.fontSize) {
-      reaction.fontSize = 48;
-    }
-    return reaction;
-  });
-  game.settings.set(id, "reactions", newReactions);
 }
 function registerHooks() {
   Hooks.once("init", async function() {
