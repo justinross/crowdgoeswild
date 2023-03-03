@@ -1,11 +1,11 @@
-import {
-  id as moduleId,
-  version as installedVersion,
-} from "../../../public/module.json";
+import { id as moduleId } from "../../../public/module.json";
 import * as semver from "semver";
 
 export default async function runMigrationChecks() {
   // don't do anything if we're running a local dev version without a real version number filled in
+  let module = await game.modules.get("crowdgoeswild");
+  let installedVersion = module.version;
+  console.log(installedVersion);
   if (installedVersion == "#{VERSION}#") {
     console.log(
       "No version number available. Skipping migration. Things might run wonky."
