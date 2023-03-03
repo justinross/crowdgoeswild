@@ -27,7 +27,7 @@ export default function registerHooks() {
     }
     exposeForMacros();
     // resetDefaultReactions()
-    let rm = new ReactionSetupMenu({}).render(true);
+    // let rm = new ReactionSetupMenu({}).render(true);
   });
 
   Hooks.on("hotbarDrop", async function (bar, data, slot) {

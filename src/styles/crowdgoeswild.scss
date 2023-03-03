@@ -4,8 +4,12 @@
   flex-grow: 0;
   .cgw {
     &.gmButtons {
-      flex-grow: 0;
+      flex-grow: 1;
       justify-content: center;
+
+      .cgwSettings {
+        flex-grow: 0.2;
+      }
     }
 
     &.reactionbar {
@@ -19,11 +23,16 @@
         max-height: 2rem;
         background-color: rgba(0, 0, 0, 0.4);
         border: 1px solid rgba(255, 255, 255, 0.4);
-        .cgw-reaction {
-          max-width: 100%;
-          max-height: 100%;
+        i.cgw-reaction {
           position: relative;
-          font-size: 1rem;
+          font-size: 1rem !important;
+        }
+
+        img.cgw-reaction,
+        video.cgw-reaction {
+          position: relative;
+          max-width: 100% !important;
+          max-height: 100% !important;
         }
       }
     }
@@ -32,7 +41,6 @@
 
 .cgw-reaction {
   pointer-events: none;
-  font-size: 4rem;
   --fa-secondary-opacity: 1;
   position: absolute;
   z-index: 100000;
@@ -44,73 +52,179 @@
 }
 
 .reactionSetup {
-  form {
-    padding: 1rem;
+  .actionButtons {
+    align-content: center;
+    justify-content: center;
 
-    .actionButtons {
-      align-content: center;
-      justify-content: center;
+    > * {
+      margin: 1rem;
+      flex-grow: 0.25;
+    }
 
-      > * {
-        margin: 1rem;
-      }
-
-      select {
-      }
+    select {
+      height: 2rem;
+      margin-right: 1rem;
     }
   }
   .reactionRow {
+    margin: 1em;
+    height: 160px;
     margin-bottom: 1em;
     padding: 4px;
+    position: relative;
+    border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    overflow: hidden;
 
     & > * {
       margin: 5px;
-    }
-
-    &:nth-child(2n) {
-      background-color: rgba(0, 0, 0, 0.1);
-      backdrop-filter: blur(3px);
-    }
-
-    label i {
-      color: rgba(0, 0, 0, 0.4);
     }
 
     .iconPreview {
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-grow: 1;
 
       .cgw-reaction {
         position: relative;
         z-index: auto;
-        font-size: 2.5rem;
-        max-width: 100%;
-        max-height: 100%;
+      }
+
+      i.cgw-reaction {
+        font-size: 2.5rem !important;
+      }
+
+      img.cgw-reaction {
+        max-width: 100px !important;
+        max-height: 100px !important;
       }
     }
-    .colorSwitch {
-      max-width: 3em;
-      max-height: 3em;
-      align-self: center;
+
+    .reactionName {
+      font-weight: bold;
+      text-align: center;
+      flex-grow: 0;
     }
 
-    .primaryColor,
-    .secondaryColor {
-      .inputWrapper {
+    .reactionEdit {
+      background-color: rgba(0, 0, 0, 0.4);
+      border-radius: 0 6px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      border: none;
+      outline: none;
+      width: 3em;
+      height: 2em;
+      color: #fff;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+
+      i {
         position: relative;
-        min-width: 120px;
-
-        input[type="color"][data-edit][data-edit] {
-          padding: 0;
-          width: 2rem;
-          border: none;
-          position: absolute;
-          right: 0;
-          bottom: 0;
-        }
+        left: 2px;
       }
     }
+  }
+}
+
+.reactionEditor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  input,
+  select {
+    display: block;
+    width: 100%;
+  }
+
+  .reactionPreview {
+    background-color: rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1em;
+  }
+
+  .formgroup {
+    display: flex;
+    justify-content: space-between;
+    // margin: 8px 32px;
+    width: 100%;
+
+    > div {
+      flex: 1;
+      margin: 0.5em;
+      text-align: left;
+    }
+  }
+
+  .colorSwitch {
+    max-width: 3em;
+    height: 1.8rem;
+    display: flex;
+    font-size: 1rem;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .pathPicker {
+    .inputWrapper {
+      position: relative;
+      min-width: 120px;
+
+      button.file-picker {
+        padding: 0;
+        width: 4rem;
+        height: 100%;
+        border: none;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+      }
+    }
+  }
+
+  .primaryColor,
+  .secondaryColor {
+    .inputWrapper {
+      position: relative;
+      min-width: 120px;
+
+      input[type="color"][data-edit][data-edit] {
+        padding: 0;
+        width: 2rem;
+        border: none;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+      }
+    }
+  }
+
+  .nogrow {
+    flex-grow: 0 !important;
+  }
+
+  &.filepicker {
+    .iconOptions {
+      display: none;
+    }
+  }
+
+  &.fontawesome {
+    .fileOptions {
+      display: none;
+    }
+  }
+
+  .cgw-reaction {
+    position: relative;
   }
 }
 

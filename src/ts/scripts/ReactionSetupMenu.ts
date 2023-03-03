@@ -1,11 +1,11 @@
 import { id as moduleId } from "../../../public/module.json";
 import { calcAngleDegrees, saveAllReactionPNGs } from "./utils";
 import { loadReactionsPreset, ReactionOption } from "./settings";
-import { renderChatButtonBar } from "./hooks";
 import { reactionSets } from "./reactionsets";
 import { reloadAllClients } from "./socket";
+import { ReactionEditor } from "./ReactionEditor";
 
-export class ReactionSetupMenu extends FormApplication {
+export class ReactionSetupMenu extends Application {
   // constructor(exampleOption) {
   //     super(exampleOption);
   // }
@@ -21,7 +21,7 @@ export class ReactionSetupMenu extends FormApplication {
       id: `${moduleId}-reaction-setup`,
       title: "CrowdGoesWild - Reaction Setup",
       width: 1200,
-      submitOnChange: true,
+      // submitOnChange: true,
       closeOnSubmit: false,
       resizable: true,
     });
@@ -43,62 +43,72 @@ export class ReactionSetupMenu extends FormApplication {
     return data;
   }
 
-  switchColors(inputEl1, inputEl2) {
-    let v1 = inputEl1.value;
-    let v2 = inputEl2.value;
-    console.log(inputEl1, inputEl2);
+  // switchColors(inputEl1, inputEl2) {
+  //   let v1 = inputEl1.value;
+  //   let v2 = inputEl2.value;
+  //   console.log(inputEl1, inputEl2);
 
-    inputEl1.value = v2;
-    inputEl2.value = v1;
-  }
+  //   inputEl1.value = v2;
+  //   inputEl2.value = v1;
+  // }
 
-  async _updateObject(event, formData) {
-    const data = expandObject(formData);
-    let reactions = [];
+  // async _updateObject(event, formData) {
+  //   const data = expandObject(formData);
+  //   let reactions = [];
 
-    for (const reaction of Object.values(data)) {
-      reactions[reaction.id] = reaction;
-    }
-    await game.settings.set(moduleId, "reactions", reactions);
-    await this.render();
-  }
+  //   for (const reaction of Object.values(data)) {
+  //     reactions[reaction.id] = reaction;
+  //   }
+  //   await game.settings.set(moduleId, "reactions", reactions);
+  //   await this.render();
+  // }
 
   activateListeners(html) {
-    super.activateListeners(html);
+    //   super.activateListeners(html);
 
-    html.find("#generateButton").on("click", async (ev) => {
-      this.close();
-      await saveAllReactionPNGs(true);
-      reloadAllClients();
-    });
+    //   html.find("#generateButton").on("click", async (ev) => {
+    //     this.close();
+    //     await saveAllReactionPNGs(true);
+    //     reloadAllClients();
+    //   });
     html.find("#resetButton").on("click", (ev) => {
+      ev.stopPropagation();
       this.showLoadPresetDialog();
     });
-    html.find("#exportButton").on("click", (ev) => {
-      this.exportReactions();
+
+    html.find(".reactionEdit").on("click", (ev) => {
+      ev.stopPropagation();
+      let reactionEditor = new ReactionEditor(
+        ev.currentTarget.dataset.id,
+        this
+      );
+      reactionEditor.render(true);
     });
-    html.find("#importButton").on("click", (ev) => {
-      this.showImportReactionsDialog();
-    });
+    //   html.find("#exportButton").on("click", (ev) => {
+    //     this.exportReactions();
+    //   });
+    //   html.find("#importButton").on("click", (ev) => {
+    //     this.showImportReactionsDialog();
+    //   });
     html.find("#reactionPreset").on("change", (ev) => {
       ev.stopPropagation();
       this.selectedPreset = ev.currentTarget.value;
     });
 
-    html.find(".colorSwitch").on("click", (ev) => {
-      ev.stopPropagation();
-      let i1 = $(ev.target)
-        .parents(".reactionRow")
-        .find(".primaryColor input.color")
-        .first()
-        .get(0);
-      let i2 = $(ev.target)
-        .parents(".reactionRow")
-        .find(".secondaryColor input.color")
-        .first()
-        .get(0);
-      this.switchColors(i1, i2);
-    });
+    //   html.find(".colorSwitch").on("click", (ev) => {
+    //     ev.stopPropagation();
+    //     let i1 = $(ev.target)
+    //       .parents(".reactionRow")
+    //       .find(".primaryColor input.color")
+    //       .first()
+    //       .get(0);
+    //     let i2 = $(ev.target)
+    //       .parents(".reactionRow")
+    //       .find(".secondaryColor input.color")
+    //       .first()
+    //       .get(0);
+    //     this.switchColors(i1, i2);
+    //   });
 
     // html.find(".pathPicker").on("click", (ev) => {
     //   let inputEl = $(ev.currentTarget).siblings("input.path").get(0);

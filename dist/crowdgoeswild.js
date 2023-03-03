@@ -846,12 +846,6 @@ async function sendReactionToSocket(reactionId) {
     payload: reactionId
   });
 }
-async function reloadAllClients() {
-  emitSocketEvent({
-    type: "reload",
-    payload: ""
-  });
-}
 async function sendVibeCheckResponse(user, responseId) {
   emitSocketEvent({
     type: "vibecheckresponse",
@@ -907,6 +901,846 @@ async function displayVibeCheck(duration) {
 async function handleReactionClick(id2) {
   sendReactionToSocket(id2);
 }
+const reactionSets = {
+  default: {
+    label: "Default",
+    reactions: [
+      {
+        id: "0",
+        speed: "1",
+        enabled: "true",
+        title: "Like",
+        icon: "heart",
+        primaryColor: "#eb34b1",
+        secondaryColor: "",
+        style: "fas",
+        effect: "physics-floatUp",
+        directional: false,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      },
+      {
+        id: "1",
+        speed: "1",
+        enabled: "true",
+        title: "OMG",
+        icon: "triangle-exclamation",
+        primaryColor: "#c52525",
+        secondaryColor: "#efaa4b",
+        style: "fa-duotone",
+        effect: "physics-floatUp",
+        directional: false,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      },
+      {
+        id: "2",
+        speed: "1",
+        enabled: "true",
+        title: "Axe",
+        icon: "axe",
+        primaryColor: "#5f7e96",
+        secondaryColor: "#c1c1c1",
+        style: "fa-duotone",
+        effect: "physics-toss",
+        directional: true,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      },
+      {
+        id: "3",
+        speed: "1",
+        enabled: "true",
+        title: "droplet",
+        icon: "droplet",
+        primaryColor: "#a4fbf7",
+        secondaryColor: "#00a6ff",
+        style: "fa-duotone",
+        effect: "physics-drop",
+        directional: false,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      },
+      {
+        id: "4",
+        speed: "1",
+        enabled: "true",
+        title: "fire",
+        icon: "fire",
+        primaryColor: "#dd0000",
+        secondaryColor: "#f5c767",
+        style: "fa-duotone",
+        effect: "physics-floatUp",
+        directional: false,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      },
+      {
+        id: "5",
+        speed: "1",
+        enabled: "true",
+        title: "x",
+        icon: "times",
+        primaryColor: "#dd0000",
+        secondaryColor: "rgba(255,255,255,0.6)",
+        style: "fas",
+        effect: "shutdown",
+        directional: false,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      }
+    ]
+  },
+  sciFantasy: {
+    label: "Sci-Fantasy",
+    reactions: [
+      {
+        id: "0",
+        speed: "1",
+        enabled: "true",
+        title: "Like",
+        icon: "heart",
+        primaryColor: "#eb34b1",
+        secondaryColor: "",
+        style: "fas",
+        effect: "physics-floatUp",
+        directional: false,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      },
+      {
+        id: "1",
+        speed: "1",
+        enabled: "true",
+        title: "Warning",
+        icon: "siren",
+        primaryColor: "#5b7b8e",
+        secondaryColor: "#e60404",
+        style: "fa-duotone",
+        effect: "physics-floatUp",
+        directional: false,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      },
+      {
+        id: "2",
+        speed: "1",
+        enabled: "true",
+        title: "Laser Sword",
+        icon: "sword-laser",
+        primaryColor: "#7a7a7a",
+        secondaryColor: "#51e367",
+        style: "fa-duotone",
+        effect: "physics-toss",
+        directional: true,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      },
+      {
+        id: "3",
+        speed: "1",
+        enabled: "true",
+        title: "Space Station",
+        icon: "space-station-moon-construction",
+        primaryColor: "#cfcfcf",
+        secondaryColor: "#585858",
+        style: "fa-duotone",
+        effect: "physics-drop",
+        directional: false,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      },
+      {
+        id: "4",
+        speed: "1",
+        enabled: "true",
+        title: "Ship",
+        icon: "starship-freighter",
+        primaryColor: "#5f6d7e",
+        secondaryColor: "#aeaeae",
+        style: "fa-duotone",
+        effect: "physics-toss",
+        directional: false,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      },
+      {
+        id: "5",
+        speed: "1",
+        enabled: "true",
+        title: "x",
+        icon: "square-xmark",
+        primaryColor: "#dd0000",
+        secondaryColor: "rgba(255,255,255,0.6)",
+        style: "fas",
+        effect: "shutdown",
+        directional: false,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      }
+    ]
+  },
+  cozy: {
+    label: "Cozy",
+    reactions: [
+      {
+        id: "0",
+        speed: "1",
+        enabled: "true",
+        title: "Like",
+        icon: "leaf",
+        primaryColor: "#a8df35",
+        secondaryColor: "#6c9733",
+        style: "fa-duotone",
+        effect: "physics-flutterDown",
+        directional: false,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      },
+      {
+        id: "1",
+        speed: "1",
+        enabled: "true",
+        title: "OMG",
+        icon: "triangle-exclamation",
+        primaryColor: "#f5ad42",
+        secondaryColor: "",
+        style: "fas",
+        effect: "physics-floatUp",
+        directional: false,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      },
+      {
+        id: "2",
+        speed: "1",
+        enabled: "true",
+        title: "Axe",
+        icon: "mug-tea",
+        primaryColor: "#87b83d",
+        secondaryColor: "#ddbeaa",
+        style: "fa-duotone",
+        effect: "physics-floatUp",
+        directional: true,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      },
+      {
+        id: "3",
+        speed: "1",
+        enabled: "true",
+        title: "droplet",
+        icon: "droplet",
+        primaryColor: "#a4fbf7",
+        secondaryColor: "#6bc7fe",
+        style: "fa-duotone",
+        effect: "physics-drop",
+        directional: false,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      },
+      {
+        id: "4",
+        speed: "1",
+        enabled: "true",
+        title: "fire",
+        icon: "candle-holder",
+        primaryColor: "#f5efc5",
+        secondaryColor: "#eb8c34",
+        style: "fa-duotone",
+        effect: "physics-floatUp",
+        directional: false,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      },
+      {
+        id: "5",
+        speed: "1",
+        enabled: "true",
+        title: "x",
+        icon: "times",
+        primaryColor: "#dd0000",
+        secondaryColor: "rgba(255,255,255,0.6)",
+        style: "fas",
+        effect: "shutdown",
+        directional: false,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      }
+    ]
+  },
+  tavern: {
+    label: "Tavern",
+    reactions: [
+      {
+        id: "0",
+        speed: "1",
+        enabled: "true",
+        title: "Like",
+        icon: "heart",
+        primaryColor: "#eb34b1",
+        secondaryColor: "",
+        style: "fas",
+        effect: "physics-floatUp",
+        directional: false,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      },
+      {
+        id: "1",
+        speed: "1",
+        enabled: "true",
+        title: "OMG",
+        icon: "triangle-exclamation",
+        primaryColor: "#c52525",
+        secondaryColor: "#efaa4b",
+        style: "fa-duotone",
+        effect: "physics-floatUp",
+        directional: false,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      },
+      {
+        id: "2",
+        speed: "1",
+        enabled: "true",
+        title: "Axe",
+        icon: "axe",
+        primaryColor: "#5f7e96",
+        secondaryColor: "#c1c1c1",
+        style: "fa-duotone",
+        effect: "physics-toss",
+        directional: true,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      },
+      {
+        id: "3",
+        speed: "1",
+        enabled: "true",
+        title: "Beer",
+        icon: "beer-mug",
+        primaryColor: "#fee2a0",
+        secondaryColor: "#69432c",
+        style: "fa-duotone",
+        effect: "physics-toss",
+        directional: false,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      },
+      {
+        id: "4",
+        speed: "1",
+        enabled: "true",
+        title: "Meat",
+        icon: "meat",
+        primaryColor: "#ae4020",
+        secondaryColor: "#fbe7bd",
+        style: "fa-duotone",
+        effect: "physics-floatUp",
+        directional: false,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      },
+      {
+        id: "5",
+        speed: "1",
+        enabled: "true",
+        title: "x",
+        icon: "times",
+        primaryColor: "#dd0000",
+        secondaryColor: "rgba(255,255,255,0.6)",
+        style: "fas",
+        effect: "shutdown",
+        directional: false,
+        type: "fontawesome",
+        path: "",
+        maxWidth: 200,
+        maxHeight: 200,
+        fontSize: 48
+      }
+    ]
+  }
+};
+const ReactionOption = {
+  id: 0,
+  title: "",
+  icon: "",
+  primaryColor: "",
+  secondaryColor: "",
+  style: "",
+  speed: 0,
+  effect: "",
+  directional: false,
+  enabled: true,
+  type: "",
+  path: "",
+  maxWidth: 200,
+  maxHeight: 200
+};
+async function loadReactionsPreset(presetName) {
+  let reactions = reactionSets[presetName].reactions;
+  await game.settings.set(id, "reactions", reactions);
+  return;
+}
+function registerSettings() {
+  console.log("Registering CGW Settings");
+  game.settings.register(id, "reactions", {
+    name: "Reaction",
+    hint: "The list of reactions usable by your players",
+    scope: "world",
+    // "world" = sync to db, "client" = local storage
+    config: false,
+    // false if you dont want it to show in module config
+    type: Array,
+    // Number, Boolean, String, Object
+    default: reactionSets["default"].reactions,
+    onChange: (value) => {
+    }
+  });
+  game.settings.register(id, "vibecheckautoclose", {
+    name: "Close vibe check after selection",
+    hint: "If this is enabled, players' vibe check popups will close after they make a selection. If this is disabled, it will stay open and they can choose another reaction.",
+    scope: "world",
+    // "world" = sync to db, "client" = local storage
+    config: true,
+    // false if you dont want it to show in module config
+    type: Boolean,
+    // Number, Boolean, String, Object
+    default: true,
+    onChange: (value) => {
+    }
+  });
+  game.settings.register(id, "vibecheckduration", {
+    name: "Vibe check duration",
+    hint: "This determines, in seconds, how long players have to respond to a vibe check. The results will display to the GM for twice this duration. 0 = no timeout",
+    scope: "world",
+    // "world" = sync to db, "client" = local storage
+    config: true,
+    // false if you dont want it to show in module config
+    type: Number,
+    // Number, Boolean, String, Object
+    default: 10,
+    range: {
+      min: 0,
+      step: 10,
+      max: 60
+    },
+    onChange: (value) => {
+    }
+  });
+  game.settings.register(id, "maxdisplayed", {
+    name: "Maximum Simultaneous Reactions",
+    hint: `Turn this down if you're running into performance issues from players spamming reactions.`,
+    scope: "client",
+    config: false,
+    type: Number,
+    range: {
+      min: 10,
+      max: 200,
+      step: 5
+    },
+    default: 200
+  });
+}
+class ReactionEditor extends FormApplication {
+  constructor(reactionId, parent) {
+    super({});
+    __publicField(this, "reactionId");
+    __publicField(this, "parent");
+    __publicField(this, "loadedJSON", {});
+    __publicField(this, "selectedPreset", "default");
+    this.reactionId = reactionId;
+    this.parent = parent;
+  }
+  static get defaultOptions() {
+    return mergeObject(super.defaultOptions, {
+      classes: ["form", "crowdgoeswild", "reactionEdtior"],
+      popOut: true,
+      template: `modules/${id}/templates/ReactionEditor.hbs`,
+      id: `${id}-reaction-editor`,
+      title: "CrowdGoesWild - Reaction Editor",
+      width: 600,
+      height: "auto",
+      submitOnChange: true,
+      closeOnSubmit: false,
+      resizable: true
+    });
+  }
+  async getData() {
+    let reactions = await game.settings.get(id, "reactions");
+    let data = reactions.find((reaction) => reaction.id == this.reactionId);
+    return data;
+  }
+  async _updateObject(event, formData) {
+    expandObject(formData);
+    let reactions = await game.settings.get(id, "reactions");
+    let index = reactions.findIndex(
+      (reaction) => reaction.id == this.reactionId
+    );
+    reactions[index] = formData;
+    await game.settings.set(id, "reactions", reactions);
+    await this.render();
+    await this.parent.render();
+  }
+  switchColors(inputEl1, inputEl2) {
+    let v1 = inputEl1.value;
+    let v2 = inputEl2.value;
+    console.log(inputEl1, inputEl2);
+    inputEl1.value = v2;
+    inputEl2.value = v1;
+  }
+  activateListeners(html) {
+    super.activateListeners(html);
+    html.find(".colorSwitch").on("click", (ev) => {
+      ev.stopPropagation();
+      let i1 = $(ev.currentTarget).parents(".colors").find(".primaryColor input.color").first().get(0);
+      let i2 = $(ev.currentTarget).parents(".colors").find(".secondaryColor input.color").first().get(0);
+      console.log(i1, i2);
+      this.switchColors(i1, i2);
+    });
+  }
+  // showImportReactionsDialog() {
+  //   let d = new Dialog({
+  //     title: "Import Reactions",
+  //     content: `
+  //           <p>Import a set of reactions from a JSON file? All current reactions will be overwritten.</p>
+  //           <input type="file" id="importer" name="reactionjson" class="cgw importer">
+  //           `,
+  //     buttons: {
+  //       one: {
+  //         icon: '<i class="fas fa-check"></i>',
+  //         label: "Import",
+  //         callback: () => {
+  //           if (this.loadedJSON) {
+  //             this.saveReactionSetData(this.loadedJSON);
+  //           }
+  //         },
+  //       },
+  //       two: {
+  //         icon: '<i class="fas fa-times"></i>',
+  //         label: "Cancel",
+  //         callback: () => {},
+  //       },
+  //     },
+  //     default: "two",
+  //     render: (html) => {
+  //       $(html)
+  //         .find("#importer")
+  //         .on("change", (ev) => {
+  //           console.log("Loaded file");
+  //           let reader = new FileReader();
+  //           reader.onload = (readerEv) => {
+  //             try {
+  //               let loadedJSON = JSON.parse(readerEv.target.result);
+  //               if (this.validateLoadedJSON(loadedJSON)) {
+  //                 this.loadedJSON = loadedJSON;
+  //               }
+  //             } catch (error) {
+  //               console.log("Invalid JSON file");
+  //               this.loadedJSON = false;
+  //             }
+  //           };
+  //           reader.readAsText(ev.target.files[0]);
+  //         });
+  //     },
+  //     close: (html) => {},
+  //   });
+  //   d.render(true);
+  // }
+  // async exportReactions() {
+  //   let data = await game.settings.get(moduleId, "reactions");
+  //   let dataJSON = JSON.stringify(data);
+  //   saveDataToFile(dataJSON, "text/json", "reactions.json");
+  // }
+  // async saveReactionSetData(data) {
+  // await game.settings.set(moduleId, 'reactions', data)
+  // }
+  // validateLoadedJSON(data) {
+  //   let isValid = true;
+  //   // make sure it's an array
+  //   if (Array.isArray(data)) {
+  //     // make sure nobody's slipping in the wrong number of reactions
+  //     if (data.length == 6) {
+  //       // check each row to make sure it has the right fields
+  //       for (const row of data) {
+  //         for (const key in ReactionOption) {
+  //           if (!(key in row)) {
+  //             isValid = false;
+  //             console.log(`Invalid JSON data in row ${row.id}: Missing ${key}`);
+  //           }
+  //         }
+  //       }
+  //     } else {
+  //       isValid = false;
+  //     }
+  //   }
+  //   return isValid;
+  // }
+  // showLoadPresetDialog() {
+  //   let d = new Dialog({
+  //     title: "Load Preset",
+  //     content: `<p>Load the ${
+  //       reactionSets[this.selectedPreset].label
+  //     } preset? Any changes you've made to reactions will be lost.</p>`,
+  //     buttons: {
+  //       one: {
+  //         icon: '<i class="fas fa-check"></i>',
+  //         label: "Load Preset",
+  //         callback: async () => {
+  //           await loadReactionsPreset(this.selectedPreset);
+  //           this.render(false);
+  //         },
+  //       },
+  //       two: {
+  //         icon: '<i class="fas fa-times"></i>',
+  //         label: "Cancel",
+  //         callback: () => {},
+  //       },
+  //     },
+  //     default: "two",
+  //     render: (html) => {},
+  //     close: (html) => {},
+  //   });
+  //   d.render(true);
+  // }
+}
+class ReactionSetupMenu extends Application {
+  constructor() {
+    super(...arguments);
+    // constructor(exampleOption) {
+    //     super(exampleOption);
+    // }
+    __publicField(this, "loadedJSON", {});
+    __publicField(this, "selectedPreset", "default");
+  }
+  static get defaultOptions() {
+    return mergeObject(super.defaultOptions, {
+      classes: ["form", "crowdgoeswild", "reactionSetup"],
+      popOut: true,
+      template: `modules/${id}/templates/ReactionSetup.hbs`,
+      id: `${id}-reaction-setup`,
+      title: "CrowdGoesWild - Reaction Setup",
+      width: 1200,
+      // submitOnChange: true,
+      closeOnSubmit: false,
+      resizable: true
+    });
+  }
+  async getData() {
+    let data = {
+      currentReactions: [],
+      presets: reactionSets,
+      selectedPreset: this.selectedPreset
+    };
+    data.currentReactions = game.settings.get(id, "reactions");
+    return data;
+  }
+  // switchColors(inputEl1, inputEl2) {
+  //   let v1 = inputEl1.value;
+  //   let v2 = inputEl2.value;
+  //   console.log(inputEl1, inputEl2);
+  //   inputEl1.value = v2;
+  //   inputEl2.value = v1;
+  // }
+  // async _updateObject(event, formData) {
+  //   const data = expandObject(formData);
+  //   let reactions = [];
+  //   for (const reaction of Object.values(data)) {
+  //     reactions[reaction.id] = reaction;
+  //   }
+  //   await game.settings.set(moduleId, "reactions", reactions);
+  //   await this.render();
+  // }
+  activateListeners(html) {
+    html.find("#resetButton").on("click", (ev) => {
+      ev.stopPropagation();
+      this.showLoadPresetDialog();
+    });
+    html.find(".reactionEdit").on("click", (ev) => {
+      ev.stopPropagation();
+      let reactionEditor = new ReactionEditor(
+        ev.currentTarget.dataset.id,
+        this
+      );
+      reactionEditor.render(true);
+    });
+    html.find("#reactionPreset").on("change", (ev) => {
+      ev.stopPropagation();
+      this.selectedPreset = ev.currentTarget.value;
+    });
+  }
+  showImportReactionsDialog() {
+    let d = new Dialog({
+      title: "Import Reactions",
+      content: `
+            <p>Import a set of reactions from a JSON file? All current reactions will be overwritten.</p>
+            <input type="file" id="importer" name="reactionjson" class="cgw importer">
+            `,
+      buttons: {
+        one: {
+          icon: '<i class="fas fa-check"></i>',
+          label: "Import",
+          callback: () => {
+            if (this.loadedJSON) {
+              this.saveReactionSetData(this.loadedJSON);
+            }
+          }
+        },
+        two: {
+          icon: '<i class="fas fa-times"></i>',
+          label: "Cancel",
+          callback: () => {
+          }
+        }
+      },
+      default: "two",
+      render: (html) => {
+        $(html).find("#importer").on("change", (ev) => {
+          console.log("Loaded file");
+          let reader = new FileReader();
+          reader.onload = (readerEv) => {
+            try {
+              let loadedJSON = JSON.parse(readerEv.target.result);
+              if (this.validateLoadedJSON(loadedJSON)) {
+                this.loadedJSON = loadedJSON;
+              }
+            } catch (error) {
+              console.log("Invalid JSON file");
+              this.loadedJSON = false;
+            }
+          };
+          reader.readAsText(ev.target.files[0]);
+        });
+      },
+      close: (html) => {
+      }
+    });
+    d.render(true);
+  }
+  async exportReactions() {
+    let data = await game.settings.get(id, "reactions");
+    let dataJSON = JSON.stringify(data);
+    saveDataToFile(dataJSON, "text/json", "reactions.json");
+  }
+  async saveReactionSetData(data) {
+  }
+  validateLoadedJSON(data) {
+    let isValid = true;
+    if (Array.isArray(data)) {
+      if (data.length == 6) {
+        for (const row of data) {
+          for (const key in ReactionOption) {
+            if (!(key in row)) {
+              isValid = false;
+              console.log(`Invalid JSON data in row ${row.id}: Missing ${key}`);
+            }
+          }
+        }
+      } else {
+        isValid = false;
+      }
+    }
+    return isValid;
+  }
+  showLoadPresetDialog() {
+    let d = new Dialog({
+      title: "Load Preset",
+      content: `<p>Load the ${reactionSets[this.selectedPreset].label} preset? Any changes you've made to reactions will be lost.</p>`,
+      buttons: {
+        one: {
+          icon: '<i class="fas fa-check"></i>',
+          label: "Load Preset",
+          callback: async () => {
+            await loadReactionsPreset(this.selectedPreset);
+            this.render(false);
+          }
+        },
+        two: {
+          icon: '<i class="fas fa-times"></i>',
+          label: "Cancel",
+          callback: () => {
+          }
+        }
+      },
+      default: "two",
+      render: (html) => {
+      },
+      close: (html) => {
+      }
+    });
+    d.render(true);
+  }
+}
 function randomNumber(min, max) {
   return Math.random() * (max - min) + min;
 }
@@ -943,9 +1777,10 @@ function getReactionHTML(reaction) {
                   color: ${reaction.primaryColor}; 
                   --fa-primary-color: ${reaction.primaryColor};
                   --fa-secondary-color: ${reaction.secondaryColor};
+                  font-size: ${reaction.fontSize}px;
               ">
           </i>`;
-  } else if (reaction.type == "filepicker" && ["png", "jpg", "jpeg", "webp", "avif", "svg"].includes(
+  } else if (reaction.type == "filepicker" && ["png", "jpg", "jpeg", "webp", "avif", "svg", ".gif"].includes(
     (_a = reaction.path) == null ? void 0 : _a.split(".").pop()
   )) {
     htmlString = `
@@ -953,10 +1788,19 @@ function getReactionHTML(reaction) {
             class="cgw-reaction" 
             data-id=${reaction.id}
             src="${reaction.path}"
+            style="
+              max-width: ${reaction.maxWidth}px;
+              max-height: ${reaction.maxHeight}px;
+            "
           />`;
   } else if (reaction.type == "filepicker" && ["webm", "mp4", "m4v"].includes((_b = reaction.path) == null ? void 0 : _b.split(".").pop())) {
     htmlString = `
-          <video class="cgw-reaction" data-id=${reaction.id} autoplay loop muted>
+          <video class="cgw-reaction" data-id=${reaction.id} autoplay loop muted
+            style="
+              max-width: ${reaction.maxWidth}px;
+              max-height: ${reaction.maxHeight}px;
+            "
+          >
             <source src="${reaction.path}" 
             type="video/${(_c = reaction.path) == null ? void 0 : _c.split(".").pop()}"
             />
@@ -1039,6 +1883,10 @@ async function renderChatButtonBar() {
       });
       $content.find("button.vibecheck").on("click", (event) => {
         initiateVibeCheck();
+      });
+      $content.find("button.cgwSettings").on("click", (event) => {
+        let reactionSetup = new ReactionSetupMenu();
+        reactionSetup.render(true);
       });
     }
   }).catch((e) => console.error(e));
@@ -1358,631 +2206,6 @@ function registerEffects() {
     }
   });
 }
-const reactionSets = {
-  default: {
-    label: "Default",
-    reactions: [
-      {
-        id: "0",
-        speed: "1",
-        enabled: "true",
-        title: "Like",
-        icon: "heart",
-        primaryColor: "#eb34b1",
-        secondaryColor: "",
-        style: "fas",
-        effect: "physics-floatUp",
-        directional: false,
-        type: "fontawesome",
-        path: ""
-      },
-      {
-        id: "1",
-        speed: "1",
-        enabled: "true",
-        title: "OMG",
-        icon: "triangle-exclamation",
-        primaryColor: "#c52525",
-        secondaryColor: "#efaa4b",
-        style: "fa-duotone",
-        effect: "physics-floatUp",
-        directional: false,
-        type: "fontawesome",
-        path: ""
-      },
-      {
-        id: "2",
-        speed: "1",
-        enabled: "true",
-        title: "Axe",
-        icon: "axe",
-        primaryColor: "#5f7e96",
-        secondaryColor: "#c1c1c1",
-        style: "fa-duotone",
-        effect: "physics-toss",
-        directional: true,
-        type: "fontawesome",
-        path: ""
-      },
-      {
-        id: "3",
-        speed: "1",
-        enabled: "true",
-        title: "droplet",
-        icon: "droplet",
-        primaryColor: "#a4fbf7",
-        secondaryColor: "#00a6ff",
-        style: "fa-duotone",
-        effect: "physics-drop",
-        directional: false,
-        type: "fontawesome",
-        path: ""
-      },
-      {
-        id: "4",
-        speed: "1",
-        enabled: "true",
-        title: "fire",
-        icon: "fire",
-        primaryColor: "#dd0000",
-        secondaryColor: "#f5c767",
-        style: "fa-duotone",
-        effect: "physics-floatUp",
-        directional: false,
-        type: "fontawesome",
-        path: ""
-      },
-      {
-        id: "5",
-        speed: "1",
-        enabled: "true",
-        title: "x",
-        icon: "times",
-        primaryColor: "#dd0000",
-        secondaryColor: "rgba(255,255,255,0.6)",
-        style: "fas",
-        effect: "shutdown",
-        directional: false,
-        type: "fontawesome",
-        path: ""
-      }
-    ]
-  },
-  sciFantasy: {
-    label: "Sci-Fantasy",
-    reactions: [
-      {
-        id: "0",
-        speed: "1",
-        enabled: "true",
-        title: "Like",
-        icon: "heart",
-        primaryColor: "#eb34b1",
-        secondaryColor: "",
-        style: "fas",
-        effect: "physics-floatUp",
-        directional: false,
-        type: "fontawesome",
-        path: ""
-      },
-      {
-        id: "1",
-        speed: "1",
-        enabled: "true",
-        title: "Warning",
-        icon: "siren",
-        primaryColor: "#5b7b8e",
-        secondaryColor: "#e60404",
-        style: "fa-duotone",
-        effect: "physics-floatUp",
-        directional: false,
-        type: "fontawesome",
-        path: ""
-      },
-      {
-        id: "2",
-        speed: "1",
-        enabled: "true",
-        title: "Laser Sword",
-        icon: "sword-laser",
-        primaryColor: "#7a7a7a",
-        secondaryColor: "#51e367",
-        style: "fa-duotone",
-        effect: "physics-toss",
-        directional: true,
-        type: "fontawesome",
-        path: ""
-      },
-      {
-        id: "3",
-        speed: "1",
-        enabled: "true",
-        title: "Space Station",
-        icon: "space-station-moon-construction",
-        primaryColor: "#cfcfcf",
-        secondaryColor: "#585858",
-        style: "fa-duotone",
-        effect: "physics-drop",
-        directional: false,
-        type: "fontawesome",
-        path: ""
-      },
-      {
-        id: "4",
-        speed: "1",
-        enabled: "true",
-        title: "Ship",
-        icon: "starship-freighter",
-        primaryColor: "#5f6d7e",
-        secondaryColor: "#aeaeae",
-        style: "fa-duotone",
-        effect: "physics-toss",
-        directional: false,
-        type: "fontawesome",
-        path: ""
-      },
-      {
-        id: "5",
-        speed: "1",
-        enabled: "true",
-        title: "x",
-        icon: "square-xmark",
-        primaryColor: "#dd0000",
-        secondaryColor: "rgba(255,255,255,0.6)",
-        style: "fas",
-        effect: "shutdown",
-        directional: false,
-        type: "fontawesome",
-        path: ""
-      }
-    ]
-  },
-  cozy: {
-    label: "Cozy",
-    reactions: [
-      {
-        id: "0",
-        speed: "1",
-        enabled: "true",
-        title: "Like",
-        icon: "leaf",
-        primaryColor: "#a8df35",
-        secondaryColor: "#6c9733",
-        style: "fa-duotone",
-        effect: "physics-flutterDown",
-        directional: false,
-        type: "fontawesome",
-        path: ""
-      },
-      {
-        id: "1",
-        speed: "1",
-        enabled: "true",
-        title: "OMG",
-        icon: "triangle-exclamation",
-        primaryColor: "#f5ad42",
-        secondaryColor: "",
-        style: "fas",
-        effect: "physics-floatUp",
-        directional: false,
-        type: "fontawesome",
-        path: ""
-      },
-      {
-        id: "2",
-        speed: "1",
-        enabled: "true",
-        title: "Axe",
-        icon: "mug-tea",
-        primaryColor: "#87b83d",
-        secondaryColor: "#ddbeaa",
-        style: "fa-duotone",
-        effect: "physics-floatUp",
-        directional: true,
-        type: "fontawesome",
-        path: ""
-      },
-      {
-        id: "3",
-        speed: "1",
-        enabled: "true",
-        title: "droplet",
-        icon: "droplet",
-        primaryColor: "#a4fbf7",
-        secondaryColor: "#6bc7fe",
-        style: "fa-duotone",
-        effect: "physics-drop",
-        directional: false,
-        type: "fontawesome",
-        path: ""
-      },
-      {
-        id: "4",
-        speed: "1",
-        enabled: "true",
-        title: "fire",
-        icon: "candle-holder",
-        primaryColor: "#f5efc5",
-        secondaryColor: "#eb8c34",
-        style: "fa-duotone",
-        effect: "physics-floatUp",
-        directional: false,
-        type: "fontawesome",
-        path: ""
-      },
-      {
-        id: "5",
-        speed: "1",
-        enabled: "true",
-        title: "x",
-        icon: "times",
-        primaryColor: "#dd0000",
-        secondaryColor: "rgba(255,255,255,0.6)",
-        style: "fas",
-        effect: "shutdown",
-        directional: false,
-        type: "fontawesome",
-        path: ""
-      }
-    ]
-  },
-  tavern: {
-    label: "Tavern",
-    reactions: [
-      {
-        id: "0",
-        speed: "1",
-        enabled: "true",
-        title: "Like",
-        icon: "heart",
-        primaryColor: "#eb34b1",
-        secondaryColor: "",
-        style: "fas",
-        effect: "physics-floatUp",
-        directional: false,
-        type: "fontawesome",
-        path: ""
-      },
-      {
-        id: "1",
-        speed: "1",
-        enabled: "true",
-        title: "OMG",
-        icon: "triangle-exclamation",
-        primaryColor: "#c52525",
-        secondaryColor: "#efaa4b",
-        style: "fa-duotone",
-        effect: "physics-floatUp",
-        directional: false,
-        type: "fontawesome",
-        path: ""
-      },
-      {
-        id: "2",
-        speed: "1",
-        enabled: "true",
-        title: "Axe",
-        icon: "axe",
-        primaryColor: "#5f7e96",
-        secondaryColor: "#c1c1c1",
-        style: "fa-duotone",
-        effect: "physics-toss",
-        directional: true,
-        type: "fontawesome",
-        path: ""
-      },
-      {
-        id: "3",
-        speed: "1",
-        enabled: "true",
-        title: "Beer",
-        icon: "beer-mug",
-        primaryColor: "#fee2a0",
-        secondaryColor: "#69432c",
-        style: "fa-duotone",
-        effect: "physics-toss",
-        directional: false,
-        type: "fontawesome",
-        path: ""
-      },
-      {
-        id: "4",
-        speed: "1",
-        enabled: "true",
-        title: "Meat",
-        icon: "meat",
-        primaryColor: "#ae4020",
-        secondaryColor: "#fbe7bd",
-        style: "fa-duotone",
-        effect: "physics-floatUp",
-        directional: false,
-        type: "fontawesome",
-        path: ""
-      },
-      {
-        id: "5",
-        speed: "1",
-        enabled: "true",
-        title: "x",
-        icon: "times",
-        primaryColor: "#dd0000",
-        secondaryColor: "rgba(255,255,255,0.6)",
-        style: "fas",
-        effect: "shutdown",
-        directional: false,
-        type: "fontawesome",
-        path: ""
-      }
-    ]
-  }
-};
-class ReactionSetupMenu extends FormApplication {
-  constructor() {
-    super(...arguments);
-    // constructor(exampleOption) {
-    //     super(exampleOption);
-    // }
-    __publicField(this, "loadedJSON", {});
-    __publicField(this, "selectedPreset", "default");
-  }
-  static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
-      classes: ["form", "crowdgoeswild", "reactionSetup"],
-      popOut: true,
-      template: `modules/${id}/templates/ReactionSetup.hbs`,
-      id: `${id}-reaction-setup`,
-      title: "CrowdGoesWild - Reaction Setup",
-      width: 1200,
-      submitOnChange: true,
-      closeOnSubmit: false,
-      resizable: true
-    });
-  }
-  async getData() {
-    let data = {
-      currentReactions: [],
-      presets: reactionSets,
-      selectedPreset: this.selectedPreset
-    };
-    data.currentReactions = game.settings.get(id, "reactions");
-    return data;
-  }
-  switchColors(inputEl1, inputEl2) {
-    let v1 = inputEl1.value;
-    let v2 = inputEl2.value;
-    console.log(inputEl1, inputEl2);
-    inputEl1.value = v2;
-    inputEl2.value = v1;
-  }
-  async _updateObject(event, formData) {
-    const data = expandObject(formData);
-    let reactions = [];
-    for (const reaction of Object.values(data)) {
-      reactions[reaction.id] = reaction;
-    }
-    await game.settings.set(id, "reactions", reactions);
-    await this.render();
-  }
-  activateListeners(html) {
-    super.activateListeners(html);
-    html.find("#generateButton").on("click", async (ev) => {
-      this.close();
-      await saveAllReactionPNGs(true);
-      reloadAllClients();
-    });
-    html.find("#resetButton").on("click", (ev) => {
-      this.showLoadPresetDialog();
-    });
-    html.find("#exportButton").on("click", (ev) => {
-      this.exportReactions();
-    });
-    html.find("#importButton").on("click", (ev) => {
-      this.showImportReactionsDialog();
-    });
-    html.find("#reactionPreset").on("change", (ev) => {
-      ev.stopPropagation();
-      this.selectedPreset = ev.currentTarget.value;
-    });
-    html.find(".colorSwitch").on("click", (ev) => {
-      ev.stopPropagation();
-      let i1 = $(ev.target).parents(".reactionRow").find(".primaryColor input.color").first().get(0);
-      let i2 = $(ev.target).parents(".reactionRow").find(".secondaryColor input.color").first().get(0);
-      this.switchColors(i1, i2);
-    });
-  }
-  showImportReactionsDialog() {
-    let d = new Dialog({
-      title: "Import Reactions",
-      content: `
-            <p>Import a set of reactions from a JSON file? All current reactions will be overwritten.</p>
-            <input type="file" id="importer" name="reactionjson" class="cgw importer">
-            `,
-      buttons: {
-        one: {
-          icon: '<i class="fas fa-check"></i>',
-          label: "Import",
-          callback: () => {
-            if (this.loadedJSON) {
-              this.saveReactionSetData(this.loadedJSON);
-            }
-          }
-        },
-        two: {
-          icon: '<i class="fas fa-times"></i>',
-          label: "Cancel",
-          callback: () => {
-          }
-        }
-      },
-      default: "two",
-      render: (html) => {
-        $(html).find("#importer").on("change", (ev) => {
-          console.log("Loaded file");
-          let reader = new FileReader();
-          reader.onload = (readerEv) => {
-            try {
-              let loadedJSON = JSON.parse(readerEv.target.result);
-              if (this.validateLoadedJSON(loadedJSON)) {
-                this.loadedJSON = loadedJSON;
-              }
-            } catch (error) {
-              console.log("Invalid JSON file");
-              this.loadedJSON = false;
-            }
-          };
-          reader.readAsText(ev.target.files[0]);
-        });
-      },
-      close: (html) => {
-      }
-    });
-    d.render(true);
-  }
-  async exportReactions() {
-    let data = await game.settings.get(id, "reactions");
-    let dataJSON = JSON.stringify(data);
-    saveDataToFile(dataJSON, "text/json", "reactions.json");
-  }
-  async saveReactionSetData(data) {
-  }
-  validateLoadedJSON(data) {
-    let isValid = true;
-    if (Array.isArray(data)) {
-      if (data.length == 6) {
-        for (const row of data) {
-          for (const key in ReactionOption) {
-            if (!(key in row)) {
-              isValid = false;
-              console.log(`Invalid JSON data in row ${row.id}: Missing ${key}`);
-            }
-          }
-        }
-      } else {
-        isValid = false;
-      }
-    }
-    return isValid;
-  }
-  showLoadPresetDialog() {
-    let d = new Dialog({
-      title: "Load Preset",
-      content: `<p>Load the ${reactionSets[this.selectedPreset].label} preset? Any changes you've made to reactions will be lost.</p>`,
-      buttons: {
-        one: {
-          icon: '<i class="fas fa-check"></i>',
-          label: "Load Preset",
-          callback: async () => {
-            await loadReactionsPreset(this.selectedPreset);
-            this.render(false);
-          }
-        },
-        two: {
-          icon: '<i class="fas fa-times"></i>',
-          label: "Cancel",
-          callback: () => {
-          }
-        }
-      },
-      default: "two",
-      render: (html) => {
-      },
-      close: (html) => {
-      }
-    });
-    d.render(true);
-  }
-}
-const ReactionOption = {
-  id: 0,
-  title: "",
-  icon: "",
-  primaryColor: "",
-  secondaryColor: "",
-  style: "",
-  speed: 0,
-  effect: "",
-  directional: false,
-  enabled: true,
-  type: "",
-  path: ""
-};
-async function loadReactionsPreset(presetName) {
-  let reactions = reactionSets[presetName].reactions;
-  await game.settings.set(id, "reactions", reactions);
-  return;
-}
-function registerSettings() {
-  console.log("Registering CGW Settings");
-  game.settings.register(id, "reactions", {
-    name: "Reaction",
-    hint: "The list of reactions usable by your players",
-    scope: "world",
-    // "world" = sync to db, "client" = local storage
-    config: false,
-    // false if you dont want it to show in module config
-    type: Array,
-    // Number, Boolean, String, Object
-    default: reactionSets["default"].reactions,
-    onChange: (value) => {
-    }
-  });
-  game.settings.register(id, "vibecheckautoclose", {
-    name: "Close vibe check after selection",
-    hint: "If this is enabled, players' vibe check popups will close after they make a selection. If this is disabled, it will stay open and they can choose another reaction.",
-    scope: "world",
-    // "world" = sync to db, "client" = local storage
-    config: true,
-    // false if you dont want it to show in module config
-    type: Boolean,
-    // Number, Boolean, String, Object
-    default: true,
-    onChange: (value) => {
-    }
-  });
-  game.settings.register(id, "vibecheckduration", {
-    name: "Vibe check duration",
-    hint: "This determines, in seconds, how long players have to respond to a vibe check. The results will display to the GM for twice this duration. 0 = no timeout",
-    scope: "world",
-    // "world" = sync to db, "client" = local storage
-    config: true,
-    // false if you dont want it to show in module config
-    type: Number,
-    // Number, Boolean, String, Object
-    default: 10,
-    range: {
-      min: 0,
-      step: 10,
-      max: 60
-    },
-    onChange: (value) => {
-    }
-  });
-  game.settings.register(id, "maxdisplayed", {
-    name: "Maximum Simultaneous Reactions",
-    hint: `Turn this down if you're running into performance issues from players spamming reactions.`,
-    scope: "client",
-    config: false,
-    type: Number,
-    range: {
-      min: 10,
-      max: 200,
-      step: 5
-    },
-    default: 200
-  });
-  game.settings.registerMenu(id, "reactionSetup", {
-    name: "Reactions",
-    label: "Configure Available Reactions",
-    // The text label used in the button
-    hint: "Use this menu to create up to eight reactions for your players to use during play.",
-    icon: "fas fa-bars",
-    // A Font Awesome icon used in the submenu button
-    type: ReactionSetupMenu,
-    // A FormApplication subclass
-    restricted: true
-    // Restrict this submenu to gamemaster only?
-  });
-}
 async function registerHelpers() {
   Handlebars.registerHelper("reactionPreview", (reaction) => {
     let html = getReactionHTML(reaction);
@@ -2019,7 +2242,6 @@ function registerHooks() {
       saveAllReactionPNGs();
     }
     exposeForMacros();
-    new ReactionSetupMenu({}).render(true);
   });
   Hooks.on("hotbarDrop", async function(bar, data, slot) {
     if (data.type == "reaction") {

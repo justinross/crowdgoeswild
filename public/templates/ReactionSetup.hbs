@@ -1,20 +1,20 @@
-<form>
+<div>
   <h2>Configure your reactions here. Changes are saved as they're made, but you should generate PNGs after making
     changes if you want players' macro icons to match the current reactions.</h2>
-  <div class="flexcol">
+  <div class="flexrow">
     {{#each currentReactions}}
       {{> "modules/crowdgoeswild/templates/parts/ReactionRow.hbs"}}
     {{/each}}
   </div>
   <div class="flexrow actionButtons">
-    <button name="submit" id="generateButton">Generate Reaction PNGs</button>
-    <div class="flexcol">
+    <div class="flexrow">
       <select name="reactionPreset" id="reactionPreset">
         {{selectOptions presets labelAttr="label" selected=selectedPreset}}
       </select>
       <button name="reset" id="resetButton" title="Load the selected reaction set">Load Preset</button>
     </div>
-    <button name="reset" id="importButton" title="Import a reaction set from JSON" ><i class="fas fa-upload"></i>Import Set</button>
-    <button name="reset" id="exportButton" title="Export a reaction set to JSON" ><i class="fas fa-download"></i>Export Set</button>
+    <button name="submit" id="generateButton">Generate Reaction PNGs</button>
+    {{!-- <button name="reset" id="importButton" title="Import a reaction set from JSON" ><i class="fas fa-upload"></i>Import Set</button>
+    <button name="reset" id="exportButton" title="Export a reaction set to JSON" ><i class="fas fa-download"></i>Export Set</button> --}}
   </div>
-</form>
+</div>

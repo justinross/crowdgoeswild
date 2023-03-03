@@ -16,6 +16,8 @@ export const ReactionOption = {
   enabled: true,
   type: "",
   path: "",
+  maxWidth: 200,
+  maxHeight: 200,
 };
 
 export const typeOptions = [
@@ -96,12 +98,12 @@ export function registerSettings() {
     default: 200,
   });
 
-  game.settings.registerMenu(moduleId, "reactionSetup", {
-    name: "Reactions",
-    label: "Configure Available Reactions", // The text label used in the button
-    hint: "Use this menu to create up to eight reactions for your players to use during play.",
-    icon: "fas fa-bars", // A Font Awesome icon used in the submenu button
-    type: ReactionSetupMenu, // A FormApplication subclass
-    restricted: true, // Restrict this submenu to gamemaster only?
-  });
+  // game.settings.registerMenu(moduleId, "reactionSetup", {
+  //   name: "Reactions",
+  //   label: "Configure Available Reactions", // The text label used in the button
+  //   hint: "Use this menu to create up to eight reactions for your players to use during play.",
+  //   icon: "fas fa-bars", // A Font Awesome icon used in the submenu button
+  //   type: ReactionSetupMenu, // A FormApplication subclass
+  //   restricted: true, // Restrict this submenu to gamemaster only?
+  // });
 }

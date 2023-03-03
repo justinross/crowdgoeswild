@@ -3,6 +3,7 @@ import * as htmlToImage from "html-to-image";
 import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
 import { handleReactionClick } from "./events";
 import { initiateVibeCheck } from "./socket";
+import { ReactionSetupMenu } from "./ReactionSetupMenu";
 
 export function randomNumber(min, max) {
   return Math.random() * (max - min) + min;
@@ -64,11 +65,12 @@ export function getReactionHTML(reaction) {
                   color: ${reaction.primaryColor}; 
                   --fa-primary-color: ${reaction.primaryColor};
                   --fa-secondary-color: ${reaction.secondaryColor};
+                  font-size: ${reaction.fontSize}px;
               ">
           </i>`;
   } else if (
     reaction.type == "filepicker" &&
-    ["png", "jpg", "jpeg", "webp", "avif", "svg"].includes(
+    ["png", "jpg", "jpeg", "webp", "avif", "svg", ".gif"].includes(
       reaction.path?.split(".").pop()
     )
   ) {
@@ -77,15 +79,22 @@ export function getReactionHTML(reaction) {
             class="cgw-reaction" 
             data-id=${reaction.id}
             src="${reaction.path}"
+            style="
+              max-width: ${reaction.maxWidth}px;
+              max-height: ${reaction.maxHeight}px;
+            "
           />`;
   } else if (
     reaction.type == "filepicker" &&
     ["webm", "mp4", "m4v"].includes(reaction.path?.split(".").pop())
   ) {
     htmlString = `
-          <video class="cgw-reaction" data-id=${
-            reaction.id
-          } autoplay loop muted>
+          <video class="cgw-reaction" data-id=${reaction.id} autoplay loop muted
+            style="
+              max-width: ${reaction.maxWidth}px;
+              max-height: ${reaction.maxHeight}px;
+            "
+          >
             <source src="${reaction.path}" 
             type="video/${reaction.path?.split(".").pop()}"
             />
@@ -192,6 +201,11 @@ export async function renderChatButtonBar() {
 
         $content.find("button.vibecheck").on("click", (event) => {
           initiateVibeCheck();
+        });
+
+        $content.find("button.cgwSettings").on("click", (event) => {
+          let reactionSetup = new ReactionSetupMenu();
+          reactionSetup.render(true);
         });
       }
     })
