@@ -73,7 +73,10 @@ function registerEffects() {
 
       gsap.set(targets, {
         left: xFrom,
-        bottom: defaults.offscreen,
+        bottom:
+          config.reaction.type == "fontawesome"
+            ? defaults.offscreen
+            : defaults.offscreen - config.reaction.maxHeight / 2,
       });
 
       let randomLife = randomNumber(1, 5);
@@ -306,7 +309,10 @@ function registerEffects() {
 
       gsap.set(targets, {
         left: xFrom,
-        bottom: defaults.offscreen,
+        bottom:
+          config.reaction.type == "fontawesome"
+            ? defaults.offscreen
+            : defaults.offscreen - config.reaction.maxHeight / 2,
       });
 
       if (config.reaction.directional) {
