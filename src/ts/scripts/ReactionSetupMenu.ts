@@ -64,13 +64,13 @@ export class ReactionSetupMenu extends Application {
   // }
 
   activateListeners(html) {
-    //   super.activateListeners(html);
+    super.activateListeners(html);
 
-    //   html.find("#generateButton").on("click", async (ev) => {
-    //     this.close();
-    //     await saveAllReactionPNGs(true);
-    //     reloadAllClients();
-    //   });
+    html.find("#generateButton").on("click", async (ev) => {
+      this.close();
+      await saveAllReactionPNGs(true);
+      reloadAllClients();
+    });
     html.find("#resetButton").on("click", (ev) => {
       ev.stopPropagation();
       this.showLoadPresetDialog();

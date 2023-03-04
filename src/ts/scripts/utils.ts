@@ -28,24 +28,17 @@ export function calcAngleDegrees(x, y) {
 export async function getReactionAsImage(reactionObject) {
   let reactionHTML = await getReactionHTML(reactionObject);
   let $interface = $("#interface");
-  // let interfaceEl = $interface.get(0)
-  // let $addedChild = $('<div id="interfaceShadow"></div>')
-  // let addedChildEl = $addedChild.get(0)
-
-  // let shadow = addedChildEl.attachShadow({mode: 'open'})
   let $appended = $(reactionHTML).appendTo($interface);
   $appended.css({ zIndex: "-10000" });
-
-  // $(shadow).append(reactionHTML)
-  // let shadowEl = addedChildEl.shadowRoot
   let iconPNGData;
   try {
-    iconPNGData = await htmlToImage.toPng($appended.get(0));
+    let appEl = $appended.get(0);
+    iconPNGData = await htmlToImage.toPng(appEl);
   } catch (error) {
     console.error("oops, something went wrong!", error);
   }
 
-  $appended.remove();
+  // $appended.remove();
   return iconPNGData;
 }
 
@@ -113,7 +106,12 @@ export async function saveAllReactionPNGs(force = false) {
   }
   let reactions = (await game.settings.get(moduleId, "reactions")) as [];
   for (const reaction of reactions) {
-    await generateReactionPNG(reaction, force);
+    if (!["webm", "mp4", "m4v"].includes(reaction.path?.split(".").pop())) {
+      console.log("Not a video", reaction);
+      await generateReactionPNG(reaction, force);
+    } else {
+      console.log("Can't make images for video reactions", reaction);
+    }
   }
 }
 
@@ -153,12 +151,6 @@ export async function generateReactionPNG(reactionObject, force) {
     console.log("Image already exists. Refusing to regenerate.");
     return;
   }
-
-  // try {
-  // } catch (error) {
-  //     console.log("Folder exists. Using it!")
-  // }
-  // folderPath += "/reactions"
 }
 
 export async function getReactionPNGUrl(reactionId) {

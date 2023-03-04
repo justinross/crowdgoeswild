@@ -56,7 +56,6 @@ export default function registerHooks() {
   });
 
   Hooks.on("renderSidebarTab", async (app, html, data) => {
-    console.log("Rendered sidebar tab");
     if (app.tabName !== "chat") return;
     renderChatButtonBar();
 

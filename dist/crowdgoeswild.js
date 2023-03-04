@@ -846,6 +846,12 @@ async function sendReactionToSocket(reactionId) {
     payload: reactionId
   });
 }
+async function reloadAllClients() {
+  emitSocketEvent({
+    type: "reload",
+    payload: ""
+  });
+}
 async function sendVibeCheckResponse(user, responseId) {
   emitSocketEvent({
     type: "vibecheckresponse",
@@ -1631,6 +1637,12 @@ class ReactionSetupMenu extends Application {
   //   await this.render();
   // }
   activateListeners(html) {
+    super.activateListeners(html);
+    html.find("#generateButton").on("click", async (ev) => {
+      this.close();
+      await saveAllReactionPNGs(true);
+      reloadAllClients();
+    });
     html.find("#resetButton").on("click", (ev) => {
       ev.stopPropagation();
       this.showLoadPresetDialog();
@@ -1763,11 +1775,11 @@ async function getReactionAsImage(reactionObject) {
   $appended.css({ zIndex: "-10000" });
   let iconPNGData;
   try {
-    iconPNGData = await toPng($appended.get(0));
+    let appEl = $appended.get(0);
+    iconPNGData = await toPng(appEl);
   } catch (error) {
     console.error("oops, something went wrong!", error);
   }
-  $appended.remove();
   return iconPNGData;
 }
 async function getReactionObject(reactionId) {
@@ -1819,6 +1831,7 @@ function getReactionHTML(reaction) {
   return htmlString;
 }
 async function saveAllReactionPNGs(force = false) {
+  var _a;
   if (force) {
     ui.notifications.info(
       `Generating icons for reaction macros. This will take a moment.`,
@@ -1827,7 +1840,12 @@ async function saveAllReactionPNGs(force = false) {
   }
   let reactions = await game.settings.get(id, "reactions");
   for (const reaction of reactions) {
-    await generateReactionPNG(reaction, force);
+    if (!["webm", "mp4", "m4v"].includes((_a = reaction.path) == null ? void 0 : _a.split(".").pop())) {
+      console.log("Not a video", reaction);
+      await generateReactionPNG(reaction, force);
+    } else {
+      console.log("Can't make images for video reactions", reaction);
+    }
   }
 }
 async function generateReactionPNG(reactionObject, force) {
@@ -1955,7 +1973,7 @@ function registerEffects() {
       $fullScreen.height();
       gsap.set(targets, {
         left: xFrom,
-        bottom: defaults.offscreen
+        bottom: config.reaction.type == "fontawesome" ? defaults.offscreen : defaults.offscreen - config.reaction.maxHeight / 2
       });
       let randomLife = randomNumber(1, 5);
       tl.to(
@@ -2148,7 +2166,7 @@ function registerEffects() {
       let velocity = randomNumber(velocityBase * 0.85, velocityBase * 1.15);
       gsap.set(targets, {
         left: xFrom,
-        bottom: defaults.offscreen
+        bottom: config.reaction.type == "fontawesome" ? defaults.offscreen : defaults.offscreen - config.reaction.maxHeight / 2
       });
       if (config.reaction.directional) {
         gsap.set(targets, {
@@ -4353,7 +4371,6 @@ var semver = {
 async function runMigrationChecks() {
   let module = await game.modules.get("crowdgoeswild");
   let installedVersion = module.version;
-  console.log(installedVersion);
   if (installedVersion == "#{VERSION}#") {
     console.log(
       "No version number available. Skipping migration. Things might run wonky."
@@ -4435,7 +4452,6 @@ function registerHooks() {
     }
   });
   Hooks.on("renderSidebarTab", async (app, html, data) => {
-    console.log("Rendered sidebar tab");
     if (app.tabName !== "chat")
       return;
     renderChatButtonBar();

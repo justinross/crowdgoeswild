@@ -24,11 +24,13 @@
 }
 .cgwcontainer .cgw.reactionbar button i.cgw-reaction {
   position: relative;
+  pointer-events: all;
   font-size: 1rem !important;
 }
 .cgwcontainer .cgw.reactionbar button img.cgw-reaction,
 .cgwcontainer .cgw.reactionbar button video.cgw-reaction {
   position: relative;
+  pointer-events: all;
   max-width: 100% !important;
   max-height: 100% !important;
 }
