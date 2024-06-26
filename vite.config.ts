@@ -1,43 +1,47 @@
-import {defineConfig} from 'vite';
+import type { UserConfig } from "vite";
+import path from "path";
 
-export default defineConfig({
-    publicDir: 'public',
-    base: '/modules/crowdgoeswild/',
-    server: {
-        port: 31001,
-        open: true,
-        proxy: {
-            '^(?!/modules/crowdgoeswild)': 'http://localhost:31000/',
-            '/socket.io': {
-                target: 'ws://localhost:31000',
-                ws: true
-            }
-        }
+const config: UserConfig = {
+  publicDir: "public",
+  base: "/modules/crowdgoeswild/",
+  root: "src/",
+  server: {
+    port: 31001,
+    open: true,
+    proxy: {
+      "^(?!/modules/crowdgoeswild)": "http://localhost:31000/",
+      "/socket.io": {
+        target: "ws://localhost:31000",
+        ws: true,
+      },
     },
-    build: {
-        outDir: 'dist',
-        emptyOutDir: true,
-        sourcemap: true,
-        minify: false,
-        rollupOptions: {
-            external: ['/scripts/greensock/esm/all.js'],
-            makeAbsoluteExternalsRelative: false,
-            output: {
-                assetFileNames: (assetInfo) => {
-                    if (assetInfo.name === 'style.css') return 'cgw.css';
-                    return assetInfo.name;
-                },
-                globals: {
-                    gsap: "gsap",
-                    Handlebars: "Handlebars"
-                }
-            }
+  },
+  build: {
+    outDir: path.resolve(__dirname, "dist"),
+    emptyOutDir: true,
+    sourcemap: true,
+    minify: false,
+    rollupOptions: {
+      external: ["/scripts/greensock/esm/all.js"],
+      makeAbsoluteExternalsRelative: false,
+      output: {
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name === "style.css") return "crowdgoeswild.css";
+          return assetInfo.name as string;
         },
-        lib: {
-            name: 'crowdgoeswild',
-            entry: 'src/ts/scripts/crowdgoeswild.ts',
-            formats: ['es'],
-            fileName: 'crowdgoeswild'
-        }
-    }
-})
+        globals: {
+          gsap: "gsap",
+          Handlebars: "Handlebars",
+        },
+      },
+    },
+    lib: {
+      name: "crowdgoeswild",
+      entry: path.resolve(__dirname, "src/crowdgoeswild.ts"),
+      formats: ["es"],
+      fileName: "crowdgoeswild",
+    },
+  },
+};
+
+export default config;

@@ -1,8 +1,8 @@
 import { ReactionSetupMenu } from "./ReactionSetupMenu";
-import { id as moduleId } from "../../../public/module.json";
 import { saveAllReactionPNGs } from "./utils";
 import { reactionSets } from "./reactionsets";
 
+const moduleId = "crowdgoeswild";
 export const ReactionOption = {
   id: 0,
   title: "",

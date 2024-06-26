@@ -4,11 +4,10 @@
   "description": "",
   "version": "#{VERSION}#",
   "library": "false",
-  "manifestPlusVersion": "1.2.0",
   "compatibility": {
     "minimum": 10,
     "verified": 10,
-    "maximum": 12
+    "maximum": 13
   },
   "authors": [
     {
@@ -22,7 +21,7 @@
     "requires": []
   },
   "esmodules": ["crowdgoeswild.js", "greensock/esm/all.js"],
-  "styles": ["cgw.css"],
+  "styles": ["crowdgoeswild.css"],
   "languages": [
     {
       "lang": "en",

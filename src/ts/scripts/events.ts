@@ -1,7 +1,6 @@
 import { gsap, CustomWiggle, CustomEase } from "/scripts/greensock/esm/all.js";
 import { randomNumber, getReactionObject, getReactionHTML } from "./utils";
 import { sendReactionToSocket } from "./socket";
-import { id as moduleId } from "../../../public/module.json";
 import VibeCheckPopup from "./VibeCheckPopup";
 
 export async function insertSentReaction(reactionId) {

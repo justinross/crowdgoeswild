@@ -1,4 +1,4 @@
-import { id as moduleId } from "../../../public/module.json";
+const moduleId = "crowdgoeswild";
 import * as htmlToImage from "html-to-image";
 import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
 import { handleReactionClick } from "./events";

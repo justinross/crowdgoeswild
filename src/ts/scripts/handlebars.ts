@@ -1,5 +1,6 @@
-import { id as moduleId } from "../../../public/module.json";
 import { getReactionHTML } from "./utils";
+
+const moduleId = "crowdgoeswild";
 
 export async function registerHelpers() {
   Handlebars.registerHelper("reactionPreview", (reaction) => {

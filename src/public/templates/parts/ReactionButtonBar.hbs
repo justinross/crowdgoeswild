@@ -1,0 +1,17 @@
+<div class="cgwcontainer">
+  <div class="cgw reactionbar flexrow">
+    {{#each reactions}}
+      <button
+        draggable="true"
+        class="reaction"
+        data-id="{{id}}"
+      >{{reactionPreview this}}</button>
+    {{/each}}
+  </div>
+  {{#if isGM}}
+    <div class="cgw gmButtons flexrow">
+      <button class="vibecheck">Vibe Check</button>
+      <button class="cgwSettings"><i class="fas fa-gears"></i></button>
+    </div>
+  {{/if}}
+</div>

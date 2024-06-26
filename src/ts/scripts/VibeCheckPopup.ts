@@ -1,6 +1,6 @@
-import { id as moduleId } from "../../../public/module.json";
 import { sendVibeCheckResponse } from "./socket";
 import { getReactionObject } from "./utils";
+const moduleId = "crowdgoeswild";
 
 type userResponse = {
   user: {};
@@ -23,7 +23,7 @@ export default class VibeCheckPopup extends Application {
    * override
    */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["form", "crowdgoeswild", "vibecheck"],
       popOut: true,
       template: `modules/${moduleId}/templates/VibeCheckPopup.hbs`,
@@ -35,7 +35,7 @@ export default class VibeCheckPopup extends Application {
     });
   }
 
-  async getData(): object | Promise<object> {
+  async getData(): Promise<object> {
     let users = await game.users.players.filter((u) => u.active);
 
     //group the responses by user for display. Variable naming is awful here.

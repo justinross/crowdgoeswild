@@ -1,0 +1,7 @@
+// only required in dev
+
+// in prod, foundry loads style.css, as compiled by vite/rollup,
+// mostly from the `import crowdgoeswild.scss` line at the top of crowdgoeswild.ts
+
+// in dev, foundry loads style.css, this file, which is a no-op
+// in dev, crowdgoeswild.ts imports crowdgoeswild.scss directly

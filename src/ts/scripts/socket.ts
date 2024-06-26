@@ -1,6 +1,6 @@
 import { insertSentReaction, displayVibeCheck } from "./events";
-import { id as moduleId } from "../../../public/module.json";
 import { recordVibeCheckResponse } from "./VibeCheckPopup";
+const moduleId = "crowdgoeswild";
 
 export function registerSocketEvents() {
   game.socket.on(`module.${moduleId}`, handleSocketEvent);

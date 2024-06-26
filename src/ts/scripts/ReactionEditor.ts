@@ -1,4 +1,4 @@
-import { id as moduleId } from "../../../public/module.json";
+const moduleId = "crowdgoeswild";
 
 export class ReactionEditor extends FormApplication {
   reactionId: Number;
@@ -13,7 +13,7 @@ export class ReactionEditor extends FormApplication {
   selectedPreset = "default";
 
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["form", "crowdgoeswild", "reactionEdtior"],
       popOut: true,
       template: `modules/${moduleId}/templates/ReactionEditor.hbs`,
@@ -27,15 +27,44 @@ export class ReactionEditor extends FormApplication {
     });
   }
 
-  async getData() {
-    let reactions = await game.settings.get(moduleId, "reactions");
+  async getThisReaction() {
+    let reactions = (await game.settings.get(moduleId, "reactions")) as [
+      { id: Number; meta: {} }
+    ];
     let data = reactions.find((reaction) => reaction.id == this.reactionId);
     return data;
   }
 
+  async getData() {
+    let data = await this.getThisReaction();
+    data.meta = {
+      typeOptions: {
+        fontawesome: "Font Icon",
+        filepicker: "Image/Video",
+      },
+      effectOptions: {
+        "physics-floatUp": "Float Up",
+        "physics-drop": "Fall Down",
+        "physics-flutterDown": "Flutter Down",
+        "physics-toss": "Throw",
+        shutdown: "Shutdown",
+      },
+      styleOptions: {
+        fas: "Solid",
+        "fa-duotone": "Duotone",
+        "fa-regular": "Regular",
+        "fa-light": "Light",
+        "fa-thin": "Thin",
+      },
+    };
+    return data;
+  }
+
   async _updateObject(event, formData) {
-    const data = expandObject(formData);
-    let reactions = await game.settings.get(moduleId, "reactions");
+    const data = foundry.utils.expandObject(formData);
+    let reactions = (await game.settings.get(moduleId, "reactions")) as [
+      { id: Number }
+    ];
 
     let index = reactions.findIndex(
       (reaction) => reaction.id == this.reactionId
@@ -52,9 +81,10 @@ export class ReactionEditor extends FormApplication {
     let v1 = inputEl1.value;
     let v2 = inputEl2.value;
     console.log(inputEl1, inputEl2);
+    console.log(v1, v2);
 
-    inputEl1.value = v2;
     inputEl2.value = v1;
+    inputEl1.value = v2;
   }
 
   activateListeners(html) {
@@ -83,16 +113,15 @@ export class ReactionEditor extends FormApplication {
       ev.stopPropagation();
       let i1 = $(ev.currentTarget)
         .parents(".colors")
-        .find(".primaryColor input.color")
+        .find(".primaryColor color-picker")
         .first()
         .get(0);
       let i2 = $(ev.currentTarget)
         .parents(".colors")
-        .find(".secondaryColor input.color")
+        .find(".secondaryColor color-picker")
         .first()
         .get(0);
 
-      console.log(i1, i2);
       this.switchColors(i1, i2);
     });
 

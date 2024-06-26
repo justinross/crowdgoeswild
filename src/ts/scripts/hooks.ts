@@ -1,5 +1,4 @@
 import { registerSettings } from "./settings";
-import { id as moduleId } from "../../../public/module.json";
 import { registerSocketEvents, sendReactionToSocket } from "./socket";
 import { loadPartials, registerHelpers } from "./handlebars";
 import {
@@ -11,6 +10,7 @@ import {
 
 import { ReactionSetupMenu } from "./ReactionSetupMenu";
 import runMigrationChecks from "./migrations";
+const moduleId = "crowdgoeswild";
 
 export default function registerHooks() {
   Hooks.once("init", async function () {

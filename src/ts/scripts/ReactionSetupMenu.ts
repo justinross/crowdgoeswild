@@ -1,10 +1,10 @@
-import { id as moduleId } from "../../../public/module.json";
 import { calcAngleDegrees, saveAllReactionPNGs } from "./utils";
 import { loadReactionsPreset, ReactionOption } from "./settings";
 import { reactionSets } from "./reactionsets";
 import { reloadAllClients } from "./socket";
 import { ReactionEditor } from "./ReactionEditor";
 
+const moduleId = "crowdgoeswild";
 export class ReactionSetupMenu extends Application {
   // constructor(exampleOption) {
   //     super(exampleOption);
@@ -14,7 +14,7 @@ export class ReactionSetupMenu extends Application {
   selectedPreset = "default";
 
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["form", "crowdgoeswild", "reactionSetup"],
       popOut: true,
       template: `modules/${moduleId}/templates/ReactionSetup.hbs`,
@@ -53,7 +53,7 @@ export class ReactionSetupMenu extends Application {
   // }
 
   // async _updateObject(event, formData) {
-  //   const data = expandObject(formData);
+  //   const data = foundry.utils.expandObject(formData);
   //   let reactions = [];
 
   //   for (const reaction of Object.values(data)) {
