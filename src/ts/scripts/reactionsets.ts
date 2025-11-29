@@ -1,4 +1,11 @@
-export const reactionSets = {
+import type { Reaction } from "./types";
+
+interface ReactionSet {
+  label: string;
+  reactions: Reaction[];
+}
+
+export const reactionSets: Record<string, ReactionSet> = {
   default: {
     label: "Default",
     reactions: [

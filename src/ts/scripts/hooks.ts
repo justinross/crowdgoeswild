@@ -55,17 +55,18 @@ export default function registerHooks() {
     }
   });
 
-  Hooks.on("renderSidebarTab", async (app, html, data) => {
-    if (app.tabName !== "chat") return;
+  // Foundry v13+ uses Application V2 for sidebar tabs
+  // renderSidebarTab may fire before the DOM is ready, so we use renderChatLog instead
+  Hooks.on("renderChatLog", async (app, html, data) => {
     renderChatButtonBar();
-
-    //Stress testing. Don't turn this on. Probably.
-    // setTimeout(()=>{
-    //     for (let index = 0; index < 1000; index++) {
-    //         setTimeout(()=>sendReactionToSocket({icon: "heart", color: "#eb34b1", effect: "floatUp"}), randomNumber(0, 100))
-    //     }
-    // }, 4000)
   });
+
+  //Stress testing. Don't turn this on. Probably.
+  // setTimeout(()=>{
+  //     for (let index = 0; index < 1000; index++) {
+  //         setTimeout(()=>sendReactionToSocket({icon: "heart", color: "#eb34b1", effect: "floatUp"}), randomNumber(0, 100))
+  //     }
+  // }, 4000)
 
   // Hooks.on("getSceneControlButtons", controls => {
   //     console.log(controls)

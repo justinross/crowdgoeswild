@@ -9,9 +9,9 @@ const config: UserConfig = {
     port: 31001,
     open: true,
     proxy: {
-      "^(?!/modules/crowdgoeswild)": "http://localhost:31000/",
+      "^(?!/modules/crowdgoeswild)": "http://localhost:30000/",
       "/socket.io": {
-        target: "ws://localhost:31000",
+        target: "ws://localhost:30000",
         ws: true,
       },
     },

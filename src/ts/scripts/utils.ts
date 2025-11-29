@@ -4,36 +4,39 @@ import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
 import { handleReactionClick } from "./events";
 import { initiateVibeCheck } from "./socket";
 import { ReactionSetupMenu } from "./ReactionSetupMenu";
+import type { Reaction } from "./types";
 
-export function randomNumber(min, max) {
+export function randomNumber(min: number, max: number): number {
   return Math.random() * (max - min) + min;
 }
 
-export function invlerp(x, y, a) {
+export function invlerp(x: number, y: number, a: number): number {
   return clamp((a - x) / (y - x));
 }
 
-export function lerp(start, end, amt) {
+export function lerp(start: number, end: number, amt: number): number {
   return (1 - amt) * start + amt * end;
 }
 
-export function clamp(a, min = 0, max = 1) {
+export function clamp(a: number, min: number = 0, max: number = 1): number {
   return Math.min(max, Math.max(min, a));
 }
 
-export function calcAngleDegrees(x, y) {
+export function calcAngleDegrees(x: number, y: number): number {
   return (Math.atan2(y, x) * 180) / Math.PI;
 }
 
-export async function getReactionAsImage(reactionObject) {
+export async function getReactionAsImage(reactionObject: Reaction): Promise<string | undefined> {
   let reactionHTML = await getReactionHTML(reactionObject);
   let $interface = $("#interface");
   let $appended = $(reactionHTML).appendTo($interface);
   $appended.css({ zIndex: "-10000" });
-  let iconPNGData;
+  let iconPNGData: string | undefined;
   try {
     let appEl = $appended.get(0);
-    iconPNGData = await htmlToImage.toPng(appEl);
+    if (appEl) {
+      iconPNGData = await htmlToImage.toPng(appEl);
+    }
   } catch (error) {
     console.error("oops, something went wrong!", error);
   }
@@ -42,13 +45,13 @@ export async function getReactionAsImage(reactionObject) {
   return iconPNGData;
 }
 
-export async function getReactionObject(reactionId) {
-  let reactions = (await game.settings.get(moduleId, "reactions")) as [];
+export async function getReactionObject(reactionId: string): Promise<Reaction | undefined> {
+  let reactions = game.settings?.get("crowdgoeswild", "reactions") ?? [];
   let reaction = reactions.find((r) => r.id == reactionId);
   return reaction;
 }
 
-export function getReactionHTML(reaction) {
+export function getReactionHTML(reaction: Reaction): string {
   let htmlString = "";
   if (reaction.type == "fontawesome") {
     htmlString = `
@@ -64,7 +67,7 @@ export function getReactionHTML(reaction) {
   } else if (
     reaction.type == "filepicker" &&
     ["png", "jpg", "jpeg", "webp", "avif", "svg", ".gif"].includes(
-      reaction.path?.split(".").pop()
+      reaction.path?.split(".").pop() ?? ""
     )
   ) {
     htmlString = `
@@ -79,7 +82,7 @@ export function getReactionHTML(reaction) {
           />`;
   } else if (
     reaction.type == "filepicker" &&
-    ["webm", "mp4", "m4v"].includes(reaction.path?.split(".").pop())
+    ["webm", "mp4", "m4v"].includes(reaction.path?.split(".").pop() ?? "")
   ) {
     htmlString = `
           <video class="cgw-reaction" data-id=${reaction.id} autoplay loop muted
@@ -97,17 +100,17 @@ export function getReactionHTML(reaction) {
   return htmlString;
 }
 
-export async function saveAllReactionPNGs(force = false) {
+export async function saveAllReactionPNGs(force: boolean = false): Promise<void> {
   if (force) {
-    ui.notifications.info(
+    ui.notifications?.info(
       `Generating icons for reaction macros. This will take a moment.`,
       { permanent: false }
     );
   }
-  let reactions = (await game.settings.get(moduleId, "reactions")) as [];
+  let reactions = game.settings?.get("crowdgoeswild", "reactions") ?? [];
   for (const reaction of reactions) {
-    if (!["webm", "mp4", "m4v"].includes(reaction.path?.split(".").pop())) {
-      console.log("Not a video", reaction);
+    const ext = reaction.path?.split(".").pop();
+    if (!ext || !["webm", "mp4", "m4v"].includes(ext)) {
       await generateReactionPNG(reaction, force);
     } else {
       console.log("Can't make images for video reactions", reaction);
@@ -115,24 +118,20 @@ export async function saveAllReactionPNGs(force = false) {
   }
 }
 
-export async function generateReactionPNG(reactionObject, force) {
+export async function generateReactionPNG(reactionObject: Reaction, force: boolean): Promise<string | undefined> {
+  if (!game.world) return;
   let worldPath = `worlds/${game.world.id}`;
   let iconsPath = `worlds/${game.world.id}/reactionIcons`;
-  let world_dirs_list = await FilePicker.browse("data", worldPath).then(
+  let world_dirs_list = await foundry.applications.apps.FilePicker.implementation.browse("data", worldPath).then(
     (picker) => picker.dirs
   );
   if (!world_dirs_list.includes(iconsPath)) {
     console.log("Reactions icon folder doesn't exist. Creating it.");
-    await FilePicker.createDirectory("data", iconsPath);
+    await foundry.applications.apps.FilePicker.implementation.createDirectory("data", iconsPath);
   }
-  // let macros_dirs_list = await FilePicker.browse("data", macrosPath).then(picker => picker.dirs)
-  // if (!macros_dirs_list.includes(macrosPath + "/reactions")){
-  //     console.log("Reactions macro folder doesn't exist. Creating it.");
-  //     await FilePicker.createDirectory('data', macrosPath + '/reactions')
-  // }
 
   let imagesPath = iconsPath;
-  let files_list = await FilePicker.browse("data", iconsPath).then(
+  let files_list = await foundry.applications.apps.FilePicker.implementation.browse("data", iconsPath).then(
     (picker) => picker.files
   );
   if (
@@ -141,35 +140,46 @@ export async function generateReactionPNG(reactionObject, force) {
   ) {
     console.log("Image does not yet exist or force flag was set. Generating.");
     let imageDataURL = await getReactionAsImage(reactionObject);
+    if (!imageDataURL) return;
     let uploadResponse = await ImageHelper.uploadBase64(
       imageDataURL,
       `reaction-${reactionObject.id}.png`,
       imagesPath
     );
-    return uploadResponse.path;
+    if (uploadResponse) return uploadResponse.path;
   } else {
     console.log("Image already exists. Refusing to regenerate.");
-    return;
   }
+  return undefined;
 }
 
-export async function getReactionPNGUrl(reactionId) {
-  return `worlds/${game.world.id}/reactionIcons/reaction-${reactionId}.png`;
+export async function getReactionPNGUrl(reactionId: string): Promise<string> {
+  return `worlds/${game.world?.id}/reactionIcons/reaction-${reactionId}.png`;
 }
 
 export async function renderChatButtonBar() {
-  let $chatForm = $("#chat-form");
+  // Remove any existing container first
   let $cgwContainer = $(".cgwcontainer");
   $cgwContainer.remove();
+
+  // Foundry v13 uses a different chat structure
+  // The chat form is inside the chat sidebar element
+  let $chatForm: JQuery = $("#chat form");
+  
+  if ($chatForm.length === 0) {
+    console.warn("CrowdGoesWild: Could not find chat form element to attach reaction bar");
+    return;
+  }
+  
   let templatePath = `modules/${moduleId}/templates/parts/ReactionButtonBar.hbs`;
   let templateData = {
-    reactions: (await game.settings.get(moduleId, "reactions")) as [],
-    isGM: game.user.isGM,
+    reactions: game.settings?.get("crowdgoeswild", "reactions") ?? [],
+    isGM: game.user?.isGM ?? false,
   };
 
   renderTemplate(templatePath, templateData)
     .then((c) => {
-      if (c.length > 0) {
+      if (c.length > 0 && $chatForm.length > 0) {
         let $content = $(c);
         $chatForm.after($content);
 
@@ -182,7 +192,7 @@ export async function renderChatButtonBar() {
         });
 
         $content.find(".reactionbar button").on("dragstart", (event) => {
-          event.originalEvent.dataTransfer.setData(
+          event.originalEvent?.dataTransfer?.setData(
             "text/plain",
             JSON.stringify({
               id: event.currentTarget.dataset.id,
