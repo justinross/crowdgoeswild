@@ -50,7 +50,7 @@ function handleSocketEvent({ type, payload }) {
       break;
 
     case "reload":
-      debouncedReload();
+      foundry.utils.debouncedReload();
       break;
 
     case "vibecheck":

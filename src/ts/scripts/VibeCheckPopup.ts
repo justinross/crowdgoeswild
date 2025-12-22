@@ -1,109 +1,137 @@
 import { sendVibeCheckResponse } from "./socket";
 import { getReactionObject } from "./utils";
+import type { Reaction } from "./types";
+
 const moduleId = "crowdgoeswild";
 
-type userResponse = {
-  user: {};
-  response: Number;
+const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+
+type UserResponse = {
+  user: User;
+  response: Reaction;
 };
 
-export default class VibeCheckPopup extends Application {
-  static instance;
-  userResponses: userResponse[] = [];
+export default class VibeCheckPopup extends HandlebarsApplicationMixin(ApplicationV2) {
+  static instance: VibeCheckPopup | null = null;
+  userResponses: UserResponse[] = [];
+  private keyupHandler: ((ev: KeyboardEvent) => void) | null = null;
 
-  static getInstance() {
+  static getInstance(): VibeCheckPopup {
     if (!this.instance) {
       this.instance = new VibeCheckPopup();
     }
-
     return this.instance;
   }
 
-  /**
-   * override
-   */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["form", "crowdgoeswild", "vibecheck"],
-      popOut: true,
-      template: `modules/${moduleId}/templates/VibeCheckPopup.hbs`,
-      id: `${moduleId}-vibe-check`,
+  static override DEFAULT_OPTIONS = {
+    id: "crowdgoeswild-vibe-check",
+    classes: ["crowdgoeswild", "vibecheck"],
+    tag: "div",
+    window: {
+      frame: true,
+      positioned: true,
       title: "CrowdGoesWild - Vibe Check",
+      icon: "fas fa-face-smile",
+      controls: [],
+      resizable: false,
+    },
+    position: {
       width: 600,
-      // height: game.user.isGM ? 600 : "auto",
-      height: "auto",
-    });
-  }
+      height: "auto" as const,
+    },
+    actions: {
+      selectReaction: VibeCheckPopup.#onSelectReaction,
+    },
+  };
 
-  async getData(): Promise<object> {
-    let users = await game.users.players.filter((u) => u.active);
+  static override PARTS = {
+    content: {
+      template: `modules/${moduleId}/templates/VibeCheckPopup.hbs`,
+    },
+  };
 
-    //group the responses by user for display. Variable naming is awful here.
-    let groupedResponses = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  override async _prepareContext(options: any) {
+    const context = await super._prepareContext(options);
+    const users = game.users?.players.filter((u) => u.active) ?? [];
+
+    // Group the responses by user for display
+    const groupedResponses: { user: User; responses: Reaction[] }[] = [];
+    
     for (const user of users) {
-      let filteredResponses = [];
+      const filteredResponses: Reaction[] = [];
       for (const sentResponse of this.userResponses) {
-        if (sentResponse.user._id == user.id) {
+        if (sentResponse.user.id === user.id) {
           filteredResponses.push(sentResponse.response);
         }
       }
 
-      let userCharacter = await user.character;
+      const userCharacter = user.character;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const userWithImage = user as any;
       if (userCharacter) {
-        user.image = userCharacter.img;
+        userWithImage.image = userCharacter.img ?? user.avatar ?? "";
       } else {
-        user.image = user.avatar;
+        userWithImage.image = user.avatar ?? "";
       }
 
-      let userResponses = {
-        user: user,
+      groupedResponses.push({
+        user: userWithImage,
         responses: filteredResponses,
-      };
-
-      groupedResponses.push(userResponses);
+      });
     }
 
-    let data = {
-      isGM: game.user.isGM,
-      reactions: await game.settings.get(moduleId, "reactions"),
+    return {
+      ...context,
+      isGM: game.user?.isGM ?? false,
+      reactions: (await game.settings?.get(moduleId, "reactions")) ?? [],
       responses: this.userResponses,
       groupedResponses: groupedResponses,
     };
-
-    return data;
   }
 
-  activateListeners(html: JQuery<HTMLElement>): void {
-    html.find("button.reaction").on("click", (ev) => {
-      sendVibeCheckResponse(game.user, ev.currentTarget.dataset.id);
-      this.close();
-    });
-
-    $(document).off("keyup.cgw-vibecheck");
-    $(document).on("keyup.cgw-vibecheck", (ev) => {
-      let key = parseInt(ev.key);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  override async _onRender(context: object, options: any) {
+    // Set up keyboard handler for number keys 1-6
+    this.keyupHandler = (ev: KeyboardEvent) => {
+      const key = parseInt(ev.key);
       if (key >= 1 && key <= 6) {
-        console.log(key, key >= 1 && key <= 6);
         sendVibeCheckResponse(game.user, key - 1);
         this.close();
       }
-    });
+    };
+    document.addEventListener("keyup", this.keyupHandler);
   }
 
-  async close(options?: Application.CloseOptions): Promise<void> {
-    $(document).off("keyup.cgw-vibecheck");
-    super.close();
+  static async #onSelectReaction(this: VibeCheckPopup, event: Event, target: HTMLElement) {
+    event.preventDefault();
+    const reactionId = target.dataset.id;
+    if (reactionId) {
+      sendVibeCheckResponse(game.user, reactionId);
+      this.close();
+    }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  override async close(options?: any): Promise<this> {
+    // Clean up keyboard listener
+    if (this.keyupHandler) {
+      document.removeEventListener("keyup", this.keyupHandler);
+      this.keyupHandler = null;
+    }
+    return super.close(options);
   }
 }
 
-export async function recordVibeCheckResponse(response) {
-  let vc = VibeCheckPopup.getInstance();
-  let reaction = await getReactionObject(response.response);
-  let user = response.user;
-  response = {
-    user: user,
-    response: reaction,
-  };
-  vc.userResponses.push(response);
-  vc.render(false);
+export async function recordVibeCheckResponse(response: { user: User; response: string | number }) {
+  const vc = VibeCheckPopup.getInstance();
+  const reaction = await getReactionObject(String(response.response));
+  if (reaction) {
+    const userResponse: UserResponse = {
+      user: response.user,
+      response: reaction,
+    };
+    vc.userResponses.push(userResponse);
+    vc.render();
+  }
 }

@@ -1,8 +1,10 @@
-<div>
+<div class="reactionEditor">
   
-  <h3>Configure your reactions here. Changes are saved as they're made, but you should generate PNGs after making
+  <h3>Configure your reactions here.</h3>
+
+  <p>Changes are saved as they're made, but you should generate PNGs after making
     changes if you want players' macro icons to match the current reactions. Other settings are located in the Foundry Module Settings. <br/>
-    Note: PNG thumbnails cannot currently be generated for video icons. They will be skipped.</h3>
+    Note: PNG thumbnails cannot currently be generated for video icons. They will be skipped.</p>
   <div class="flexrow">
     {{#each currentReactions}}
       {{> "modules/crowdgoeswild/templates/parts/ReactionRow.hbs"}}
@@ -13,9 +15,9 @@
       <select name="reactionPreset" id="reactionPreset">
         {{selectOptions presets labelAttr="label" selected=selectedPreset}}
       </select>
-      <button name="reset" id="resetButton" title="Load the selected reaction set">Load Preset</button>
+      <button type="button" data-action="loadPreset" title="Load the selected reaction set">Load Preset</button>
     </div>
-    <button name="submit" id="generateButton">Generate Reaction PNGs</button>
+    <button type="button" data-action="generatePNGs">Generate Reaction PNGs</button>
     {{!-- <button name="reset" id="importButton" title="Import a reaction set from JSON" ><i class="fas fa-upload"></i>Import Set</button>
     <button name="reset" id="exportButton" title="Export a reaction set to JSON" ><i class="fas fa-download"></i>Export Set</button> --}}
   </div>

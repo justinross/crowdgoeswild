@@ -378,7 +378,7 @@ function registerEffects() {
         fontSize: "50vh",
       });
 
-      game.togglePause(true);
+      game.togglePause?.(true, { broadcast: true });
       tl.to(targets, {
         rotation: 5,
         // duration: 10,

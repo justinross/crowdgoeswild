@@ -1,6 +1,6 @@
 const moduleId = "crowdgoeswild";
 import * as htmlToImage from "html-to-image";
-import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
+
 import { handleReactionClick } from "./events";
 import { initiateVibeCheck } from "./socket";
 import { ReactionSetupMenu } from "./ReactionSetupMenu";
@@ -28,20 +28,50 @@ export function calcAngleDegrees(x: number, y: number): number {
 
 export async function getReactionAsImage(reactionObject: Reaction): Promise<string | undefined> {
   let reactionHTML = await getReactionHTML(reactionObject);
+  console.log("Generating PNG for reaction", reactionObject.id, reactionHTML);
   let $interface = $("#interface");
   let $appended = $(reactionHTML).appendTo($interface);
-  $appended.css({ zIndex: "-10000" });
+  // $appended.css({ zIndex: "-10000" });
   let iconPNGData: string | undefined;
   try {
+    // Wait for fonts/images to load and layout to stabilize
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
     let appEl = $appended.get(0);
+    console.log("appEl for reaction", reactionObject.id, appEl);
     if (appEl) {
+      // const fontEmbedCSS = await htmlToImage.getFontEmbedCSS(appEl);
       iconPNGData = await htmlToImage.toPng(appEl);
     }
+    console.log("Generated PNG data for reaction", reactionObject.id, iconPNGData);
   } catch (error) {
-    console.error("oops, something went wrong!", error);
+    console.error("PNG generation failed for reaction", reactionObject.id, error);
+    ui.notifications?.error(
+      `Failed to generate PNG for reaction "${reactionObject.icon}". Check console for details.`
+    );
   }
 
   // $appended.remove();
+  
+  // Validate the generated PNG data URL
+  if (iconPNGData) {
+    if (!iconPNGData.startsWith('data:image/png;base64,')) {
+      console.error("Invalid PNG data URL format for reaction", reactionObject.id);
+      ui.notifications?.error(
+        `Invalid image data for reaction "${reactionObject.icon}": Not a PNG data URL`
+      );
+      return undefined;
+    }
+    
+    if (iconPNGData.length < 100) {
+      console.error("PNG data URL too short for reaction", reactionObject.id, "Length:", iconPNGData.length);
+      ui.notifications?.error(
+        `Invalid image data for reaction "${reactionObject.icon}": PNG appears corrupted or incomplete`
+      );
+      return undefined;
+    }
+  }
+  
   return iconPNGData;
 }
 
@@ -140,8 +170,11 @@ export async function generateReactionPNG(reactionObject: Reaction, force: boole
   ) {
     console.log("Image does not yet exist or force flag was set. Generating.");
     let imageDataURL = await getReactionAsImage(reactionObject);
-    if (!imageDataURL) return;
-    let uploadResponse = await ImageHelper.uploadBase64(
+    if (!imageDataURL) {
+      console.warn("Skipping upload for reaction", reactionObject.id, "- invalid image data");
+      return;
+    }
+    let uploadResponse = await foundry.helpers.media.ImageHelper.uploadBase64(
       imageDataURL,
       `reaction-${reactionObject.id}.png`,
       imagesPath
@@ -177,13 +210,14 @@ export async function renderChatButtonBar() {
     isGM: game.user?.isGM ?? false,
   };
 
-  renderTemplate(templatePath, templateData)
+  foundry.applications.handlebars.renderTemplate(templatePath, templateData)
     .then((c) => {
       if (c.length > 0 && $chatForm.length > 0) {
         let $content = $(c);
         $chatForm.after($content);
 
         $content.find(".reactionbar button").on("click", (event) => {
+          console.log("REACTION CLICK", event.target);
           event.preventDefault();
           let $self = $(event.currentTarget);
           let dataset = event.currentTarget.dataset;
@@ -202,10 +236,12 @@ export async function renderChatButtonBar() {
         });
 
         $content.find("button.vibecheck").on("click", (event) => {
+          console.log("VIBE CHECK");
           initiateVibeCheck();
         });
 
         $content.find("button.cgwSettings").on("click", (event) => {
+          console.log("OPEN SETTINGS");
           let reactionSetup = new ReactionSetupMenu();
           reactionSetup.render(true);
         });

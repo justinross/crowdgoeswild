@@ -2,10 +2,20 @@
   padding: 1em;
   padding-top: 0;
   flex-grow: 0;
+  position: relative;
+  z-index: 1;
   .cgw {
     &.gmButtons {
       flex-grow: 1;
       justify-content: center;
+      position: relative;
+      z-index: 1;
+
+      button {
+        position: relative;
+        pointer-events: all;
+        z-index: 1;
+      }
 
       .cgwSettings {
         flex-grow: 0.2;
@@ -23,9 +33,9 @@
         max-height: 2rem;
         background-color: rgba(0, 0, 0, 0.4);
         border: 1px solid rgba(255, 255, 255, 0.4);
+        pointer-events: all;
         i.cgw-reaction {
           position: relative;
-          pointer-events: all;
           font-size: 1rem !important;
         }
 
@@ -52,25 +62,8 @@
 .cgw.importer {
   margin-bottom: 1em;
 }
-
-.reactionSetup {
-  .actionButtons {
-    align-content: center;
-    justify-content: center;
-
-    > * {
-      margin: 1rem;
-      flex-grow: 0.25;
-    }
-
-    select {
-      height: 2rem;
-      margin-right: 1rem;
-    }
-  }
-  .reactionRow {
-    margin: 1em;
-    height: 160px;
+  .reactionElement {
+    margin: 1em !important;
     margin-bottom: 1em;
     padding: 4px;
     position: relative;
@@ -113,7 +106,7 @@
       background-color: rgba(0, 0, 0, 0.4);
       border-radius: 0 6px;
       position: absolute;
-      top: 0;
+      bottom: 0;
       right: 0;
       border: none;
       outline: none;
@@ -130,6 +123,22 @@
         position: relative;
         left: 2px;
       }
+    }
+  }
+
+.reactionEditor {
+  .actionButtons {
+    align-content: center;
+    justify-content: center;
+
+    > * {
+      margin: 1rem;
+      flex-grow: 0.25;
+    }
+
+    select {
+      height: 2rem;
+      margin-right: 1rem;
     }
   }
 }
@@ -150,9 +159,8 @@
     width: 100%;
   }
 
-  .reactionPreview {
+  .iconPreview {
     background-color: rgba(0, 0, 0, 0.2);
-    display: flex;
     justify-content: center;
     align-items: center;
     margin-bottom: 1em;

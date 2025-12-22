@@ -1,198 +1,152 @@
-import { calcAngleDegrees, saveAllReactionPNGs } from "./utils";
+import { saveAllReactionPNGs } from "./utils";
 import { loadReactionsPreset, ReactionOption } from "./settings";
 import { reactionSets } from "./reactionsets";
 import { reloadAllClients } from "./socket";
 import { ReactionEditor } from "./ReactionEditor";
+import type { Reaction } from "./types";
 
 const moduleId = "crowdgoeswild";
-export class ReactionSetupMenu extends Application {
-  // constructor(exampleOption) {
-  //     super(exampleOption);
-  // }
 
-  loadedJSON = {};
-  selectedPreset = "default";
+const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["form", "crowdgoeswild", "reactionSetup"],
-      popOut: true,
-      template: `modules/${moduleId}/templates/ReactionSetup.hbs`,
-      id: `${moduleId}-reaction-setup`,
+export class ReactionSetupMenu extends HandlebarsApplicationMixin(ApplicationV2) {
+  loadedJSON: object = {};
+  selectedPreset: string = "default";
+
+  static override DEFAULT_OPTIONS = {
+    id: "crowdgoeswild-reaction-setup",
+    classes: ["crowdgoeswild", "reaction-setup"],
+    tag: "div",
+    window: {
+      frame: true,
+      positioned: true,
       title: "CrowdGoesWild - Reaction Setup",
-      width: 1200,
-      // submitOnChange: true,
-      closeOnSubmit: false,
+      icon: "fas fa-icons",
+      controls: [],
       resizable: true,
-    });
-  }
+    },
+    position: {
+      width: 800,
+      height: "auto" as const,
+    },
+    actions: {
+      generatePNGs: ReactionSetupMenu.#onGeneratePNGs,
+      loadPreset: ReactionSetupMenu.#onLoadPreset,
+      editReaction: ReactionSetupMenu.#onEditReaction,
+    },
+  };
 
-  async getData() {
-    let data = {
-      currentReactions: [],
+  static override PARTS = {
+    form: {
+      template: `modules/${moduleId}/templates/ReactionSetup.hbs`,
+    },
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  override async _prepareContext(options: any) {
+    const context = await super._prepareContext(options);
+    return {
+      ...context,
+      currentReactions: game.settings?.get(moduleId, "reactions") as [] ?? [],
       presets: reactionSets,
       selectedPreset: this.selectedPreset,
     };
-    data.currentReactions = game.settings.get(moduleId, "reactions") as [];
-    // let outputReactions = []
-    // for (const reaction of currentReactions) {
-    //     if(!reaction.id){
-
-    //     }
-    // }
-    return data;
   }
 
-  // switchColors(inputEl1, inputEl2) {
-  //   let v1 = inputEl1.value;
-  //   let v2 = inputEl2.value;
-  //   console.log(inputEl1, inputEl2);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  override async _onRender(context: object, options: any) {
+    // Handle preset dropdown change
+    const presetSelect = this.element.querySelector("#reactionPreset") as HTMLSelectElement;
+    if (presetSelect) {
+      presetSelect.addEventListener("change", (ev) => {
+        this.selectedPreset = (ev.target as HTMLSelectElement).value;
+      });
+    }
+  }
 
-  //   inputEl1.value = v2;
-  //   inputEl2.value = v1;
-  // }
+  // Action handlers - static methods that receive the app instance as `this`
+  static async #onGeneratePNGs(this: ReactionSetupMenu, event: Event, target: HTMLElement) {
+    event.preventDefault();
+    this.close();
+    await saveAllReactionPNGs(true);
+    // reloadAllClients();
+  }
 
-  // async _updateObject(event, formData) {
-  //   const data = foundry.utils.expandObject(formData);
-  //   let reactions = [];
+  static async #onLoadPreset(this: ReactionSetupMenu, event: Event, target: HTMLElement) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.showLoadPresetDialog();
+  }
 
-  //   for (const reaction of Object.values(data)) {
-  //     reactions[reaction.id] = reaction;
-  //   }
-  //   await game.settings.set(moduleId, "reactions", reactions);
-  //   await this.render();
-  // }
-
-  activateListeners(html) {
-    super.activateListeners(html);
-
-    html.find("#generateButton").on("click", async (ev) => {
-      this.close();
-      await saveAllReactionPNGs(true);
-      reloadAllClients();
-    });
-    html.find("#resetButton").on("click", (ev) => {
-      ev.stopPropagation();
-      this.showLoadPresetDialog();
-    });
-
-    html.find(".reactionEdit").on("click", (ev) => {
-      ev.stopPropagation();
-      let reactionEditor = new ReactionEditor(
-        ev.currentTarget.dataset.id,
-        this
-      );
+  static async #onEditReaction(this: ReactionSetupMenu, event: Event, target: HTMLElement) {
+    event.preventDefault();
+    event.stopPropagation();
+    const reactionId = target.dataset.id;
+    if (reactionId) {
+      const reactionEditor = new ReactionEditor(reactionId, this);
       reactionEditor.render(true);
-    });
-    //   html.find("#exportButton").on("click", (ev) => {
-    //     this.exportReactions();
-    //   });
-    //   html.find("#importButton").on("click", (ev) => {
-    //     this.showImportReactionsDialog();
-    //   });
-    html.find("#reactionPreset").on("change", (ev) => {
-      ev.stopPropagation();
-      this.selectedPreset = ev.currentTarget.value;
-    });
-
-    //   html.find(".colorSwitch").on("click", (ev) => {
-    //     ev.stopPropagation();
-    //     let i1 = $(ev.target)
-    //       .parents(".reactionRow")
-    //       .find(".primaryColor input.color")
-    //       .first()
-    //       .get(0);
-    //     let i2 = $(ev.target)
-    //       .parents(".reactionRow")
-    //       .find(".secondaryColor input.color")
-    //       .first()
-    //       .get(0);
-    //     this.switchColors(i1, i2);
-    //   });
-
-    // html.find(".pathPicker").on("click", (ev) => {
-    //   let inputEl = $(ev.currentTarget).siblings("input.path").get(0);
-    //   inputEl.value = "butts";
-    //   let picker = new FilePicker({
-    //     callback: (picked) => {
-    //       console.log(picked);
-    //       try {
-    //         inputEl.value = picked;
-    //       } catch (error) {
-    //         console.error(error);
-    //       }
-    //     },
-    //   });
-    //   picker.render(true);
-    // });
+    }
   }
 
   showImportReactionsDialog() {
-    let d = new Dialog({
-      title: "Import Reactions",
+    foundry.applications.api.DialogV2.prompt({
+      window: { title: "Import Reactions" },
       content: `
-            <p>Import a set of reactions from a JSON file? All current reactions will be overwritten.</p>
-            <input type="file" id="importer" name="reactionjson" class="cgw importer">
-            `,
-      buttons: {
-        one: {
-          icon: '<i class="fas fa-check"></i>',
-          label: "Import",
-          callback: () => {
-            if (this.loadedJSON) {
-              this.saveReactionSetData(this.loadedJSON);
-            }
-          },
-        },
-        two: {
-          icon: '<i class="fas fa-times"></i>',
-          label: "Cancel",
-          callback: () => {},
+        <p>Import a set of reactions from a JSON file? All current reactions will be overwritten.</p>
+        <input type="file" id="importer" name="reactionjson" class="cgw importer">
+      `,
+      ok: {
+        label: "Import",
+        icon: "fas fa-check",
+        callback: async () => {
+          if (this.loadedJSON && Object.keys(this.loadedJSON).length > 0) {
+            await this.saveReactionSetData(this.loadedJSON);
+          }
         },
       },
-      default: "two",
-      render: (html) => {
-        $(html)
-          .find("#importer")
-          .on("change", (ev) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      render: (event: Event, dialog: any) => {
+        const importer = dialog.element.querySelector("#importer") as HTMLInputElement;
+        if (importer) {
+          importer.addEventListener("change", (ev) => {
             console.log("Loaded file");
-            let reader = new FileReader();
+            const reader = new FileReader();
             reader.onload = (readerEv) => {
               try {
-                let loadedJSON = JSON.parse(readerEv.target.result);
+                const loadedJSON = JSON.parse(readerEv.target?.result as string);
                 if (this.validateLoadedJSON(loadedJSON)) {
                   this.loadedJSON = loadedJSON;
                 }
               } catch (error) {
                 console.log("Invalid JSON file");
-                this.loadedJSON = false;
+                this.loadedJSON = {};
               }
             };
-            reader.readAsText(ev.target.files[0]);
+            const files = (ev.target as HTMLInputElement).files;
+            if (files && files[0]) {
+              reader.readAsText(files[0]);
+            }
           });
+        }
       },
-      close: (html) => {},
     });
-    d.render(true);
   }
 
   async exportReactions() {
-    let data = await game.settings.get(moduleId, "reactions");
-    let dataJSON = JSON.stringify(data);
-    saveDataToFile(dataJSON, "text/json", "reactions.json");
+    const data = await game.settings?.get(moduleId, "reactions");
+    const dataJSON = JSON.stringify(data);
+    foundry.utils.saveDataToFile(dataJSON, "text/json", "reactions.json");
   }
 
-  async saveReactionSetData(data) {
-    // await game.settings.set(moduleId, 'reactions', data)
+  async saveReactionSetData(data: object) {
+    await game.settings?.set(moduleId, "reactions", data as Reaction[]);
+    this.render();
   }
 
-  validateLoadedJSON(data) {
+  validateLoadedJSON(data: unknown): boolean {
     let isValid = true;
-    // make sure it's an array
     if (Array.isArray(data)) {
-      // make sure nobody's slipping in the wrong number of reactions
-      if (data.length == 6) {
-        // check each row to make sure it has the right fields
+      if (data.length === 6) {
         for (const row of data) {
           for (const key in ReactionOption) {
             if (!(key in row)) {
@@ -204,35 +158,28 @@ export class ReactionSetupMenu extends Application {
       } else {
         isValid = false;
       }
+    } else {
+      isValid = false;
     }
     return isValid;
   }
 
   showLoadPresetDialog() {
-    let d = new Dialog({
-      title: "Load Preset",
-      content: `<p>Load the ${
-        reactionSets[this.selectedPreset].label
-      } preset? Any changes you've made to reactions will be lost.</p>`,
-      buttons: {
-        one: {
-          icon: '<i class="fas fa-check"></i>',
-          label: "Load Preset",
-          callback: async () => {
-            await loadReactionsPreset(this.selectedPreset);
-            this.render(false);
-          },
-        },
-        two: {
-          icon: '<i class="fas fa-times"></i>',
-          label: "Cancel",
-          callback: () => {},
+    foundry.applications.api.DialogV2.confirm({
+      window: { title: "Load Preset" },
+      content: `<p>Load the ${reactionSets[this.selectedPreset].label} preset? Any changes you've made to reactions will be lost.</p>`,
+      yes: {
+        label: "Load Preset",
+        icon: "fas fa-check",
+        callback: async () => {
+          await loadReactionsPreset(this.selectedPreset);
+          this.render();
         },
       },
-      default: "two",
-      render: (html) => {},
-      close: (html) => {},
+      no: {
+        label: "Cancel",
+        icon: "fas fa-times",
+      },
     });
-    d.render(true);
   }
 }

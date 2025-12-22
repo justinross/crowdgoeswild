@@ -27,5 +27,5 @@ export function loadPartials() {
     `modules/${moduleId}/templates/parts/ReactionRow.hbs`,
     `modules/${moduleId}/templates/parts/ReactionButtonBar.hbs`,
   ];
-  loadTemplates(partialsList);
+  foundry.applications.handlebars.loadTemplates(partialsList);
 }
