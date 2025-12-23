@@ -128,12 +128,13 @@
 
 .reactionEditor {
   .actionButtons {
+    width: 100%;
     align-content: center;
     justify-content: center;
 
     > * {
       margin: 1rem;
-      flex-grow: 0.25;
+      flex-grow: 1;
     }
 
     select {

@@ -21,7 +21,7 @@
 {{else}}
   <div class="reactionButtons flexrow" tabindex="0">
     {{#each reactions}}
-        <button type="button" class="reaction" data-action="selectReaction" data-id="{{id}}"><i class="{{style}} fa-{{icon}}"
+        <button type="button" class="reaction" data-action="selectReaction" data-id="{{id}}"><i class="{{reactionStyle}} fa-{{icon}}"
                 style="color: {{primaryColor}}; --fa-primary-color: {{primaryColor}}; --fa-secondary-color: {{secondaryColor}}; {{#if secondaryColor}}--fa-secondary-opacity: 1{{/if}}"></i><span class="buttonshortcut">{{add id 1}}</span></button>
     {{/each}}
 </div>

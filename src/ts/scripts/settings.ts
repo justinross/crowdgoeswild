@@ -10,7 +10,7 @@ export const ReactionOption = {
   icon: "",
   primaryColor: "",
   secondaryColor: "",
-  style: "",
+  reactionStyle: "",
   speed: 0,
   effect: "",
   directional: false,

@@ -33,6 +33,8 @@ export class ReactionSetupMenu extends HandlebarsApplicationMixin(ApplicationV2)
       generatePNGs: ReactionSetupMenu.#onGeneratePNGs,
       loadPreset: ReactionSetupMenu.#onLoadPreset,
       editReaction: ReactionSetupMenu.#onEditReaction,
+      importReactions: ReactionSetupMenu.#onShowImportReactionsDialog,
+      exportReactions: ReactionSetupMenu.#onExportReactions,
     },
   };
 
@@ -83,9 +85,22 @@ export class ReactionSetupMenu extends HandlebarsApplicationMixin(ApplicationV2)
     event.stopPropagation();
     const reactionId = target.dataset.id;
     if (reactionId) {
-      const reactionEditor = new ReactionEditor(reactionId, this);
-      reactionEditor.render(true);
+      const reactionEditor = new ReactionEditor({reactionId: reactionId, parent: this});
+      reactionEditor.render({force: true});
+      console.log(reactionEditor);
     }
+  }
+
+  static async #onShowImportReactionsDialog(this: ReactionSetupMenu, event: Event, target: HTMLElement) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.showImportReactionsDialog();
+  }
+
+  static async #onExportReactions(this: ReactionSetupMenu, event: Event, target: HTMLElement) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.exportReactions();
   }
 
   showImportReactionsDialog() {

@@ -40,8 +40,9 @@ export async function getReactionAsImage(reactionObject: Reaction): Promise<stri
     let appEl = $appended.get(0);
     console.log("appEl for reaction", reactionObject.id, appEl);
     if (appEl) {
-      // const fontEmbedCSS = await htmlToImage.getFontEmbedCSS(appEl);
-      iconPNGData = await htmlToImage.toPng(appEl);
+      const fontEmbedCSS = await htmlToImage.getFontEmbedCSS(appEl);
+      console.log(fontEmbedCSS);
+      // iconPNGData = await htmlToImage.toPng(appEl);
     }
     console.log("Generated PNG data for reaction", reactionObject.id, iconPNGData);
   } catch (error) {
@@ -51,7 +52,7 @@ export async function getReactionAsImage(reactionObject: Reaction): Promise<stri
     );
   }
 
-  // $appended.remove();
+  $appended.remove();
   
   // Validate the generated PNG data URL
   if (iconPNGData) {
@@ -85,7 +86,7 @@ export function getReactionHTML(reaction: Reaction): string {
   let htmlString = "";
   if (reaction.type == "fontawesome") {
     htmlString = `
-          <i class="${reaction.style} fa-${reaction.icon} cgw-reaction" 
+          <i class="${reaction.reactionStyle} fa-${reaction.icon} cgw-reaction" 
               data-id=${reaction.id}
               style="
                   color: ${reaction.primaryColor}; 
@@ -243,7 +244,7 @@ export async function renderChatButtonBar() {
         $content.find("button.cgwSettings").on("click", (event) => {
           console.log("OPEN SETTINGS");
           let reactionSetup = new ReactionSetupMenu();
-          reactionSetup.render(true);
+          reactionSetup.render({force: true});
         });
       }
     })

@@ -1,9 +1,9 @@
-<form class="reactionEditor {{type}}" data-id="{{id}}">
+<div class="reactionEditor {{type}}" data-id="{{id}}">
   <div
     class="reactionPreview"
-    style="width: {{maxWidth}}px; height: {{maxHeight}}px; "
+    style=""
   >
-    {{reactionPreview this}}
+    {{reactionPreview this}} 
   </div>
   <input type="hidden" value="{{id}}" name="id" />
   <input type="hidden" value="{{speed}}" name="speed" />
@@ -86,7 +86,7 @@
       <label
         for="reaction-{{id}}-max-height"
         title="Maximum height in pixels for an image reaction"
-      >Max Width
+      >Max Height
         <i class="fas fa-circle-info"></i></label>
       <input
         type="text"
@@ -126,8 +126,8 @@
         for="reaction-{{id}}-style"
         title="This lets you choose which Font Awesome icon style to use."
       >Icon Style <i class="fas fa-circle-info"></i></label>
-      <select id="reaction-{{id}}-style" value="{{style}}" name="style">
-        {{selectOptions meta.styleOptions selected=style}}
+      <select id="reaction-{{id}}-reactionStyle" value="{{reactionStyle}}" name="reactionStyle">
+        {{selectOptions meta.styleOptions selected=reactionStyle}}
       </select>
     </div>
   </div>
@@ -161,7 +161,8 @@
           class="secondaryColor"
           value="{{secondaryColor}}"
           default="#000000"
-        /></div>
+        />
+      </div>
     </div>
-  </div>
-</form>
+  </div> 
+</div>

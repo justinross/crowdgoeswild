@@ -6,13 +6,14 @@
   "scripts": {
     "dev": "vite",
     "watch": "vite build --watch",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
     "@types/gsap": "^3.0.0",
     "@types/handlebars": "^4.1.0",
     "fvtt-types": "github:League-of-Foundry-Developers/foundry-vtt-types#main",
+    "glob": "^13.0.0",
     "sass": "^1.58.1",
     "semver": "^7.3.8",
     "typescript": "^5.9.0",

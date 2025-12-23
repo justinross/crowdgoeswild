@@ -6,19 +6,10 @@ const moduleId = "crowdgoeswild";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export class ReactionEditor extends HandlebarsApplicationMixin(ApplicationV2) {
-  reactionId: string;
-  parent: ReactionSetupMenu | undefined;
-
-  constructor(reactionId: string, parent?: ReactionSetupMenu) {
-    super({});
-    this.reactionId = reactionId;
-    this.parent = parent;
-  }
 
   static override DEFAULT_OPTIONS = {
-    id: "crowdgoeswild-reaction-editor",
-    classes: ["crowdgoeswild", "reaction-editor"],
     tag: "form",
+    classes: ["crowdgoeswild", "reaction-editor"],
     window: {
       frame: true,
       positioned: true,
@@ -41,15 +32,15 @@ export class ReactionEditor extends HandlebarsApplicationMixin(ApplicationV2) {
     },
   };
 
-  static override PARTS = {
+  static PARTS = {
     form: {
       template: `modules/${moduleId}/templates/ReactionEditor.hbs`,
-    },
+    }
   };
 
   async getThisReaction(): Promise<Reaction | undefined> {
     const reactions = (await game.settings?.get(moduleId, "reactions")) as Reaction[] ?? [];
-    const data = reactions.find((reaction) => reaction.id == this.reactionId);
+    const data = reactions.find((reaction) => reaction.id == this.options.reactionId);
     return data;
   }
 
@@ -62,9 +53,21 @@ export class ReactionEditor extends HandlebarsApplicationMixin(ApplicationV2) {
       return context;
     }
 
+    // Add reaction type to the form element classes
+    if (data.type && !this.options.classes.includes(data.type)) {
+      this.options.classes.push(data.type);
+    }
+    // if (!this.options.classes.includes('reactionEditor')) {
+    //   this.options.classes.push('reactionEditor');
+    // }
+
     return {
-      ...context,
+      ...context, 
       ...data,
+      // buttons: [
+      //     { type: "submit", icon: "fa-solid fa-save", label: "SETTINGS.Save" },
+      //     // { type: "reset", action: "reset", icon: "fa-solid fa-undo", label: "SETTINGS.Reset" },
+      // ],
       meta: {
         typeOptions: {
           fontawesome: "Font Icon",
@@ -78,7 +81,7 @@ export class ReactionEditor extends HandlebarsApplicationMixin(ApplicationV2) {
           shutdown: "Shutdown",
         },
         styleOptions: {
-          fas: "Solid",
+          "fas": "Solid",
           "fa-duotone": "Duotone",
           "fa-regular": "Regular",
           "fa-light": "Light",
@@ -96,13 +99,13 @@ export class ReactionEditor extends HandlebarsApplicationMixin(ApplicationV2) {
   ) {
     const data = formData.object;
     const reactions = (await game.settings?.get(moduleId, "reactions")) as Reaction[] ?? [];
-    const index = reactions.findIndex((reaction) => reaction.id == this.reactionId);
+    const index = reactions.findIndex((reaction) => reaction.id == this.options.reactionId);
     
     if (index !== -1) {
       reactions[index] = data as unknown as Reaction;
       await game.settings?.set(moduleId, "reactions", reactions);
       this.render();
-      this.parent?.render();
+      this.options.parent?.render();
     }
   }
 

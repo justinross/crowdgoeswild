@@ -1,10 +1,36 @@
-import type { UserConfig } from "vite";
+import type { Plugin } from "vite";
+import { defineConfig } from "vite";
 import path from "path";
+import { globSync } from "glob";
 
-const config: UserConfig = {
+/*
+The intent of this plugin is to make so that Rollup watches files
+that are not in the module graph (i.e. not imported in a JS file),
+allowing for rebuilds when the module's manifest changes, or when
+handlebars is updated.
+*/
+function watcher(...globs: string[]): Plugin {
+    return {
+        name: "watcher",
+        buildStart() {
+            for (const item of globs) {
+                globSync(path.resolve(item)).forEach((filename) => {
+                    this.addWatchFile(filename);
+                });
+            }
+        },
+    };
+}
+
+export default defineConfig({
   publicDir: "public",
   base: "/modules/crowdgoeswild/",
   root: "src/",
+  plugins: [
+    watcher(
+      `./src/public/**/*`,
+    )
+  ],
   server: {
     port: 31001,
     open: true,
@@ -21,6 +47,10 @@ const config: UserConfig = {
     emptyOutDir: true,
     sourcemap: true,
     minify: false,
+    watch: {
+      include: ["src/**/*.ts", "src/**/*.scss", "src/**/*.hbs", "src/**/*.json"],
+      exclude: ["node_modules/**", "dist/**"],
+    },
     rollupOptions: {
       external: ["/scripts/greensock/esm/all.js"],
       makeAbsoluteExternalsRelative: false,
@@ -42,6 +72,4 @@ const config: UserConfig = {
       fileName: "crowdgoeswild",
     },
   },
-};
-
-export default config;
+});

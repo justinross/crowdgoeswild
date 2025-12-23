@@ -12,13 +12,14 @@
   </div>
   <div class="flexrow actionButtons">
     <div class="flexrow">
+      <button type="button" data-action="loadPreset" title="Load the selected reaction set">Load Preset</button>
       <select name="reactionPreset" id="reactionPreset">
         {{selectOptions presets labelAttr="label" selected=selectedPreset}}
       </select>
-      <button type="button" data-action="loadPreset" title="Load the selected reaction set">Load Preset</button>
+      <span></span>
     </div>
     <button type="button" data-action="generatePNGs">Generate Reaction PNGs</button>
-    {{!-- <button name="reset" id="importButton" title="Import a reaction set from JSON" ><i class="fas fa-upload"></i>Import Set</button>
-    <button name="reset" id="exportButton" title="Export a reaction set to JSON" ><i class="fas fa-download"></i>Export Set</button> --}}
+    <button name="reset" id="importButton" title="Import a reaction set from JSON" data-action="importSet" ><i class="fas fa-upload"></i>Import Set</button>
+    <button name="reset" id="exportButton" title="Export a reaction set to JSON" data-action="exportSet" ><i class="fas fa-download"></i>Export Set</button>
   </div>
 </div>

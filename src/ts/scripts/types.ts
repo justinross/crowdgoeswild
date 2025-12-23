@@ -6,7 +6,7 @@ export interface Reaction {
   icon: string;
   primaryColor: string;
   secondaryColor: string;
-  style: string;
+  reactionStyle: string;
   effect: string;
   directional: boolean;
   type: "fontawesome" | "filepicker";
