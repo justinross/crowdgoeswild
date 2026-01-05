@@ -1,0 +1,19 @@
+<div class="flexcol reactionElement" data-id="{{id}}">
+  <div class="flexrow">
+    <div class="reactionName">
+      <span
+        for="reaction-{{id}}-title"
+        title="This reaction's name."
+      >{{title}}</span>
+    </div>
+  </div>
+  <div class="flexrow">
+    <div class="iconPreview">
+      {{reactionPreview this}}
+    </div>
+  </div>
+  <div class="flexrow">
+  <button type="button" class="reactionEdit" data-action="editReaction" data-id="{{id}}"><i
+      class="fas fa-edit"
+    ></i></button></div>
+</div>
